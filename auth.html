@@ -78,23 +78,15 @@
             }
         }
 
-        // Función para mostrar la pantalla de confirmación animada
+        // Función para mostrar la pantalla de confirmación
         function showConfirmationScreen() {
             const formContainer = document.getElementById('form-container');
             const confirmationCard = document.getElementById('confirmation-card');
-            const frontCard = document.querySelector('.card-front');
-            const backCard = document.querySelector('.card-back');
-
-            // Aseguramos que solo la confirmación sea visible después de la animación de giro
-            formContainer.classList.add('flipped');
-
-            // Ocultar los formularios y mostrar la confirmación
-            setTimeout(() => {
-                frontCard.style.display = 'none';
-                backCard.style.display = 'none';
-                confirmationCard.style.display = 'flex';
-            }, 800); 
+            
+            formContainer.style.display = 'none'; // Ocultar el contenedor de formularios
+            confirmationCard.style.display = 'flex'; // Mostrar la pantalla de confirmación
         }
+
 
         window.handleRegistration = handleRegistration;
     </script>
@@ -138,7 +130,7 @@
             }
         }
 
-        .card-front, .card-back, .confirmation-card {
+        .card-front, .card-back {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -150,10 +142,7 @@
         .card-back {
             transform: rotateY(180deg);
         }
-        .confirmation-card {
-            transform: rotateY(180deg);
-            display: none; /* Oculto por defecto */
-        }
+        
         .form-container.flipped {
             transform: rotateY(180deg);
         }
@@ -243,6 +232,7 @@
         <!-- Right Section (Visible on both mobile and desktop) -->
         <div class="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-center md:bg-transparent flex-grow bg-white">
             <div class="max-w-md mx-auto w-full">
+                <!-- Contenedor de formularios que se oculta -->
                 <div id="form-container" class="form-container">
                     <!-- Login Form -->
                     <div class="card-front">
@@ -316,19 +306,19 @@
                             </button>
                         </form>
                     </div>
+                </div>
 
-                    <!-- Confirmation Card -->
-                    <div id="confirmation-card" class="confirmation-card justify-center items-center text-center p-6 md:p-12">
-                        <div class="text-green-500 mb-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto animated-check" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4a1 1 0 000-1.414z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <h2 class="text-white text-3xl font-bold mb-4">¡Registro Exitoso!</h2>
-                        <p class="text-gray-400">
-                            Se te ha enviado un correo de confirmación a tu dirección de correo electrónico. Por favor, revisa tu bandeja de entrada o la carpeta de spam para verificar tu cuenta.
-                        </p>
+                <!-- Confirmation Card (separado para evitar conflictos de animación) -->
+                <div id="confirmation-card" class="hidden flex-col justify-center items-center text-center p-6 md:p-12">
+                    <div class="text-green-500 mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto animated-check" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4a1 1 0 000-1.414z" clip-rule="evenodd" />
+                        </svg>
                     </div>
+                    <h2 class="text-white text-3xl font-bold mb-4">¡Registro Exitoso!</h2>
+                    <p class="text-gray-400">
+                        Se te ha enviado un correo de confirmación a tu dirección de correo electrónico. Por favor, revisa tu bandeja de entrada o la carpeta de spam para verificar tu cuenta.
+                    </p>
                 </div>
             </div>
         </div>
