@@ -39,27 +39,12 @@
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         setLogLevel('error');
 
-        // CÓDIGO CLAVE PARA EVITAR EL INICIO DE SESIÓN AUTOMÁTICO INDESEADO
-        // Este listener se ejecuta en cada carga de auth.html.
-        // Si detecta un usuario (incluso de una sesión persistente anterior),
-        // lo cierra de sesión inmediatamente para forzar un nuevo login.
-        onAuthStateChanged(auth, async (user) => {
-            console.log("auth.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
-            
-            if (user) {
-                // Si hay un usuario, lo cerramos de sesión.
-                // Esto anula cualquier persistencia anterior (localStorage, sessionStorage)
-                // y asegura que la página de auth.html SIEMPRE muestre el formulario de login.
-                console.log("auth.html: Usuario detectado al cargar la página. Forzando cierre de sesión para que el usuario deba iniciar sesión de nuevo.");
-                await signOut(auth); // Cierra la sesión
-                // IMPORTANTE: NO redirigir aquí. Deja que la página se quede en auth.html y el
-                // onAuthStateChanged se disparará de nuevo con 'user = null'.
-                return; // Salir para evitar cualquier procesamiento con el objeto de usuario ahora inválido.
-            }
-            console.log("auth.html: No hay usuario autenticado. Mostrando formulario de inicio de sesión.");
-            // Si user es null (ya sea por defecto o después de un signOut forzado),
-            // la página permanece en auth.html, lista para un nuevo inicio de sesión.
-        });
+        // *******************************************************************
+        // IMPORTANTE: SE HA ELIMINADO EL onAuthStateChanged GLOBAL DE AQUI.
+        // auth.html ahora es una página de entrada simple.
+        // La protección de rutas y la gestión de la persistencia de sesión
+        // ahora recaen ÚNICAMENTE en data-collection.html y dashboard.html.
+        // *******************************************************************
 
         // Función para manejar el registro de usuario
         async function handleRegistration(email, password, firstName, lastName) {
@@ -111,7 +96,7 @@
             try {
                 // Establecer la persistencia a browserSessionPersistence ANTES de iniciar sesión
                 // Esto permite que la sesión persista dentro de la misma pestaña/ventana del navegador
-                // pero se borre al cerrar la pestaña/ventana por completo.
+                // pero se borrará al cerrar la pestaña/ventana por completo.
                 await setPersistence(auth, browserSessionPersistence);
                 console.log("handleLogin: Persistencia establecida a 'browserSessionPersistence'.");
 
