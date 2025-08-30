@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha de Datos del Usuario - Instituto Gerencial de Talentos</title>
+    <title>Datos de Registro de Inscripción de IGT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Importar Firebase SDK -->
@@ -33,22 +33,49 @@
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         setLogLevel('error');
 
-        const userDataForm = document.getElementById('user-data-form');
+        let currentPhase = 1;
+        const totalPhases = 3;
+        let autoSaveTimeout;
+        const AUTOSAVE_DELAY = 2000; // 2 segundos
+
+        const formContainer = document.getElementById('form-container');
+        const phaseIndicator = document.getElementById('phase-indicator');
+        const phase1Div = document.getElementById('phase-1');
+        const phase2Div = document.getElementById('phase-2');
+        const phase3Div = document.getElementById('phase-3');
+        const prevButton = document.getElementById('prev-phase-btn');
+        const nextButton = document.getElementById('next-phase-btn');
+        const finishButton = document.getElementById('finish-registration-btn');
+        const logoutButton = document.getElementById('logout-btn');
+
+        // Campos de la Fase 1
         const firstNameDisplay = document.getElementById('first-name-display');
         const lastNameDisplay = document.getElementById('last-name-display');
         const emailDisplay = document.getElementById('email-display');
-        
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
         const ciInput = document.getElementById('ci');
         const dobInput = document.getElementById('dob');
         const ageDisplay = document.getElementById('age-display');
-        const educationInput = document.getElementById('education');
         const professionInput = document.getElementById('profession');
         const genderInput = document.getElementById('gender');
         const cityInput = document.getElementById('city');
         const countryInput = document.getElementById('country');
 
+        // Campos de la Fase 2
+        const educationLevelInput = document.getElementById('education-level');
+        const institutionInput = document.getElementById('institution');
+        const degreeInput = document.getElementById('degree');
+        const graduationYearInput = document.getElementById('graduation-year');
+
+        // Campos de la Fase 3 (inputs de tipo file son placeholders por ahora)
+        const ciUploadInput = document.getElementById('ci-upload');
+        const degreeUploadInput = document.getElementById('degree-upload');
+        const otherDocsUploadInput = document.getElementById('other-docs-upload');
+        const agreeTermsCheckbox = document.getElementById('agree-terms');
+
+
+        // Funciones auxiliares
         function calculateAge(dateOfBirth) {
             if (!dateOfBirth) return '';
             const today = new Date();
@@ -58,58 +85,280 @@
             if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
-            return age > 0 ? age : '';
+            return age >= 0 ? age : ''; // Asegura que no muestre edades negativas
         }
 
         dobInput.addEventListener('change', () => {
             ageDisplay.textContent = calculateAge(dobInput.value);
+            triggerAutoSave();
         });
 
-        // Listener para el estado de autenticación
+        // Autoguardado
+        async function saveFormData() {
+            const currentUser = auth.currentUser;
+            if (!currentUser) return;
+
+            console.log("Autoguardando datos...");
+            const userProfileRef = doc(db, `artifacts/default-app-id/users/${currentUser.uid}/private_data/user_profile`);
+            
+            // Recolectar todos los datos del formulario que pueden ser guardados
+            const dataToSave = {
+                currentPhase: currentPhase, // Guarda la fase actual
+                phone: phoneInput.value,
+                address: addressInput.value,
+                ci: ciInput.value,
+                dateOfBirth: dobInput.value,
+                profession: professionInput.value,
+                gender: genderInput.value,
+                city: cityInput.value,
+                country: countryInput.value,
+                
+                educationLevel: educationLevelInput.value,
+                institution: institutionInput.value,
+                degree: degreeInput.value,
+                graduationYear: graduationYearInput.value,
+
+                // Los campos de archivo no se guardan directamente en Firestore,
+                // sino sus referencias o URLs una vez subidos a Storage.
+                // Por ahora, solo guardamos los datos de texto.
+
+                updatedAt: new Date()
+            };
+
+            try {
+                await setDoc(userProfileRef, dataToSave, { merge: true });
+                console.log("Datos autoguardados en Firestore.");
+            } catch (error) {
+                console.error("Error al autoguardar datos:", error);
+            }
+        }
+
+        function triggerAutoSave() {
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(saveFormData, AUTOSAVE_DELAY);
+        }
+
+        // Event listeners para autoguardado en todos los campos editables
+        document.querySelectorAll('#user-data-form input, #user-data-form select, #user-data-form textarea').forEach(input => {
+            if (input.type !== 'file') { // Los inputs de archivo se guardan al hacer submit, no con autoguardado en Firestore
+                input.addEventListener('input', triggerAutoSave);
+            }
+        });
+
+
+        // Lógica de fases
+        function updatePhaseIndicator() {
+            const phaseElements = document.querySelectorAll('.phase-step');
+            phaseElements.forEach((el, index) => {
+                if (index < currentPhase) {
+                    el.classList.add('bg-blue-600', 'text-white');
+                    el.classList.remove('bg-gray-700', 'text-gray-400');
+                } else if (index === currentPhase - 1) { // Fase actual
+                    el.classList.add('bg-blue-600', 'text-white');
+                    el.classList.remove('bg-gray-700', 'text-gray-400');
+                }
+                else {
+                    el.classList.add('bg-gray-700', 'text-gray-400');
+                    el.classList.remove('bg-blue-600', 'text-white');
+                }
+            });
+        }
+
+        function showPhase(phaseNumber) {
+            phase1Div.classList.add('hidden');
+            phase2Div.classList.add('hidden');
+            phase3Div.classList.add('hidden');
+
+            switch (phaseNumber) {
+                case 1:
+                    phase1Div.classList.remove('hidden');
+                    prevButton.classList.add('hidden');
+                    nextButton.classList.remove('hidden');
+                    finishButton.classList.add('hidden');
+                    break;
+                case 2:
+                    phase2Div.classList.remove('hidden');
+                    prevButton.classList.remove('hidden');
+                    nextButton.classList.remove('hidden');
+                    finishButton.classList.add('hidden');
+                    break;
+                case 3:
+                    phase3Div.classList.remove('hidden');
+                    prevButton.classList.remove('hidden');
+                    nextButton.classList.add('hidden'); // No hay "siguiente" después de la fase 3
+                    finishButton.classList.remove('hidden');
+                    break;
+            }
+            currentPhase = phaseNumber;
+            updatePhaseIndicator();
+        }
+
+        function validateCurrentPhase() {
+            let isValid = true;
+            let fieldsToValidate = [];
+
+            switch (currentPhase) {
+                case 1:
+                    fieldsToValidate = [
+                        phoneInput, addressInput, ciInput, dobInput, professionInput, genderInput, cityInput, countryInput
+                    ];
+                    break;
+                case 2:
+                    fieldsToValidate = [
+                        educationLevelInput, institutionInput, degreeInput, graduationYearInput
+                    ];
+                    break;
+                case 3:
+                    fieldsToValidate = [
+                        agreeTermsCheckbox
+                        // Los inputs de tipo file no se validan como 'required' de esta manera tan simple,
+                        // la lógica de validación de archivos es más compleja (tamaño, tipo, etc.)
+                        // Para este ejemplo, solo validamos el checkbox de términos.
+                    ];
+                    if (!agreeTermsCheckbox.checked) {
+                        alert("Debes aceptar los términos y condiciones.");
+                        isValid = false;
+                    }
+                    break;
+            }
+
+            for (const field of fieldsToValidate) {
+                if (field.value.trim() === '' || (field.type === 'checkbox' && !field.checked)) {
+                    field.classList.add('border-red-500', 'ring-red-500'); // Resalta el campo inválido
+                    isValid = false;
+                } else {
+                    field.classList.remove('border-red-500', 'ring-red-500');
+                }
+            }
+
+            if (!isValid) {
+                alert("Por favor, completa todos los campos requeridos en esta fase.");
+            }
+            return isValid;
+        }
+
+        async function nextPhase() {
+            clearTimeout(autoSaveTimeout); // Guardar inmediatamente al cambiar de fase
+            await saveFormData();
+
+            if (validateCurrentPhase()) {
+                if (currentPhase < totalPhases) {
+                    showPhase(currentPhase + 1);
+                }
+            }
+        }
+
+        async function prevPhase() {
+            clearTimeout(autoSaveTimeout); // Guardar inmediatamente al cambiar de fase
+            await saveFormData();
+            
+            if (currentPhase > 1) {
+                showPhase(currentPhase - 1);
+            }
+        }
+
+        prevButton.addEventListener('click', prevPhase);
+        nextButton.addEventListener('click', nextPhase);
+        
+        // Listener para el estado de autenticación (ejecutado al cargar la página)
         onAuthStateChanged(auth, async (user) => {
             console.log("data-collection.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
 
             if (user && user.emailVerified) {
-                // Fetch user profile (which contains firstName, lastName and the new dataCollected flag)
                 const userProfileRef = doc(db, `artifacts/default-app-id/users/${user.uid}/private_data/user_profile`);
                 const userProfileSnap = await getDoc(userProfileRef);
                 const userProfileData = userProfileSnap.exists() ? userProfileSnap.data() : {};
 
-                // Check if data has already been collected
+                // Cargar la fase actual del usuario desde Firestore, si existe
                 if (userProfileData.dataCollected === true) {
                     console.log("data-collection.html: Datos ya recolectados. Redirigiendo a dashboard.html.");
                     window.location.href = 'dashboard.html';
-                    return; // Stop further processing
+                    return;
                 }
+
+                currentPhase = userProfileData.currentPhase || 1; // Cargar la fase guardada o empezar en 1
 
                 // Pre-fill fields from Firebase Auth and Firestore profile
                 firstNameDisplay.textContent = userProfileData.firstName || 'N/A';
                 lastNameDisplay.textContent = userProfileData.lastName || 'N/A';
                 emailDisplay.textContent = user.email || 'N/A';
                 
-                // Load existing data for other fields (if any, from previous partial saves or if user comes back to complete)
                 phoneInput.value = userProfileData.phone || '';
                 addressInput.value = userProfileData.address || '';
                 ciInput.value = userProfileData.ci || '';
                 dobInput.value = userProfileData.dateOfBirth || '';
-                educationInput.value = userProfileData.education || '';
                 professionInput.value = userProfileData.profession || '';
                 genderInput.value = userProfileData.gender || '';
                 cityInput.value = userProfileData.city || '';
                 countryInput.value = userProfileData.country || '';
 
-                // Calculate age if DOB is present
-                ageDisplay.textContent = calculateAge(dobInput.value);
+                educationLevelInput.value = userProfileData.educationLevel || '';
+                institutionInput.value = userProfileData.institution || '';
+                degreeInput.value = userProfileData.degree || '';
+                graduationYearInput.value = userProfileData.graduationYear || '';
 
+                ageDisplay.textContent = calculateAge(dobInput.value); // Recalcular edad
+
+                showPhase(currentPhase); // Muestra la fase correcta al cargar
                 document.body.classList.remove('hidden'); // Muestra el contenido de la página
             } else {
                 console.log("data-collection.html: Usuario no autenticado o no verificado. Redirigiendo a auth.html.");
-                await signOut(auth); // Cierra la sesión explícitamente por si acaso
+                await signOut(auth);
                 window.location.href = 'auth.html';
             }
         });
 
-        // Función para cerrar sesión
+        // Función para enviar los datos finales
+        async function handleSubmitData(event) {
+            event.preventDefault();
+            clearTimeout(autoSaveTimeout); // Asegurar que el último cambio se guarde
+            await saveFormData(); // Guarda los datos de la última fase
+
+            if (!validateCurrentPhase()) {
+                return; // Si la última fase no está validada, no se envía
+            }
+
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                alert("No hay usuario autenticado. Redirigiendo al login.");
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            // Lógica para subir documentos (solo placeholders por ahora)
+            // if (ciUploadInput.files.length > 0) {
+            //     console.log("Subiendo CI:", ciUploadInput.files[0].name);
+            //     // Implementar subida a Firebase Storage aquí
+            // }
+            // if (degreeUploadInput.files.length > 0) {
+            //     console.log("Subiendo Título:", degreeUploadInput.files[0].name);
+            //     // Implementar subida a Firebase Storage aquí
+            // }
+            // if (otherDocsUploadInput.files.length > 0) {
+            //     console.log("Subiendo Otros Documentos:", otherDocsUploadInput.files[0].name);
+            //     // Implementar subida a Firebase Storage aquí
+            // }
+
+            try {
+                // Actualizar el perfil del usuario para marcar la recolección de datos como completa
+                const userProfileRef = doc(db, `artifacts/default-app-id/users/${currentUser.uid}/private_data/user_profile`);
+                await setDoc(userProfileRef, {
+                    dataCollected: true, // Marcar la recolección de datos como completa
+                    currentPhase: totalPhases, // Opcional: registrar la fase final
+                    updatedAt: new Date()
+                }, { merge: true });
+
+                alert("¡Registro completado exitosamente! Redirigiendo al dashboard.");
+                console.log("Registro completado, redirigiendo a dashboard.html.");
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                console.error("Error al finalizar el registro:", error.message);
+                alert("Error al finalizar el registro. Por favor, inténtalo de nuevo.");
+            }
+        }
+        finishButton.addEventListener('click', handleSubmitData); // El botón de "Finalizar" de la fase 3
+
+        // Función para cerrar sesión (ya existente)
         async function handleLogout() {
             try {
                 await signOut(auth);
@@ -119,137 +368,90 @@
                 alert("Error al cerrar sesión. Por favor, inténtalo de nuevo.");
             }
         }
-        window.handleLogout = handleLogout; // Hacer accesible globalmente
-
-        // Función para enviar los datos (ejemplo)
-        async function handleSubmitData(event) {
-            event.preventDefault();
-            const currentUser = auth.currentUser;
-
-            if (currentUser) {
-                const phone = phoneInput.value;
-                const address = addressInput.value;
-                const ci = ciInput.value;
-                const dateOfBirth = dobInput.value;
-                const education = educationInput.value;
-                const profession = professionInput.value;
-                const gender = genderInput.value;
-                const city = cityInput.value;
-                const country = countryInput.value;
-
-                try {
-                    // Update the user's private profile with the new data and set dataCollected to true
-                    const userProfileRef = doc(db, `artifacts/default-app-id/users/${currentUser.uid}/private_data/user_profile`);
-                    await setDoc(userProfileRef, {
-                        phone: phone,
-                        address: address,
-                        ci: ci,
-                        dateOfBirth: dateOfBirth,
-                        education: education,
-                        profession: profession,
-                        gender: gender,
-                        city: city,
-                        country: country,
-                        dataCollected: true, // Mark data collection as complete
-                        updatedAt: new Date()
-                    }, { merge: true }); // 'merge: true' para no sobrescribir firstName, lastName, email
-
-                    alert("Datos guardados y perfil completado exitosamente!");
-                    console.log("Datos de usuario guardados, redirigiendo a dashboard.html.");
-                    window.location.href = 'dashboard.html'; // Redirect after successful completion
-                } catch (error) {
-                    console.error("Error al guardar los datos:", error.message);
-                    alert("Error al guardar los datos. Por favor, inténtalo de nuevo.");
-                }
-            } else {
-                alert("No hay usuario autenticado. Redirigiendo al login.");
-                window.location.href = 'auth.html';
-            }
-        }
-        userDataForm.addEventListener('submit', handleSubmitData);
-
+        window.handleLogout = handleLogout;
     </script>
     <style>
         html, body {
-            height: 100%; /* Asegura que html y body ocupen el 100% del alto */
+            height: 100%;
             margin: 0;
             padding: 0;
-            overflow: auto; /* Permite scroll si el contenido es más grande que la pantalla */
+            overflow: hidden; /* Oculta el scroll de todo el html/body, para que solo el contenido scrollable lo tenga */
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0e172a; /* Fondo oscuro principal */
-            color: #e2e8f0; /* Color de texto claro */
+            background-color: #0e172a;
+            color: #e2e8f0;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            display: flex; /* Para centrar el contenido, si no es full-width */
-            flex-direction: column; /* Asegura que el contenido se apile verticalmente */
-            align-items: center; /* Centra horizontalmente */
-            justify-content: flex-start; /* Empieza desde arriba, permitiendo scroll */
-            padding: 1rem 0; /* Padding superior e inferior para el contenido si es scrollable */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Centra el container-card verticalmente */
+            padding: 1rem;
         }
-        /* Estilo general para la tarjeta tipo "PDF" - AHORA OCUPA CASI TODA LA PANTALLA */
         .container-card {
-            background-color: #1c1c24; /* Fondo oscuro de la tarjeta para mantener el estilo */
+            background-color: #1c1c24;
             border-radius: 1rem;
             padding: 2.5rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            width: 100%; /* Ocupa todo el ancho */
-            min-height: calc(100vh - 2rem); /* Ocupa casi todo el alto de la ventana, dejando un pequeño margen vertical */
-            margin: 1rem auto; /* Margen automático para centrar horizontalmente */
-            color: #e2e8f0; /* Color de texto claro para fondo oscuro */
-            box-sizing: border-box; /* Incluye padding y border en el width/height */
-            display: flex; /* Para organizar el contenido dentro de la tarjeta */
+            width: 100%;
+            max-width: 900px; /* Un ancho máximo para que no se estire demasiado en pantallas muy anchas */
+            height: calc(100vh - 2rem); /* Ocupa casi todo el alto de la ventana */
+            margin: 0 auto; /* Centrar horizontalmente */
+            color: #e2e8f0;
+            box-sizing: border-box;
+            display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Contenido al inicio de la tarjeta */
+            overflow-y: auto; /* Permite scroll solo dentro de la tarjeta si el contenido es mucho */
+            position: relative; /* Para posicionar el indicador de fase */
         }
         @media (max-width: 768px) {
-            .container-card {
-                margin: 0; /* Sin margen en móvil */
-                padding: 1.5rem;
-                border-radius: 0; /* Sin bordes redondeados en móvil para un look más "full-screen" */
-                min-height: 100vh; /* Ocupa el 100% del alto en móvil */
-            }
             body {
-                padding: 0; /* Elimina el padding del body en móvil */
+                padding: 0;
+            }
+            .container-card {
+                margin: 0;
+                padding: 1.5rem;
+                border-radius: 0;
+                height: 100vh;
             }
         }
         .section-title {
-            font-weight: 600; /* semibold */
-            font-size: 1.125rem; /* text-lg */
+            font-weight: 600;
+            font-size: 1.125rem;
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
-            border-bottom: 1px solid #4a5568; /* Borde más oscuro para fondo oscuro */
-            color: #f8fafc; /* Texto claro */
+            border-bottom: 1px solid #4a5568;
+            color: #f8fafc;
         }
         .form-label {
             display: block;
-            color: #cbd5e0; /* gris claro */
-            font-size: 0.875rem; /* text-sm */
-            font-weight: 700; /* font-bold */
+            color: #cbd5e0;
+            font-size: 0.875rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
         .display-field {
-            background-color: #2d3748; /* Fondo más oscuro para campos no editables */
+            background-color: #2d3748;
             padding: 0.75rem;
             border-radius: 0.5rem;
             margin-bottom: 1rem;
             font-size: 1rem;
-            color: #f8fafc; /* Texto muy claro */
-            border: 1px solid #4a5568; /* Borde oscuro */
+            color: #f8fafc;
+            border: 1px solid #4a5568;
         }
         .animated-input {
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            background-color: #0e172a; /* Fondo oscuro para inputs editables */
-            color: #e2e8f0; /* Texto claro */
-            border: 1px solid #4a5568; /* Borde estándar */
+            background-color: #0e172a;
+            color: #e2e8f0;
+            border: 1px solid #4a5568;
         }
         .animated-input:focus {
             transform: scale(1.01);
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-            border-color: #3b82f6; /* blue-600 */
+            border-color: #3b82f6;
         }
         .animated-btn {
             transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease-in-out;
@@ -259,6 +461,30 @@
             transform: scale(1.02);
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
+        /* Estilos para el indicador de fase */
+        .phase-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .phase-step {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px; /* full rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.25rem; /* text-xl */
+            transition: all 0.3s ease-in-out;
+        }
+        .phase-divider {
+            height: 2px;
+            width: 2rem;
+            background-color: #4a5568; /* gray-600 */
+            align-self: center;
+            margin: 0 0.5rem;
+        }
         /* Oculta el body por defecto hasta que se verifique la autenticación */
         body.hidden {
             display: none;
@@ -267,99 +493,163 @@
 </head>
 <body class="bg-[#0e172a] min-h-screen flex items-center justify-center hidden">
     <div class="container-card">
-        <h1 class="text-3xl font-bold text-center mb-8 text-blue-400">Ficha de Datos del Usuario</h1>
-        <p class="text-center text-gray-400 mb-6">Por favor, revisa tus datos y completa la información restante.</p>
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-400">Datos de Registro de Inscripción de IGT</h1>
+        <p class="text-center text-gray-400 mb-6">Completa los siguientes pasos para finalizar tu inscripción.</p>
 
-        <form id="user-data-form" class="space-y-6 flex-grow"> <!-- flex-grow para que el formulario ocupe el espacio restante -->
-            <!-- Sección: Información Personal (Pre-rellenada y de solo lectura) -->
-            <div class="border border-gray-700 rounded-lg p-4 bg-[#1c1c24]">
-                <h2 class="section-title mb-4">Información de Registro</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="form-label">Nombre:</label>
-                        <p id="first-name-display" class="display-field"></p>
+        <!-- Indicador de Fases -->
+        <div id="phase-indicator" class="phase-indicator">
+            <div class="phase-step bg-gray-700 text-gray-400" data-phase="1">1</div>
+            <div class="phase-divider"></div>
+            <div class="phase-step bg-gray-700 text-gray-400" data-phase="2">2</div>
+            <div class="phase-divider"></div>
+            <div class="phase-step bg-gray-700 text-gray-400" data-phase="3">3</div>
+        </div>
+
+        <form id="user-data-form" class="space-y-6 flex-grow">
+            <!-- Fase 1: Datos Generales -->
+            <div id="phase-1" class="phase-content space-y-4">
+                <div class="border border-gray-700 rounded-lg p-4 bg-[#1c1c24]">
+                    <h2 class="section-title mb-4">Información de Registro (Pre-rellenada)</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Nombre:</label>
+                            <p id="first-name-display" class="display-field"></p>
+                        </div>
+                        <div>
+                            <label class="form-label">Apellido:</label>
+                            <p id="last-name-display" class="display-field"></p>
+                        </div>
                     </div>
                     <div>
-                        <label class="form-label">Apellido:</label>
-                        <p id="last-name-display" class="display-field"></p>
+                        <label class="form-label">Correo Electrónico:</label>
+                        <p id="email-display" class="display-field"></p>
                     </div>
                 </div>
-                <div>
-                    <label class="form-label">Correo Electrónico:</label>
-                    <p id="email-display" class="display-field"></p>
+
+                <div class="border border-gray-700 rounded-lg p-4 bg-[#1c1c24]">
+                    <h2 class="section-title mb-4">Datos Generales</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="phone" class="form-label">Número Telefónico:</label>
+                            <input type="tel" id="phone" placeholder="Ej: +584123456789" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        </div>
+                        <div>
+                            <label for="ci" class="form-label">Cédula de Identidad:</label>
+                            <input type="text" id="ci" placeholder="Ej: V-12345678" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="address" class="form-label">Dirección:</label>
+                        <input type="text" id="address" placeholder="Ej: Av. Principal, Edif. Central, Apt 101" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="city" class="form-label">Ciudad:</label>
+                            <input type="text" id="city" placeholder="Ej: Caracas" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        </div>
+                        <div>
+                            <label for="country" class="form-label">País:</label>
+                            <input type="text" id="country" placeholder="Ej: Venezuela" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="dob" class="form-label">Fecha de Nacimiento:</label>
+                            <input type="date" id="dob" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        </div>
+                        <div>
+                            <label class="form-label">Edad:</label>
+                            <p id="age-display" class="display-field"></p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="profession" class="form-label">Profesión/Ocupación:</label>
+                            <input type="text" id="profession" placeholder="Ej: Estudiante, Ingeniero" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        </div>
+                        <div>
+                            <label for="gender" class="form-label">Género:</label>
+                            <select id="gender" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                                <option value="">Selecciona tu género</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                                <option value="otro">Otro</option>
+                                <option value="prefiero_no_decir">Prefiero no decir</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Sección: Datos Adicionales (Campos editables) -->
-            <div class="border border-gray-700 rounded-lg p-4 bg-[#1c1c24]">
-                <h2 class="section-title mb-4">Datos Adicionales</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Fase 2: Datos Educativos -->
+            <div id="phase-2" class="phase-content space-y-4 hidden">
+                <div class="border border-gray-700 rounded-lg p-4 bg-[#1c1c24]">
+                    <h2 class="section-title mb-4">Datos Educativos</h2>
                     <div>
-                        <label for="phone" class="form-label">Número Telefónico:</label>
-                        <input type="tel" id="phone" placeholder="Ej: +584123456789" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                    </div>
-                    <div>
-                        <label for="ci" class="form-label">Cédula de Identidad:</label>
-                        <input type="text" id="ci" placeholder="Ej: V-12345678" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                    </div>
-                </div>
-                <div>
-                    <label for="address" class="form-label">Dirección:</label>
-                    <input type="text" id="address" placeholder="Ej: Av. Principal, Edif. Central, Apt 101" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="city" class="form-label">Ciudad:</label>
-                        <input type="text" id="city" placeholder="Ej: Caracas" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                    </div>
-                    <div>
-                        <label for="country" class="form-label">País:</label>
-                        <input type="text" id="country" placeholder="Ej: Venezuela" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="dob" class="form-label">Fecha de Nacimiento:</label>
-                        <input type="date" id="dob" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                    </div>
-                    <div>
-                        <label class="form-label">Edad:</label>
-                        <p id="age-display" class="display-field"></p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="education" class="form-label">Grado de Estudio:</label>
-                        <select id="education" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                            <option value="">Selecciona tu grado de estudio</option>
+                        <label for="education-level" class="form-label">Nivel Educativo más Alto:</label>
+                        <select id="education-level" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                            <option value="">Selecciona tu nivel</option>
                             <option value="primaria">Primaria</option>
                             <option value="secundaria">Secundaria</option>
                             <option value="tecnico">Técnico Superior Universitario</option>
                             <option value="universitario">Universitario</option>
                             <option value="postgrado">Postgrado</option>
-                            <option value="otro">Otro</option>
+                            <option value="ninguno">Ninguno</option>
                         </select>
                     </div>
                     <div>
-                        <label for="profession" class="form-label">Profesión/Ocupación:</label>
-                        <input type="text" id="profession" placeholder="Ej: Estudiante, Ingeniero" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        <label for="institution" class="form-label">Institución Educativa:</label>
+                        <input type="text" id="institution" placeholder="Ej: Universidad Central de Venezuela" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                    <div>
+                        <label for="degree" class="form-label">Grado/Título Obtenido:</label>
+                        <input type="text" id="degree" placeholder="Ej: Licenciado en Informática" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                    <div>
+                        <label for="graduation-year" class="form-label">Año de Graduación:</label>
+                        <input type="number" id="graduation-year" min="1900" max="2099" step="1" value="" placeholder="Ej: 2015" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
                     </div>
                 </div>
-                <div>
-                    <label for="gender" class="form-label">Género:</label>
-                    <select id="gender" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                        <option value="">Selecciona tu género</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="femenino">Femenino</option>
-                        <option value="otro">Otro</option>
-                        <option value="prefiero_no_decir">Prefiero no decir</option>
-                    </select>
+            </div>
+
+            <!-- Fase 3: Subir Documentos -->
+            <div id="phase-3" class="phase-content space-y-4 hidden">
+                <div class="border border-gray-700 rounded-lg p-4 bg-[#1c1c24]">
+                    <h2 class="section-title mb-4">Subir Documentos</h2>
+                    <p class="text-gray-500 mb-4 text-sm">Por favor, sube los documentos solicitados. (La funcionalidad de subida real se implementará más adelante).</p>
+                    <div>
+                        <label for="ci-upload" class="form-label">Cédula de Identidad (PDF o JPG):</label>
+                        <input type="file" id="ci-upload" accept=".pdf,.jpg,.jpeg,.png" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+                    <div class="mt-4">
+                        <label for="degree-upload" class="form-label">Título / Certificado más alto (PDF o JPG):</label>
+                        <input type="file" id="degree-upload" accept=".pdf,.jpg,.jpeg,.png" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+                    <div class="mt-4">
+                        <label for="other-docs-upload" class="form-label">Otros documentos relevantes (Opcional - PDF o JPG):</label>
+                        <input type="file" id="other-docs-upload" accept=".pdf,.jpg,.jpeg,.png" multiple class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+                    <div class="mt-6 flex items-center">
+                        <input type="checkbox" id="agree-terms" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="agree-terms" class="ml-2 block text-sm text-gray-300">
+                            Acepto los <a href="#" class="text-blue-400 hover:underline">términos y condiciones</a> del Instituto Gerencial de Talentos 2025.
+                        </label>
+                    </div>
                 </div>
             </div>
             
-            <button type="submit" class="w-full bg-blue-600 text-white rounded-lg p-3 hover:bg-blue-700 transition-colors animated-btn mt-6">
-                Guardar y Continuar
-            </button>
+            <!-- Botones de Navegación -->
+            <div class="flex justify-between mt-8 pt-4 border-t border-gray-700">
+                <button type="button" id="prev-phase-btn" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors animated-btn hidden">
+                    Anterior
+                </button>
+                <button type="button" id="next-phase-btn" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors animated-btn">
+                    Siguiente
+                </button>
+                <button type="submit" id="finish-registration-btn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors animated-btn hidden">
+                    Finalizar Registro
+                </button>
+            </div>
         </form>
 
         <div class="mt-8 text-center">
