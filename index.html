@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicia sesion Instituto Gerencial de talentos - Catia</title> <!-- Título de la página actualizado -->
+    <title>Inicia sesion Instituto Gerencial de talentos - Catia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Script de Google reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Script de Google reCAPTCHA (renderizado explícito) -->
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 
     <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://igt-catia.vercel.app/auth.html"> <!-- ¡ACTUALIZA ESTO SI LA URL CAMBIA! -->
-    <meta property="og:title" content="Inicia sesion Instituto Gerencial de talentos - Catia"> <!-- Título OG actualizado -->
-    <meta property="og:description" content="El Instituto Gerencial de Talentos te invita a inscribirte en sus cursos."> <!-- Descripción actualizada -->
-    <meta property="og:image" content="https://igt-catia.vercel.app/images/vistaprevia.webp"> <!-- URL de imagen de vista previa actualizada -->
+    <meta property="og:url" content="https://igt-catia.vercel.app/auth.html">
+    <meta property="og:title" content="Inicia sesion Instituto Gerencial de talentos - Catia">
+    <meta property="og:description" content="El Instituto Gerencial de Talentos te invita a inscribirte en sus cursos.">
+    <meta property="og:image" content="https://igt-catia.vercel.app/images/vistaprevia.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://igt-catia.vercel.app/auth.html"> <!-- ¡ACTUALIZA ESTO SI LA URL CAMBIA! -->
-    <meta property="twitter:title" content="Inicia sesion Instituto Gerencial de talentos - Catia"> <!-- Título Twitter actualizado -->
-    <meta property="twitter:description" content="El Instituto Gerencial de Talentos te invita a inscribirte en sus cursos."> <!-- Descripción actualizada -->
-    <meta property="twitter:image" content="https://igt-catia.vercel.app/images/vistaprevia.webp"> <!-- URL de imagen de vista previa actualizada -->
+    <meta property="twitter:url" content="https://igt-catia.vercel.app/auth.html">
+    <meta property="twitter:title" content="Inicia sesion Instituto Gerencial de talentos - Catia">
+    <meta property="twitter:description" content="El Instituto Gerencial de Talentos te invita a inscribirte en sus cursos.">
+    <meta property="twitter:image" content="https://igt-catia.vercel.app/images/vistaprevia.webp">
 
     <style>
         body {
@@ -98,7 +98,7 @@
                             ¿No tienes una cuenta?
                             <a href="#" onclick="flipCard()" class="text-white hover:underline">Crear una cuenta</a>
                         </p>
-                        <form class="space-y-4">
+                        <form id="login-form" class="space-y-4">
                             <input type="email" placeholder="Correo electrónico" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-600">
                             <div class="relative">
                                 <input type="password" placeholder="Ingresa tu contraseña" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-600">
@@ -109,6 +109,8 @@
                                     </svg>
                                 </button>
                             </div>
+                            <!-- Contenedor para reCAPTCHA del Login -->
+                            <div id="login-recaptcha-container" class="mx-auto w-fit"></div>
                             <button type="submit" class="w-full bg-purple-600 text-white rounded-lg p-3 hover:bg-purple-700 transition-colors">
                                 Iniciar sesión
                             </button>
@@ -151,9 +153,11 @@
                                     </svg>
                                 </div>
                             </div>
-                            <!-- Google reCAPTCHA v2 "No soy un robot" aquí (centrado) -->
-                            <div class="g-recaptcha mx-auto w-fit" data-sitekey="6LeB2rcrAAAAAI3wrpitQ1wYZs8Nxk1_YFkdbnT2" data-callback="onRecaptchaSuccess" data-expired-callback="onRecaptchaExpired"></div>
-                            
+                            <!-- Contenedor para reCAPTCHA del Registro -->
+                            <div id="registration-recaptcha-container" class="mx-auto w-fit"></div>
+                            <p class="text-gray-400 text-xs text-center mt-2">
+                                Al dar click en registrarse aceptas los términos y condiciones del Instituto Gerencial de Talentos 2025.
+                            </p>
                             <button type="submit" class="w-full bg-purple-600 text-white rounded-lg p-3 hover:bg-purple-700 transition-colors">
                                 Crear cuenta
                             </button>
@@ -228,29 +232,77 @@
         confirmPassword.addEventListener('input', checkPasswordMatch);
 
         // --- Lógica de Google reCAPTCHA ---
-        const registrationForm = document.getElementById('registration-form');
+        const RECAPTCHA_SITE_KEY = "6LeB2rcrAAAAAI3wrpitQ1wYZs8Nxk1_YFkdbnT2"; // Tu clave de sitio reCAPTCHA
 
-        // Callback de éxito de reCAPTCHA
-        function onRecaptchaSuccess(token) {
-            console.log("reCAPTCHA exitoso, token:", token);
+        let loginRecaptchaWidgetId;
+        let registrationRecaptchaWidgetId;
+
+        // Callback que se ejecuta cuando la API de reCAPTCHA está cargada
+        function onloadCallback() {
+            // Renderizar el reCAPTCHA para el formulario de Login
+            loginRecaptchaWidgetId = grecaptcha.render('login-recaptcha-container', {
+                'sitekey': RECAPTCHA_SITE_KEY,
+                'callback': onLoginRecaptchaSuccess,
+                'expired-callback': onLoginRecaptchaExpired,
+                'theme': 'dark' // O 'light' según tu diseño
+            });
+
+            // Renderizar el reCAPTCHA para el formulario de Registro
+            registrationRecaptchaWidgetId = grecaptcha.render('registration-recaptcha-container', {
+                'sitekey': RECAPTCHA_SITE_KEY,
+                'callback': onRegistrationRecaptchaSuccess,
+                'expired-callback': onRegistrationRecaptchaExpired,
+                'theme': 'dark' // O 'light' según tu diseño
+            });
         }
 
-        // Callback de expiración de reCAPTCHA
-        function onRecaptchaExpired() {
-            console.log("reCAPTCHA ha expirado. Reiniciando...");
-            grecaptcha.reset(); // Reinicia el widget de reCAPTCHA
+        // Callbacks de reCAPTCHA para el formulario de Login
+        function onLoginRecaptchaSuccess(token) {
+            console.log("reCAPTCHA de Login exitoso, token:", token);
+            // El token se guarda automáticamente en un campo oculto 'g-recaptcha-response'
         }
 
-        // Manejador del evento de envío del formulario de registro
-        registrationForm.addEventListener('submit', function(event) {
-            const recaptchaResponse = grecaptcha.getResponse(); // Obtiene la respuesta del captcha
+        function onLoginRecaptchaExpired() {
+            console.log("reCAPTCHA de Login ha expirado. Reiniciando...");
+            grecaptcha.reset(loginRecaptchaWidgetId);
+        }
 
-            if (!recaptchaResponse) { // Si no hay respuesta del captcha (no se ha marcado o resuelto)
-                event.preventDefault(); // Detiene el envío del formulario
-                alert("Por favor, marca la casilla 'No soy un robot' para continuar."); // Muestra una alerta
-                console.log("reCAPTCHA no resuelto, deteniendo envío.");
+        // Callbacks de reCAPTCHA para el formulario de Registro
+        function onRegistrationRecaptchaSuccess(token) {
+            console.log("reCAPTCHA de Registro exitoso, token:", token);
+            // El token se guarda automáticamente en un campo oculto 'g-recaptcha-response'
+        }
+
+        function onRegistrationRecaptchaExpired() {
+            console.log("reCAPTCHA de Registro ha expirado. Reiniciando...");
+            grecaptcha.reset(registrationRecaptchaWidgetId);
+        }
+
+        // Manejador del evento de envío del formulario de Login
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', function(event) {
+            const recaptchaResponse = grecaptcha.getResponse(loginRecaptchaWidgetId);
+
+            if (!recaptchaResponse) {
+                event.preventDefault();
+                alert("Por favor, marca la casilla 'No soy un robot' para iniciar sesión.");
+                console.log("reCAPTCHA de Login no resuelto, deteniendo envío.");
             } else {
-                console.log("Formulario enviado con el token de reCAPTCHA.");
+                console.log("Formulario de Login enviado con el token de reCAPTCHA.");
+            }
+        });
+
+        // Manejador del evento de envío del formulario de Registro
+        const registrationForm = document.getElementById('registration-form');
+        registrationForm.addEventListener('submit', function(event) {
+            const recaptchaResponse = grecaptcha.getResponse(registrationRecaptchaWidgetId);
+
+            if (!recaptchaResponse) {
+                event.preventDefault();
+                alert("Por favor, marca la casilla 'No soy un robot' para crear una cuenta.");
+                console.log("reCAPTCHA de Registro no resuelto, deteniendo envío.");
+            } else {
+                console.log("Formulario de Registro enviado con el token de reCAPTCHA.");
             }
         });
         // --- Fin de la lógica de Google reCAPTCHA ---
