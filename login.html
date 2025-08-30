@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicia sesion Instituto Gerencial de talentos - Catia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Script de Google reCAPTCHA (renderizado explícito) -->
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://igt-catia.vercel.app/auth.html">
+    <meta property="og:title" content="Inicia sesion Instituto Gerencial de talentos - Catia">
+    <meta property="og:description" content="El Instituto Gerencial de Talentos te invita a inscribirte en sus cursos.">
+    <meta property="og:image" content="https://igt-catia.vercel.app/images/vistaprevia.webp">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://igt-catia.vercel.app/auth.html">
+    <meta property="twitter:title" content="Inicia sesion Instituto Gerencial de talentos - Catia">
+    <meta property="twitter:description" content="El Instituto Gerencial de Talentos te invita a inscribirte en sus cursos.">
+    <meta property="twitter:image" content="https://igt-catia.vercel.app/images/vistaprevia.webp">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Estilos para el efecto de giro del formulario */
+        .form-container {
+            position: relative;
+            width: 100%;
+            min-height: 500px;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        @media (max-width: 768px) {
+             .form-container {
+                min-height: 400px;
+            }
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .form-container.flipped {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-[#1c1c24] min-h-screen flex items-center justify-center relative">
+    <a href="index.html" class="absolute top-6 right-6 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm hover:bg-white/20 transition-colors z-10">
+        Volver al sitio web →
+    </a>
+    <div class="w-full h-screen bg-[#13131a] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
+        <!-- Left Section -->
+        <div class="w-full md:w-1/2 relative">
+            <div class="relative h-full">
+                <img src="https://res.cloudinary.com/djv4xa6wu/image/upload/v1737831467/abhiraj_tdwxdf.webp"
+                    alt="Desert landscape"
+                    class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-purple-900/30"></div>
+                <div class="absolute bottom-12 left-12 text-white">
+                    <h2 class="text-2xl md:text-4xl font-semibold mb-2">Capturing Moments,</h2>
+                    <h2 class="text-2xl md:text-4xl font-semibold">Creating Memories</h2>
+                    <div class="flex gap-2 mt-6">
+                        <div class="w-4 h-1 bg-white/30 rounded"></div>
+                        <div class="w-4 h-1 bg-white/30 rounded"></div>
+                        <div class="w-4 h-1 bg-white rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-center">
+            <div class="max-w-md mx-auto w-full">
+                <div id="form-container" class="form-container">
+                    <!-- Login Form -->
+                    <div class="card-front">
+                        <h1 class="text-white text-2xl md:text-4xl font-semibold mb-2">Iniciar sesión en IGT</h1>
+                        <p class="text-gray-400 mb-8">
+                            ¿No tienes una cuenta?
+                            <a href="#" onclick="flipCard()" class="text-white hover:underline">Crear una cuenta</a>
+                        </p>
+                        <form id="login-form" class="space-y-4">
+                            <input type="email" placeholder="Correo electrónico" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                            <div class="relative">
+                                <input type="password" placeholder="Ingresa tu contraseña" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <!-- Contenedor para reCAPTCHA del Login -->
+                            <div id="login-recaptcha-container" class="mx-auto w-fit"></div>
+                            <button type="submit" class="w-full bg-purple-600 text-white rounded-lg p-3 hover:bg-purple-700 transition-colors">
+                                Iniciar sesión
+                            </button>
+                            <div class="text-center mt-4">
+                                <a href="#" class="text-gray-400 hover:text-white hover:underline">¿Olvidaste tu contraseña?</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <div class="card-back">
+                        <h1 class="text-white text-2xl md:text-4xl font-semibold mb-2">Regístrate en IGT</h1>
+                        <p class="text-gray-400 mb-8">
+                            ¿Ya tienes una cuenta?
+                            <a href="#" onclick="flipCard()" class="text-white hover:underline">Iniciar sesión</a>
+                        </p>
+                        <form id="registration-form" class="space-y-4">
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <input type="text" placeholder="Nombre" class="w-full md:w-1/2 bg-[#1c1c24] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <input type="text" placeholder="Apellido" class="w-full md:w-1/2 bg-[#1c1c24] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                            </div>
+                            <input type="email" placeholder="Correo electrónico" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                            <div class="relative">
+                                <input id="password-reg" type="password" placeholder="Ingresa tu contraseña" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="w-full h-2 rounded-full bg-gray-600">
+                                <div id="password-strength" class="h-full rounded-full transition-all duration-300"></div>
+                            </div>
+                            <div class="relative">
+                                <input id="confirm-password" type="password" placeholder="Confirmar contraseña" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <div id="match-icon" class="absolute right-3 top-1/2 -translate-y-1/2 hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4a1 1 0 000-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <!-- Contenedor para reCAPTCHA del Registro -->
+                            <div id="registration-recaptcha-container" class="mx-auto w-fit"></div>
+                            <p class="text-gray-400 text-xs text-center mt-2">
+                                Al dar click en registrarse aceptas los términos y condiciones del Instituto Gerencial de Talentos 2025.
+                            </p>
+                            <button type="submit" class="w-full bg-purple-600 text-white rounded-lg p-3 hover:bg-purple-700 transition-colors">
+                                Crear cuenta
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function flipCard() {
+            const formContainer = document.getElementById('form-container');
+            formContainer.classList.toggle('flipped');
+        }
+
+        const passwordReg = document.getElementById('password-reg');
+        const confirmPassword = document.getElementById('confirm-password');
+        const passwordStrengthBar = document.getElementById('password-strength');
+        const matchIcon = document.getElementById('match-icon');
+
+        function checkPasswordMatch() {
+            if (passwordReg.value === confirmPassword.value && confirmPassword.value !== '') {
+                matchIcon.classList.remove('hidden');
+            } else {
+                matchIcon.classList.add('hidden');
+            }
+        }
+
+        passwordReg.addEventListener('input', () => {
+            const password = passwordReg.value;
+            let strength = 0;
+
+            if (password.length > 5) {
+                strength += 1;
+            }
+            if (password.length > 8) {
+                strength += 1;
+            }
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+                strength += 1;
+            }
+            if (password.match(/\d/)) {
+                strength += 1;
+            }
+            if (password.match(/[^a-zA-Z0-9]/)) {
+                strength += 1;
+            }
+
+            switch (strength) {
+                case 0:
+                case 1:
+                    passwordStrengthBar.style.width = '20%';
+                    passwordStrengthBar.style.backgroundColor = 'red';
+                    break;
+                case 2:
+                case 3:
+                    passwordStrengthBar.style.width = '50%';
+                    passwordStrengthBar.style.backgroundColor = 'orange';
+                    break;
+                case 4:
+                case 5:
+                    passwordStrengthBar.style.width = '100%';
+                    passwordStrengthBar.style.backgroundColor = 'green';
+                    break;
+                default:
+                    passwordStrengthBar.style.width = '0%';
+                    break;
+            }
+            checkPasswordMatch();
+        });
+
+        confirmPassword.addEventListener('input', checkPasswordMatch);
+
+        // --- Lógica de Google reCAPTCHA ---
+        const RECAPTCHA_SITE_KEY = "6LeB2rcrAAAAAI3wrpitQ1wYZs8Nxk1_YFkdbnT2"; // Tu clave de sitio reCAPTCHA
+
+        let loginRecaptchaWidgetId;
+        let registrationRecaptchaWidgetId;
+
+        // Callback que se ejecuta cuando la API de reCAPTCHA está cargada
+        function onloadCallback() {
+            // Renderizar el reCAPTCHA para el formulario de Login
+            loginRecaptchaWidgetId = grecaptcha.render('login-recaptcha-container', {
+                'sitekey': RECAPTCHA_SITE_KEY,
+                'callback': onLoginRecaptchaSuccess,
+                'expired-callback': onLoginRecaptchaExpired,
+                'theme': 'dark' // O 'light' según tu diseño
+            });
+
+            // Renderizar el reCAPTCHA para el formulario de Registro
+            registrationRecaptchaWidgetId = grecaptcha.render('registration-recaptcha-container', {
+                'sitekey': RECAPTCHA_SITE_KEY,
+                'callback': onRegistrationRecaptchaSuccess,
+                'expired-callback': onRegistrationRecaptchaExpired,
+                'theme': 'dark' // O 'light' según tu diseño
+            });
+        }
+
+        // Callbacks de reCAPTCHA para el formulario de Login
+        function onLoginRecaptchaSuccess(token) {
+            console.log("reCAPTCHA de Login exitoso, token:", token);
+            // El token se guarda automáticamente en un campo oculto 'g-recaptcha-response'
+        }
+
+        function onLoginRecaptchaExpired() {
+            console.log("reCAPTCHA de Login ha expirado. Reiniciando...");
+            grecaptcha.reset(loginRecaptchaWidgetId);
+        }
+
+        // Callbacks de reCAPTCHA para el formulario de Registro
+        function onRegistrationRecaptchaSuccess(token) {
+            console.log("reCAPTCHA de Registro exitoso, token:", token);
+            // El token se guarda automáticamente en un campo oculto 'g-recaptcha-response'
+        }
+
+        function onRegistrationRecaptchaExpired() {
+            console.log("reCAPTCHA de Registro ha expirado. Reiniciando...");
+            grecaptcha.reset(registrationRecaptchaWidgetId);
+        }
+
+        // Manejador del evento de envío del formulario de Login
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', function(event) {
+            const recaptchaResponse = grecaptcha.getResponse(loginRecaptchaWidgetId);
+
+            if (!recaptchaResponse) {
+                event.preventDefault();
+                alert("Por favor, marca la casilla 'No soy un robot' para iniciar sesión.");
+                console.log("reCAPTCHA de Login no resuelto, deteniendo envío.");
+            } else {
+                console.log("Formulario de Login enviado con el token de reCAPTCHA.");
+            }
+        });
+
+        // Manejador del evento de envío del formulario de Registro
+        const registrationForm = document.getElementById('registration-form');
+        registrationForm.addEventListener('submit', function(event) {
+            const recaptchaResponse = grecaptcha.getResponse(registrationRecaptchaWidgetId);
+
+            if (!recaptchaResponse) {
+                event.preventDefault();
+                alert("Por favor, marca la casilla 'No soy un robot' para crear una cuenta.");
+                console.log("reCAPTCHA de Registro no resuelto, deteniendo envío.");
+            } else {
+                console.log("Formulario de Registro enviado con el token de reCAPTCHA.");
+            }
+        });
+        // --- Fin de la lógica de Google reCAPTCHA ---
+    </script>
+</body>
+</html>
