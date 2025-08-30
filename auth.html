@@ -14,7 +14,7 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Variables globales (proporcionadas por el entorno de Canvas)
@@ -38,6 +38,17 @@
         // Ocultar mensajes de log de Firebase
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         setLogLevel('error');
+
+        // Listener para verificar si el usuario ya está autenticado y redirigirlo
+        onAuthStateChanged(auth, (user) => {
+            console.log("auth.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
+            if (user && user.emailVerified) {
+                // Si el usuario ya está logueado y verificado, redirige a la página de datos
+                console.log("auth.html: Usuario ya logueado y verificado. Redirigiendo a data-collection.html.");
+                window.location.href = 'data-collection.html';
+            }
+            // Si no está logueado o no verificado, no hace nada (se queda en la página de login)
+        });
 
         // Función para manejar el registro de usuario
         async function handleRegistration(email, password, firstName, lastName) {
@@ -90,15 +101,20 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
+                console.log("handleLogin: Intento de inicio de sesión para:", user.email, "Correo verificado:", user.emailVerified);
+
                 if (user.emailVerified) {
-                    showNotification("¡Inicio de sesión exitoso!", 'success');
-                    // TODO: Redirigir al usuario a la página principal o panel de control
-                    console.log("Usuario autenticado y verificado:", user);
+                    showNotification("¡Inicio de sesión exitoso! Redirigiendo...", 'success');
+                    console.log("handleLogin: Correo verificado. Redirigiendo a data-collection.html en 1 segundo.");
+                    // Redirigir al usuario a la nueva página protegida después de un breve retraso
+                    setTimeout(() => {
+                        window.location.href = 'data-collection.html'; 
+                    }, 1000); // 1 segundo de retraso para que el usuario vea la notificación
                 } else {
                     // Si el correo no está verificado, cierra la sesión del usuario
                     await signOut(auth);
                     showNotification("Tu correo electrónico no ha sido verificado. Por favor, revisa tu bandeja de entrada o spam.", 'error');
-                    console.warn("Intento de inicio de sesión con correo no verificado. Sesión cerrada.");
+                    console.warn("handleLogin: Correo NO verificado. Sesión cerrada.");
                 }
             } catch (error) {
                 console.error("Error al iniciar sesión:", error.message);
@@ -572,10 +588,11 @@
             if (passwordInput) {
                 if (passwordInput.type === 'password') {
                     passwordInput.type = 'text';
-                    // Opcional: Cambiar el icono del ojo aquí (requeriría un SVG diferente o una clase)
+                    // Opcional: Podrías cambiar el icono del SVG aquí para indicar que es visible.
+                    // Por ejemplo, añadiendo o quitando una clase al botón que contiene el SVG.
                 } else {
                     passwordInput.type = 'password';
-                    // Opcional: Cambiar el icono del ojo de nuevo
+                    // Opcional: Cambiar el icono de nuevo.
                 }
             }
         }
