@@ -99,11 +99,12 @@
         // Lógica condicional para Turno de estudio
         educationStatusInput.addEventListener('change', () => {
             const status = educationStatusInput.value;
+            const studyShiftContainer = document.getElementById('study-shift-container');
             if (status === 'Estudiando Liceo' || status === 'Estudiando Universidad') {
-                studyShiftInput.closest('div').classList.remove('hidden');
+                studyShiftContainer.classList.remove('hidden');
                 studyShiftInput.setAttribute('required', 'required');
             } else {
-                studyShiftInput.closest('div').classList.add('hidden');
+                studyShiftContainer.classList.add('hidden');
                 studyShiftInput.removeAttribute('required');
                 studyShiftInput.value = ''; // Limpiar si se oculta
             }
@@ -224,12 +225,14 @@
                     break;
                 case 2:
                     fieldsToValidate = [
-                        educationStatusInput, currentStudyLevelInput, institutionInput, degreeInput, graduationYearInput
+                        educationStatusInput, currentStudyLevelInput, institutionInput, graduationYearInput
                     ];
                     // Validación condicional para studyShiftInput
-                    if (educationStatusInput.value === 'Estudiando Liceo' || educationStatusInput.value === 'Estudiando Universidad') {
+                    const status = educationStatusInput.value;
+                    if (status === 'Estudiando Liceo' || status === 'Estudiando Universidad') {
                         fieldsToValidate.push(studyShiftInput);
                     }
+                    // degreeInput es opcional, no se añade a fieldsToValidate si se permite vacío
                     break;
                 case 3:
                     fieldsToValidate = [
@@ -314,14 +317,20 @@
                 }
                 
                 // Cédula de Identidad
-                const ciFull = userProfileData.ciNumber ? `${userProfileData.ciType || ''}${userProfileData.ciNumber}` : (userProfileData.ci || '');
-                if (ciFull.startsWith('V') || ciFull.startsWith('E')) {
-                    ciTypeInput.value = ciFull.substring(0,1);
-                    ciNumberInput.value = ciFull.substring(1); // El número va desde el segundo caracter
-                } else if (ciFull.length > 0) {
-                    ciNumberInput.value = ciFull;
+                const ciNumber = userProfileData.ciNumber || '';
+                const ciType = userProfileData.ciType || '';
+                if (ciType && ciNumber) {
+                    ciTypeInput.value = ciType;
+                    ciNumberInput.value = ciNumber;
+                } else if (userProfileData.ci) { // Compatibilidad con el campo antiguo 'ci' si existiera
+                    const oldCi = userProfileData.ci;
+                     if (oldCi.startsWith('V-') || oldCi.startsWith('E-')) {
+                        ciTypeInput.value = oldCi.substring(0,1);
+                        ciNumberInput.value = oldCi.substring(2);
+                    } else if (oldCi.length > 0) {
+                        ciNumberInput.value = oldCi;
+                    }
                 }
-
 
                 addressInput.value = userProfileData.address || '';
                 dobInput.value = userProfileData.dateOfBirth || '';
@@ -340,11 +349,12 @@
 
                 // Ejecutar la lógica condicional de turno de estudio al cargar los datos
                 const status = educationStatusInput.value;
+                const studyShiftContainer = document.getElementById('study-shift-container');
                 if (status === 'Estudiando Liceo' || status === 'Estudiando Universidad') {
-                    studyShiftInput.closest('div').classList.remove('hidden');
+                    studyShiftContainer.classList.remove('hidden');
                     studyShiftInput.setAttribute('required', 'required');
                 } else {
-                    studyShiftInput.closest('div').classList.add('hidden');
+                    studyShiftContainer.classList.add('hidden');
                     studyShiftInput.removeAttribute('required');
                 }
 
