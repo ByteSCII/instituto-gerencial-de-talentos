@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recolección de Datos - Instituto Gerencial de Talentos</title>
+    <title>Ficha de Datos del Usuario - Instituto Gerencial de Talentos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Importar Firebase SDK -->
@@ -12,8 +12,8 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut, setPersistence, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Tu configuración de Firebase (DEBE SER LA MISMA QUE EN auth.html)
         const firebaseConfig = {
@@ -33,46 +33,78 @@
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         setLogLevel('error');
 
-        const userEmailSpan = document.getElementById('user-email');
         const userDataForm = document.getElementById('user-data-form');
+        const firstNameDisplay = document.getElementById('first-name-display');
+        const lastNameDisplay = document.getElementById('last-name-display');
+        const emailDisplay = document.getElementById('email-display');
+        
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
+        const ciInput = document.getElementById('ci');
+        const dobInput = document.getElementById('dob');
+        const ageDisplay = document.getElementById('age-display');
+        const educationInput = document.getElementById('education');
+        const professionInput = document.getElementById('profession');
+        const genderInput = document.getElementById('gender');
         const cityInput = document.getElementById('city');
         const countryInput = document.getElementById('country');
-        const dobInput = document.getElementById('dob');
+
+        function calculateAge(dateOfBirth) {
+            if (!dateOfBirth) return '';
+            const today = new Date();
+            const birthDate = new Date(dateOfBirth);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age > 0 ? age : '';
+        }
+
+        dobInput.addEventListener('change', () => {
+            ageDisplay.textContent = calculateAge(dobInput.value);
+        });
 
         // Listener para el estado de autenticación
         onAuthStateChanged(auth, async (user) => {
             console.log("data-collection.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
 
-            // **IMPORTANTE:** Verificar si la persistencia es 'session' (o lo que se haya establecido)
-            // y si el usuario *realmente* está presente para esta pestaña.
-            // Si user es null (porque la pestaña fue cerrada y reabierta, y sessionStorage se borró),
-            // entonces redirigimos.
             if (user && user.emailVerified) {
-                // Usuario está logueado y debería estar verificado por la página de login
-                userEmailSpan.textContent = user.email;
-                
-                // Intentar cargar datos existentes
-                const userDocRef = doc(db, `artifacts/default-app-id/users/${user.uid}/public_data/details`);
-                const userDocSnap = await getDoc(userDocRef);
+                // Fetch user profile (which contains firstName, lastName and the new dataCollected flag)
+                const userProfileRef = doc(db, `artifacts/default-app-id/users/${user.uid}/private_data/user_profile`);
+                const userProfileSnap = await getDoc(userProfileRef);
+                const userProfileData = userProfileSnap.exists() ? userProfileSnap.data() : {};
 
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    phoneInput.value = userData.phone || '';
-                    addressInput.value = userData.address || '';
-                    cityInput.value = userData.city || '';
-                    countryInput.value = userData.country || '';
-                    dobInput.value = userData.dateOfBirth || '';
+                // Check if data has already been collected
+                if (userProfileData.dataCollected === true) {
+                    console.log("data-collection.html: Datos ya recolectados. Redirigiendo a dashboard.html.");
+                    window.location.href = 'dashboard.html';
+                    return; // Stop further processing
                 }
+
+                // Pre-fill fields from Firebase Auth and Firestore profile
+                firstNameDisplay.textContent = userProfileData.firstName || 'N/A';
+                lastNameDisplay.textContent = userProfileData.lastName || 'N/A';
+                emailDisplay.textContent = user.email || 'N/A';
+                
+                // Load existing data for other fields (if any, from previous partial saves or if user comes back to complete)
+                phoneInput.value = userProfileData.phone || '';
+                addressInput.value = userProfileData.address || '';
+                ciInput.value = userProfileData.ci || '';
+                dobInput.value = userProfileData.dateOfBirth || '';
+                educationInput.value = userProfileData.education || '';
+                professionInput.value = userProfileData.profession || '';
+                genderInput.value = userProfileData.gender || '';
+                cityInput.value = userProfileData.city || '';
+                countryInput.value = userProfileData.country || '';
+
+                // Calculate age if DOB is present
+                ageDisplay.textContent = calculateAge(dobInput.value);
 
                 document.body.classList.remove('hidden'); // Muestra el contenido de la página
             } else {
-                // Usuario no está logueado o no verificado.
-                // Redirigir al login y asegurar que no haya ninguna sesión fantasma.
                 console.log("data-collection.html: Usuario no autenticado o no verificado. Redirigiendo a auth.html.");
-                // Cierra la sesión explícitamente por si acaso hay alguna persistencia residual
-                await signOut(auth); 
+                await signOut(auth); // Cierra la sesión explícitamente por si acaso
                 window.location.href = 'auth.html';
             }
         });
@@ -97,22 +129,34 @@
             if (currentUser) {
                 const phone = phoneInput.value;
                 const address = addressInput.value;
+                const ci = ciInput.value;
+                const dateOfBirth = dobInput.value;
+                const education = educationInput.value;
+                const profession = professionInput.value;
+                const gender = genderInput.value;
                 const city = cityInput.value;
                 const country = countryInput.value;
-                const dob = dobInput.value;
 
                 try {
-                    // Guardar datos en Firestore en la subcolección 'public_data'
-                    await setDoc(doc(db, `artifacts/default-app-id/users/${currentUser.uid}/public_data/details`), {
+                    // Update the user's private profile with the new data and set dataCollected to true
+                    const userProfileRef = doc(db, `artifacts/default-app-id/users/${currentUser.uid}/private_data/user_profile`);
+                    await setDoc(userProfileRef, {
                         phone: phone,
                         address: address,
+                        ci: ci,
+                        dateOfBirth: dateOfBirth,
+                        education: education,
+                        profession: profession,
+                        gender: gender,
                         city: city,
                         country: country,
-                        dateOfBirth: dob,
+                        dataCollected: true, // Mark data collection as complete
                         updatedAt: new Date()
-                    }, { merge: true }); // 'merge: true' para no sobrescribir otros campos si existen
+                    }, { merge: true }); // 'merge: true' para no sobrescribir firstName, lastName, email
 
-                    alert("Datos guardados exitosamente!");
+                    alert("Datos guardados y perfil completado exitosamente!");
+                    console.log("Datos de usuario guardados, redirigiendo a dashboard.html.");
+                    window.location.href = 'dashboard.html'; // Redirect after successful completion
                 } catch (error) {
                     console.error("Error al guardar los datos:", error.message);
                     alert("Error al guardar los datos. Por favor, inténtalo de nuevo.");
@@ -135,25 +179,65 @@
             -ms-user-select: none;
             user-select: none;
         }
+        /* Estilo general para la tarjeta tipo "PDF" */
         .container-card {
-            background-color: #1c1c24; /* Fondo oscuro para la tarjeta */
-            border-radius: 1rem; /* rounded-3xl */
-            padding: 2.5rem; /* p-10 */
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
+            background-color: #ffffff; /* Fondo blanco */
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 800px; /* Ancho máximo para simular una hoja */
+            margin: 2rem auto; /* Centrar y dar espacio */
+            color: #1c1c24; /* Color de texto oscuro para fondo blanco */
+            position: relative;
+        }
+        @media (max-width: 768px) {
+            .container-card {
+                margin: 0.5rem;
+                padding: 1.5rem;
+                border-radius: 0.5rem;
+            }
+        }
+        .section-title {
+            font-weight: 600; /* semibold */
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e2e8f0; /* Border para separar secciones */
+            color: #334155; /* gray-700 */
+        }
+        .form-label {
+            display: block;
+            color: #4a5568; /* gray-700 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 0.5rem;
+        }
+        .display-field {
+            background-color: #f0f4f8; /* Un gris claro para campos no editables */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #2d3748; /* gray-800 */
+            border: 1px solid #cbd5e0; /* light border */
         }
         .animated-input {
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background-color: #f7fafc; /* Fondo blanco casi puro para inputs */
+            color: #1a202c; /* Texto oscuro */
+            border: 1px solid #cbd5e0; /* Borde estándar */
         }
         .animated-input:focus {
-            transform: scale(1.01); /* Agrandamiento muy sutil */
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* Sombra suave y azul */
+            transform: scale(1.01);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            border-color: #3b82f6; /* blue-600 */
         }
         .animated-btn {
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0 3s ease-in-out;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease-in-out;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .animated-btn:hover {
-            transform: scale(1.02); /* Agrandamiento sutil */
+            transform: scale(1.02);
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
         /* Oculta el body por defecto hasta que se verifique la autenticación */
@@ -162,43 +246,105 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center hidden">
-    <div class="max-w-xl mx-auto container-card w-full">
-        <h1 class="text-3xl font-semibold text-white mb-6 text-center">¡Bienvenido!</h1>
-        <p class="text-gray-400 mb-4 text-center">Has iniciado sesión como: <span id="user-email" class="font-medium text-blue-400"></span></p>
-        <p class="text-gray-400 mb-8 text-center">Por favor, completa tus datos para continuar.</p>
+<body class="bg-[#0e172a] min-h-screen flex items-center justify-center hidden">
+    <div class="container-card">
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">Ficha de Datos del Usuario</h1>
+        <p class="text-center text-gray-600 mb-6">Por favor, revisa tus datos y completa la información restante.</p>
 
-        <form id="user-data-form" class="space-y-4">
-            <div>
-                <label for="phone" class="block text-gray-300 text-sm font-bold mb-2">Teléfono:</label>
-                <input type="tel" id="phone" placeholder="Ej: +584123456789" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
-            </div>
-            <div>
-                <label for="address" class="block text-gray-300 text-sm font-bold mb-2">Dirección:</label>
-                <input type="text" id="address" placeholder="Ej: Av. Principal, Edif. Central, Apt 101" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="city" class="block text-gray-300 text-sm font-bold mb-2">Ciudad:</label>
-                    <input type="text" id="city" placeholder="Ej: Caracas" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
+        <form id="user-data-form" class="space-y-6">
+            <!-- Sección: Información Personal (Pre-rellenada y de solo lectura) -->
+            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <h2 class="section-title mb-4">Información de Registro</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">Nombre:</label>
+                        <p id="first-name-display" class="display-field"></p>
+                    </div>
+                    <div>
+                        <label class="form-label">Apellido:</label>
+                        <p id="last-name-display" class="display-field"></p>
+                    </div>
                 </div>
                 <div>
-                    <label for="country" class="block text-gray-300 text-sm font-bold mb-2">País:</label>
-                    <input type="text" id="country" placeholder="Ej: Venezuela" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
+                    <label class="form-label">Correo Electrónico:</label>
+                    <p id="email-display" class="display-field"></p>
                 </div>
             </div>
-            <div>
-                <label for="dob" class="block text-gray-300 text-sm font-bold mb-2">Fecha de Nacimiento:</label>
-                <input type="date" id="dob" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
+
+            <!-- Sección: Datos Adicionales (Campos editables) -->
+            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                <h2 class="section-title mb-4">Datos Adicionales</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="phone" class="form-label">Número Telefónico:</label>
+                        <input type="tel" id="phone" placeholder="Ej: +584123456789" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                    <div>
+                        <label for="ci" class="form-label">Cédula de Identidad:</label>
+                        <input type="text" id="ci" placeholder="Ej: V-12345678" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="address" class="form-label">Dirección:</label>
+                    <input type="text" id="address" placeholder="Ej: Av. Principal, Edif. Central, Apt 101" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="city" class="form-label">Ciudad:</label>
+                        <input type="text" id="city" placeholder="Ej: Caracas" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                    <div>
+                        <label for="country" class="form-label">País:</label>
+                        <input type="text" id="country" placeholder="Ej: Venezuela" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="dob" class="form-label">Fecha de Nacimiento:</label>
+                        <input type="date" id="dob" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Edad:</label>
+                        <p id="age-display" class="display-field"></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="education" class="form-label">Grado de Estudio:</label>
+                        <select id="education" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                            <option value="">Selecciona tu grado de estudio</option>
+                            <option value="primaria">Primaria</option>
+                            <option value="secundaria">Secundaria</option>
+                            <option value="tecnico">Técnico Superior Universitario</option>
+                            <option value="universitario">Universitario</option>
+                            <option value="postgrado">Postgrado</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="profession" class="form-label">Profesión/Ocupación:</label>
+                        <input type="text" id="profession" placeholder="Ej: Estudiante, Ingeniero" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="gender" class="form-label">Género:</label>
+                    <select id="gender" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        <option value="">Selecciona tu género</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="otro">Otro</option>
+                        <option value="prefiero_no_decir">Prefiero no decir</option>
+                    </select>
+                </div>
             </div>
             
             <button type="submit" class="w-full bg-blue-600 text-white rounded-lg p-3 hover:bg-blue-700 transition-colors animated-btn">
-                Guardar Datos
+                Guardar y Continuar
             </button>
         </form>
 
         <div class="mt-8 text-center">
-            <button onclick="handleLogout()" class="text-gray-400 hover:text-white hover:underline">
+            <button onclick="handleLogout()" class="text-gray-600 hover:text-blue-600 hover:underline">
                 Cerrar Sesión
             </button>
         </div>
