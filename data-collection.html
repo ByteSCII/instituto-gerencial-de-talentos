@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recolección de Datos - Instituto Gerencial de Talentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Importar Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Tu configuración de Firebase (DEBE SER LA MISMA QUE EN auth.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQPZiekhX6LOitpyAy1pYUNb0Lb74k8WQ",
+            authDomain: "instituto-gerencial-de-talento.firebaseapp.com",
+            projectId: "instituto-gerencial-de-talento",
+            storageBucket: "instituto-gerencial-de-talento.firebasestorage.app",
+            messagingSenderId: "549000895234",
+            appId: "1:549000895234:web:e3621a884d7078d350c01b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Ocultar mensajes de log de Firebase
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        setLogLevel('error');
+
+        const userEmailSpan = document.getElementById('user-email');
+        const userDataForm = document.getElementById('user-data-form');
+        const phoneInput = document.getElementById('phone');
+        const addressInput = document.getElementById('address');
+        const cityInput = document.getElementById('city');
+        const countryInput = document.getElementById('country');
+        const dobInput = document.getElementById('dob');
+
+        // Listener para el estado de autenticación
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Usuario está logueado
+                // Si llegamos aquí, ya sabemos que el correo está verificado porque auth.html lo comprueba
+                userEmailSpan.textContent = user.email;
+                
+                // Intentar cargar datos existentes
+                const userDocRef = doc(db, `artifacts/default-app-id/users/${user.uid}/public_data/details`);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    phoneInput.value = userData.phone || '';
+                    addressInput.value = userData.address || '';
+                    cityInput.value = userData.city || '';
+                    countryInput.value = userData.country || '';
+                    dobInput.value = userData.dateOfBirth || '';
+                }
+
+                document.body.classList.remove('hidden'); // Muestra el contenido de la página
+            } else {
+                // Usuario no está logueado o la sesión expiró, redirigir al login
+                window.location.href = 'auth.html';
+            }
+        });
+
+        // Función para cerrar sesión
+        async function handleLogout() {
+            try {
+                await signOut(auth);
+                window.location.href = 'auth.html'; // Redirige al login después de cerrar sesión
+            } catch (error) {
+                console.error("Error al cerrar sesión:", error.message);
+                alert("Error al cerrar sesión. Por favor, inténtalo de nuevo.");
+            }
+        }
+        window.handleLogout = handleLogout; // Hacer accesible globalmente
+
+        // Función para enviar los datos (ejemplo)
+        async function handleSubmitData(event) {
+            event.preventDefault();
+            const currentUser = auth.currentUser;
+
+            if (currentUser) {
+                const phone = phoneInput.value;
+                const address = addressInput.value;
+                const city = cityInput.value;
+                const country = countryInput.value;
+                const dob = dobInput.value;
+
+                try {
+                    // Guardar datos en Firestore en la subcolección 'public_data'
+                    // Opcional: podrías guardar esto en 'private_data' si es sensible y no quieres que sea consultable fácilmente
+                    await setDoc(doc(db, `artifacts/default-app-id/users/${currentUser.uid}/public_data/details`), {
+                        phone: phone,
+                        address: address,
+                        city: city,
+                        country: country,
+                        dateOfBirth: dob,
+                        updatedAt: new Date()
+                    }, { merge: true }); // 'merge: true' para no sobrescribir otros campos si existen
+
+                    alert("Datos guardados exitosamente!");
+                    // No resetear el formulario para que el usuario vea sus datos guardados
+                } catch (error) {
+                    console.error("Error al guardar los datos:", error.message);
+                    alert("Error al guardar los datos. Por favor, inténtalo de nuevo.");
+                }
+            } else {
+                alert("No hay usuario autenticado. Redirigiendo al login.");
+                window.location.href = 'auth.html';
+            }
+        }
+        userDataForm.addEventListener('submit', handleSubmitData);
+
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0e172a;
+            color: #e2e8f0; /* Color de texto claro */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .container-card {
+            background-color: #1c1c24; /* Fondo oscuro para la tarjeta */
+            border-radius: 1rem; /* rounded-3xl */
+            padding: 2.5rem; /* p-10 */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
+        }
+        .animated-input {
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .animated-input:focus {
+            transform: scale(1.01); /* Agrandamiento muy sutil */
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* Sombra suave y azul */
+        }
+        .animated-btn {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .animated-btn:hover {
+            transform: scale(1.02); /* Agrandamiento sutil */
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+        /* Oculta el body por defecto hasta que se verifique la autenticación */
+        body.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center hidden">
+    <div class="max-w-xl mx-auto container-card w-full">
+        <h1 class="text-3xl font-semibold text-white mb-6 text-center">¡Bienvenido!</h1>
+        <p class="text-gray-400 mb-4 text-center">Has iniciado sesión como: <span id="user-email" class="font-medium text-blue-400"></span></p>
+        <p class="text-gray-400 mb-8 text-center">Por favor, completa tus datos para continuar.</p>
+
+        <form id="user-data-form" class="space-y-4">
+            <div>
+                <label for="phone" class="block text-gray-300 text-sm font-bold mb-2">Teléfono:</label>
+                <input type="tel" id="phone" placeholder="Ej: +584123456789" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
+            </div>
+            <div>
+                <label for="address" class="block text-gray-300 text-sm font-bold mb-2">Dirección:</label>
+                <input type="text" id="address" placeholder="Ej: Av. Principal, Edif. Central, Apt 101" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="city" class="block text-gray-300 text-sm font-bold mb-2">Ciudad:</label>
+                    <input type="text" id="city" placeholder="Ej: Caracas" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
+                </div>
+                <div>
+                    <label for="country" class="block text-gray-300 text-sm font-bold mb-2">País:</label>
+                    <input type="text" id="country" placeholder="Ej: Venezuela" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
+                </div>
+            </div>
+            <div>
+                <label for="dob" class="block text-gray-300 text-sm font-bold mb-2">Fecha de Nacimiento:</label>
+                <input type="date" id="dob" class="w-full bg-[#0e172a] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input" required>
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-600 text-white rounded-lg p-3 hover:bg-blue-700 transition-colors animated-btn">
+                Guardar Datos
+            </button>
+        </form>
+
+        <div class="mt-8 text-center">
+            <button onclick="handleLogout()" class="text-gray-400 hover:text-white hover:underline">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+</body>
+</html>
