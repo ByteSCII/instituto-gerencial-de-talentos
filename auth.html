@@ -60,7 +60,21 @@
                 
             } catch (error) {
                 console.error("Error al registrar el usuario:", error.message);
-                showNotification(error.message, 'error');
+                let message = "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.";
+                switch(error.code) {
+                    case 'auth/email-already-in-use':
+                        message = "El correo electrónico ya está en uso. Por favor, usa otro correo o inicia sesión.";
+                        break;
+                    case 'auth/invalid-email':
+                        message = "El correo electrónico no es válido.";
+                        break;
+                    case 'auth/weak-password':
+                        message = "La contraseña es muy débil. Debe tener al menos 6 caracteres.";
+                        break;
+                    default:
+                        break;
+                }
+                showNotification(message, 'error');
             }
         }
 
@@ -73,11 +87,12 @@
 
             formContainer.classList.add('flipped');
 
+            // Ocultar los formularios y mostrar la confirmación
             setTimeout(() => {
-                confirmationCard.style.display = 'flex';
                 frontCard.style.display = 'none';
                 backCard.style.display = 'none';
-            }, 400); 
+                confirmationCard.style.display = 'flex';
+            }, 400); // 400ms para que la animación de giro sea visible
         }
 
         window.handleRegistration = handleRegistration;
