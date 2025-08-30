@@ -85,6 +85,7 @@
             const frontCard = document.querySelector('.card-front');
             const backCard = document.querySelector('.card-back');
 
+            // Aseguramos que solo la confirmación sea visible después de la animación de giro
             formContainer.classList.add('flipped');
 
             // Ocultar los formularios y mostrar la confirmación
@@ -92,7 +93,7 @@
                 frontCard.style.display = 'none';
                 backCard.style.display = 'none';
                 confirmationCard.style.display = 'flex';
-            }, 400); // 400ms para que la animación de giro sea visible
+            }, 800); 
         }
 
         window.handleRegistration = handleRegistration;
