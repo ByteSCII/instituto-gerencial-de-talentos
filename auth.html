@@ -1,3 +1,5 @@
+--- START OF FILE auth (1).html ---
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -56,7 +58,7 @@
                     createdAt: new Date()
                 });
 
-                showNotification("Correo de confirmación enviado. Revisa tu bandeja de entrada y de spam.", 'success');
+                showNotification("Registro exitoso. Correo de confirmación enviado.", 'success');
                 
                 // Transición a la tarjeta de éxito
                 const formContainer = document.getElementById('form-container');
@@ -124,7 +126,8 @@
             }
         }
 
-        .card-front, .card-back, .card-success { /* Aplica estilos comunes a todas las tarjetas */
+        /* Common styles for all cards */
+        .card-front, .card-back, .card-success {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -132,19 +135,32 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            /* Add transitions for opacity and transform for smooth showing/hiding */
+            transition: transform 0.8s, opacity 0.8s;
+            pointer-events: none; /* Hidden by default for interactions */
         }
-        /* Posicionamiento inicial de las tarjetas */
-        .card-front { transform: rotateY(0deg); }
-        .card-back { transform: rotateY(180deg); }
-        .card-success { transform: rotateY(360deg); } /* La tarjeta de éxito está "dos giros" después de la frontal */
-        
+
+        /* Initial rotation of each card relative to its container */
+        .card-front { transform: rotateY(0deg); opacity: 1; pointer-events: auto; } /* Visible by default */
+        .card-back { transform: rotateY(180deg); opacity: 0; } /* Hidden by default */
+        .card-success { transform: rotateY(0deg); opacity: 0; } /* Hidden by default, same plane as front */
+
         /* Rotación del contenedor para mostrar las tarjetas */
         .form-container.flipped {
-            transform: rotateY(180deg); /* Muestra el card-back (registro) */
+            transform: rotateY(180deg); /* Shows card-back (registration) */
         }
+        /* Specific visibility rules for the 'flipped' (registration) state */
+        .form-container.flipped .card-front { opacity: 0; pointer-events: none; }
+        .form-container.flipped .card-back { opacity: 1; pointer-events: auto; }
+        .form-container.flipped .card-success { opacity: 0; pointer-events: none; }
+
         .form-container.registered {
-            transform: rotateY(360deg); /* Muestra el card-success (éxito) */
+            transform: rotateY(360deg); /* Rotates a full circle to show card-success */
         }
+        /* Specific visibility rules for the 'registered' (success) state */
+        .form-container.registered .card-front { opacity: 0; pointer-events: none; }
+        .form-container.registered .card-back { opacity: 0; pointer-events: none; }
+        .form-container.registered .card-success { opacity: 1; pointer-events: auto; }
         
         /* Animación para el icono de check */
         @keyframes pulse {
@@ -246,7 +262,7 @@
                                 <input type="password" placeholder="Ingresa tu contraseña" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input">
                                 <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 0 11-6 0 3 3 0 016 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
@@ -279,7 +295,7 @@
                                 <input id="password-reg" type="password" placeholder="Ingresa tu contraseña" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input">
                                 <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 0 11-6 0 3 3 0 016 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
@@ -336,9 +352,14 @@
             // Si estamos en la tarjeta de éxito, primero removemos la clase 'registered'
             if (formContainer.classList.contains('registered')) {
                 formContainer.classList.remove('registered');
+                // Esperamos un breve momento para que la transición de registered a default comience
+                setTimeout(() => {
+                    formContainer.classList.toggle('flipped'); // Luego, alternamos 'flipped'
+                }, 10); // Un pequeño retraso para permitir la transición inicial
+            } else {
+                // Si no estamos en la tarjeta de éxito, simplemente alternamos 'flipped'
+                formContainer.classList.toggle('flipped');
             }
-            // Luego, alternamos 'flipped' para cambiar entre login y register
-            formContainer.classList.toggle('flipped');
         }
 
         // Nueva función para volver del estado de éxito al login
@@ -506,4 +527,3 @@
     </script>
 </body>
 </html>
-
