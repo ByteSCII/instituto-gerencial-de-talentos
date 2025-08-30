@@ -26,7 +26,6 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
         }
 
         /* Estilos para el efecto de giro del formulario */
@@ -67,7 +66,7 @@
             background-image: linear-gradient(to right, #87CEEB, #F0F8FF);
         }
 
-        /* Animación personalizada para los botones y links */
+        /* Animación personalizada para los botones */
         .animated-btn {
             transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease-in-out;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -115,7 +114,7 @@
     </style>
 </head>
 <body class="bg-[#0e172a] min-h-screen flex items-center justify-center">
-    <div class="w-full h-screen bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative md:bg-black/50 md:backdrop-blur-sm">
+    <div class="w-full h-full bg-white rounded-3xl overflow-auto md:overflow-hidden shadow-2xl flex flex-col md:flex-row relative md:bg-black/50 md:backdrop-blur-sm">
         <!-- Desktop Image Section -->
         <div class="hidden md:flex w-full md:w-1/2 relative flex items-center justify-center bg-white">
             <div class="relative h-full flex items-center justify-center">
@@ -126,7 +125,7 @@
         </div>
         
         <!-- Mobile Image Section -->
-        <div class="md:hidden w-full h-[10vh] relative flex items-center justify-center bg-white">
+        <div class="md:hidden w-full h-[20vh] relative flex items-center justify-center bg-white">
             <img src="./images/mitadpantalla.webp"
                 alt="Paisaje desértico"
                 class="object-contain max-h-full w-full">
@@ -138,10 +137,10 @@
                 <div id="form-container" class="form-container">
                     <!-- Login Form -->
                     <div class="card-front">
-                        <h1 class="text-white text-2xl md:text-4xl font-semibold mb-2">Iniciar sesión en IGT</h1>
-                        <p class="text-gray-400 mb-8">
+                        <h1 class="text-black md:text-white text-2xl md:text-4xl font-semibold mb-2">Iniciar sesión en IGT</h1>
+                        <p class="text-gray-600 md:text-gray-400 mb-8">
                             ¿No tienes una cuenta?
-                            <a href="#" onclick="flipCard()" class="text-white hover:underline animated-btn">Crear una cuenta</a>
+                            <a href="#" onclick="flipCard()" class="text-black md:text-white hover:underline">Crear una cuenta</a>
                         </p>
                         <form id="login-form" class="space-y-4">
                             <input type="email" placeholder="Correo electrónico" class="w-full bg-[#1c1c24] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-600 animated-input">
@@ -167,10 +166,10 @@
 
                     <!-- Registration Form -->
                     <div class="card-back">
-                        <h1 class="text-white text-2xl md:text-4xl font-semibold mb-2">Regístrate en IGT</h1>
-                        <p class="text-gray-400 mb-8">
+                        <h1 class="text-black md:text-white text-2xl md:text-4xl font-semibold mb-2">Regístrate en IGT</h1>
+                        <p class="text-gray-600 md:text-gray-400 mb-8">
                             ¿Ya tienes una cuenta?
-                            <a href="#" onclick="flipCard()" class="text-white hover:underline animated-btn">Iniciar sesión</a>
+                            <a href="#" onclick="flipCard()" class="text-black md:text-white hover:underline">Iniciar sesión</a>
                         </p>
                         <form id="registration-form" class="space-y-4">
                             <div class="flex flex-col md:flex-row gap-4">
@@ -200,7 +199,7 @@
                             </div>
                             <!-- Contenedor para reCAPTCHA del Registro -->
                             <div id="registration-recaptcha-container" class="mx-auto w-fit"></div>
-                            <p class="text-gray-400 text-xs text-center mt-2">
+                            <p class="text-gray-600 md:text-gray-400 text-xs text-center mt-2">
                                 Al dar click en registrarse aceptas los términos y condiciones del Instituto Gerencial de Talentos 2025.
                             </p>
                             <button type="submit" class="w-full bg-blue-600 text-white rounded-lg p-3 hover:bg-blue-700 transition-colors animated-btn">
