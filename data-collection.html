@@ -12,7 +12,7 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, setPersistence, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Tu configuración de Firebase (DEBE SER LA MISMA QUE EN auth.html)
@@ -43,9 +43,14 @@
 
         // Listener para el estado de autenticación
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // Usuario está logueado
-                // Si llegamos aquí, ya sabemos que el correo está verificado porque auth.html lo comprueba
+            console.log("data-collection.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
+
+            // **IMPORTANTE:** Verificar si la persistencia es 'session' (o lo que se haya establecido)
+            // y si el usuario *realmente* está presente para esta pestaña.
+            // Si user es null (porque la pestaña fue cerrada y reabierta, y sessionStorage se borró),
+            // entonces redirigimos.
+            if (user && user.emailVerified) {
+                // Usuario está logueado y debería estar verificado por la página de login
                 userEmailSpan.textContent = user.email;
                 
                 // Intentar cargar datos existentes
@@ -63,7 +68,11 @@
 
                 document.body.classList.remove('hidden'); // Muestra el contenido de la página
             } else {
-                // Usuario no está logueado o la sesión expiró, redirigir al login
+                // Usuario no está logueado o no verificado.
+                // Redirigir al login y asegurar que no haya ninguna sesión fantasma.
+                console.log("data-collection.html: Usuario no autenticado o no verificado. Redirigiendo a auth.html.");
+                // Cierra la sesión explícitamente por si acaso hay alguna persistencia residual
+                await signOut(auth); 
                 window.location.href = 'auth.html';
             }
         });
@@ -94,7 +103,6 @@
 
                 try {
                     // Guardar datos en Firestore en la subcolección 'public_data'
-                    // Opcional: podrías guardar esto en 'private_data' si es sensible y no quieres que sea consultable fácilmente
                     await setDoc(doc(db, `artifacts/default-app-id/users/${currentUser.uid}/public_data/details`), {
                         phone: phone,
                         address: address,
@@ -105,7 +113,6 @@
                     }, { merge: true }); // 'merge: true' para no sobrescribir otros campos si existen
 
                     alert("Datos guardados exitosamente!");
-                    // No resetear el formulario para que el usuario vea sus datos guardados
                 } catch (error) {
                     console.error("Error al guardar los datos:", error.message);
                     alert("Error al guardar los datos. Por favor, inténtalo de nuevo.");
@@ -142,7 +149,7 @@
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* Sombra suave y azul */
         }
         .animated-btn {
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease-in-out;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0 3s ease-in-out;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .animated-btn:hover {
