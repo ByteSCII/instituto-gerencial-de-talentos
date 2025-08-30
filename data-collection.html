@@ -116,7 +116,7 @@
                 educationLevel: educationLevelInput.value,
                 institution: institutionInput.value,
                 degree: degreeInput.value,
-                graduationYear: graduationYearInput.value,
+                graduationYear: graduationYearInput.value ? parseInt(graduationYearInput.value) : null, // Convertir a número
 
                 // Los campos de archivo no se guardan directamente en Firestore,
                 // sino sus referencias o URLs una vez subidos a Storage.
@@ -150,14 +150,14 @@
         function updatePhaseIndicator() {
             const phaseElements = document.querySelectorAll('.phase-step');
             phaseElements.forEach((el, index) => {
-                if (index < currentPhase) {
+                if (index < currentPhase) { // Fases completadas
                     el.classList.add('bg-blue-600', 'text-white');
                     el.classList.remove('bg-gray-700', 'text-gray-400');
                 } else if (index === currentPhase - 1) { // Fase actual
                     el.classList.add('bg-blue-600', 'text-white');
                     el.classList.remove('bg-gray-700', 'text-gray-400');
                 }
-                else {
+                else { // Fases pendientes
                     el.classList.add('bg-gray-700', 'text-gray-400');
                     el.classList.remove('bg-blue-600', 'text-white');
                 }
@@ -211,9 +211,9 @@
                 case 3:
                     fieldsToValidate = [
                         agreeTermsCheckbox
-                        // Los inputs de tipo file no se validan como 'required' de esta manera tan simple,
-                        // la lógica de validación de archivos es más compleja (tamaño, tipo, etc.)
-                        // Para este ejemplo, solo validamos el checkbox de términos.
+                        // NOTA: Para inputs de tipo file, necesitarías una lógica de validación
+                        // más avanzada si fueran obligatorios (ej. verificar si se seleccionó un archivo).
+                        // Por ahora, solo validamos el checkbox de términos.
                     ];
                     if (!agreeTermsCheckbox.checked) {
                         alert("Debes aceptar los términos y condiciones.");
@@ -223,6 +223,10 @@
             }
 
             for (const field of fieldsToValidate) {
+                if (field.type === 'file') {
+                    // Los campos de tipo file no se validan con .value.trim()
+                    continue; 
+                }
                 if (field.value.trim() === '' || (field.type === 'checkbox' && !field.checked)) {
                     field.classList.add('border-red-500', 'ring-red-500'); // Resalta el campo inválido
                     isValid = false;
@@ -239,9 +243,9 @@
 
         async function nextPhase() {
             clearTimeout(autoSaveTimeout); // Guardar inmediatamente al cambiar de fase
-            await saveFormData();
-
+            
             if (validateCurrentPhase()) {
+                await saveFormData(); // Guardar antes de avanzar
                 if (currentPhase < totalPhases) {
                     showPhase(currentPhase + 1);
                 }
@@ -250,7 +254,7 @@
 
         async function prevPhase() {
             clearTimeout(autoSaveTimeout); // Guardar inmediatamente al cambiar de fase
-            await saveFormData();
+            await saveFormData(); // Guardar antes de retroceder
             
             if (currentPhase > 1) {
                 showPhase(currentPhase - 1);
@@ -326,17 +330,22 @@
             }
 
             // Lógica para subir documentos (solo placeholders por ahora)
+            // Esta parte requeriría Firebase Storage y su propia lógica asíncrona
+            // y luego guardar las URLs resultantes en Firestore.
             // if (ciUploadInput.files.length > 0) {
             //     console.log("Subiendo CI:", ciUploadInput.files[0].name);
-            //     // Implementar subida a Firebase Storage aquí
+            //     // const ciUrl = await uploadFile(ciUploadInput.files[0], currentUser.uid, 'ci');
+            //     // dataToSave.ciDocumentUrl = ciUrl;
             // }
             // if (degreeUploadInput.files.length > 0) {
             //     console.log("Subiendo Título:", degreeUploadInput.files[0].name);
-            //     // Implementar subida a Firebase Storage aquí
+            //     // const degreeUrl = await uploadFile(degreeUploadInput.files[0], currentUser.uid, 'degree');
+            //     // dataToSave.degreeDocumentUrl = degreeUrl;
             // }
             // if (otherDocsUploadInput.files.length > 0) {
             //     console.log("Subiendo Otros Documentos:", otherDocsUploadInput.files[0].name);
-            //     // Implementar subida a Firebase Storage aquí
+            //     // const otherUrls = await uploadMultipleFiles(otherDocsUploadInput.files, currentUser.uid, 'other_docs');
+            //     // dataToSave.otherDocumentsUrls = otherUrls;
             // }
 
             try {
@@ -389,32 +398,27 @@
             flex-direction: column;
             align-items: center;
             justify-content: center; /* Centra el container-card verticalmente */
-            padding: 1rem;
+            /* Eliminado: padding: 1rem; para que ocupe todo el espacio */
         }
         .container-card {
             background-color: #1c1c24;
-            border-radius: 1rem;
+            border-radius: 0; /* Eliminado: bordes redondeados para full screen */
             padding: 2.5rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: none; /* Eliminado: sombra para un look más full screen/app */
             width: 100%;
-            max-width: 900px; /* Un ancho máximo para que no se estire demasiado en pantallas muy anchas */
-            height: calc(100vh - 2rem); /* Ocupa casi todo el alto de la ventana */
-            margin: 0 auto; /* Centrar horizontalmente */
+            height: 100vh; /* ¡Ahora sí, 100% del alto del viewport! */
+            margin: 0; /* Eliminado: cualquier margen para full screen */
+            max-width: none; /* Eliminado: límite de ancho para full screen */
             color: #e2e8f0;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             overflow-y: auto; /* Permite scroll solo dentro de la tarjeta si el contenido es mucho */
-            position: relative; /* Para posicionar el indicador de fase */
+            position: relative;
         }
         @media (max-width: 768px) {
-            body {
-                padding: 0;
-            }
             .container-card {
-                margin: 0;
                 padding: 1.5rem;
-                border-radius: 0;
                 height: 100vh;
             }
         }
