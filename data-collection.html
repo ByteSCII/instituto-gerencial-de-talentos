@@ -39,7 +39,7 @@
         const AUTOSAVE_DELAY = 2000; // 2 segundos
 
         // Elementos de navegación y fases
-        const formContainer = document.getElementById('form-container');
+        const mainFormCard = document.getElementById('main-form-card'); // Corregido el ID
         const phaseIndicator = document.getElementById('phase-indicator');
         const phase1Div = document.getElementById('phase-1');
         const phase2Div = document.getElementById('phase-2');
@@ -53,20 +53,20 @@
         const firstNameDisplay = document.getElementById('first-name-display');
         const lastNameDisplay = document.getElementById('last-name-display');
         const emailDisplay = document.getElementById('email-display');
-        const phonePrefixInput = document.getElementById('phone-prefix'); // Nuevo
-        const phoneNumberInput = document.getElementById('phone-number'); // Nuevo
-        const ciTypeInput = document.getElementById('ci-type'); // Nuevo
-        const ciNumberInput = document.getElementById('ci-number'); // Nuevo
+        const phonePrefixInput = document.getElementById('phone-prefix');
+        const phoneNumberInput = document.getElementById('phone-number');
+        const ciTypeInput = document.getElementById('ci-type');
+        const ciNumberInput = document.getElementById('ci-number');
         const addressInput = document.getElementById('address');
         const dobInput = document.getElementById('dob');
         const ageDisplay = document.getElementById('age-display');
-        const courseToApplyInput = document.getElementById('course-to-apply'); // Renombrado
+        const courseToApplyInput = document.getElementById('course-to-apply');
         const genderInput = document.getElementById('gender');
 
         // Campos de la Fase 2
-        const educationStatusInput = document.getElementById('education-status'); // Nuevo
-        const studyShiftInput = document.getElementById('study-shift'); // Nuevo
-        const currentStudyLevelInput = document.getElementById('current-study-level'); // Nuevo
+        const educationStatusInput = document.getElementById('education-status');
+        const studyShiftInput = document.getElementById('study-shift');
+        const currentStudyLevelInput = document.getElementById('current-study-level');
         const institutionInput = document.getElementById('institution');
         const degreeInput = document.getElementById('degree');
         const graduationYearInput = document.getElementById('graduation-year');
@@ -123,17 +123,16 @@
             const dataToSave = {
                 currentPhase: currentPhase, // Guarda la fase actual
                 phone: `${phonePrefixInput.value}${phoneNumberInput.value}`, // Combinar prefijo y número
-                ciType: ciTypeInput.value, // Nuevo
-                ciNumber: ciNumberInput.value, // Nuevo
+                ciType: ciTypeInput.value,
+                ciNumber: ciNumberInput.value,
                 address: addressInput.value,
                 dateOfBirth: dobInput.value,
-                courseToApply: courseToApplyInput.value, // Renombrado
+                courseToApply: courseToApplyInput.value,
                 gender: genderInput.value,
-                // Ciudad y País ya no son necesarios
                 
-                educationStatus: educationStatusInput.value, // Nuevo
-                studyShift: studyShiftInput.value, // Nuevo
-                currentStudyLevel: currentStudyLevelInput.value, // Nuevo
+                educationStatus: educationStatusInput.value,
+                studyShift: studyShiftInput.value,
+                currentStudyLevel: currentStudyLevelInput.value,
                 institution: institutionInput.value,
                 degree: degreeInput.value,
                 graduationYear: graduationYearInput.value ? parseInt(graduationYearInput.value) : null,
@@ -156,7 +155,7 @@
 
         // Event listeners para autoguardado en todos los campos editables
         document.querySelectorAll('#user-data-form input, #user-data-form select, #user-data-form textarea').forEach(input => {
-            if (input.type !== 'file' && input.id !== 'agree-terms') { // Los inputs de archivo y el checkbox se guardan al hacer submit
+            if (input.type !== 'file' && input.id !== 'agree-terms') {
                 input.addEventListener('input', triggerAutoSave);
             }
         });
@@ -201,14 +200,16 @@
                 case 3:
                     phase3Div.classList.remove('hidden');
                     prevButton.classList.remove('hidden');
-                    nextButton.classList.add('hidden'); // No hay "siguiente" después de la fase 3
+                    nextButton.classList.add('hidden');
                     finishButton.classList.remove('hidden');
                     break;
             }
             currentPhase = phaseNumber;
             updatePhaseIndicator();
             // Desplazar al principio del contenido del formulario al cambiar de fase
-            formContainer.scrollTop = 0;
+            if (mainFormCard) { // Asegurarse de que el elemento exista
+                mainFormCard.scrollTop = 0;
+            }
         }
 
         function validateCurrentPhase() {
@@ -235,9 +236,7 @@
                         agreeTermsCheckbox
                     ];
                     if (!agreeTermsCheckbox.checked) {
-                        // El alert ya se maneja en el loop, pero un mensaje específico es bueno
-                        // alert("Debes aceptar los términos y condiciones.");
-                        isValid = false; // Ya se establecerá como false por el loop
+                        isValid = false;
                     }
                     break;
             }
@@ -247,7 +246,7 @@
                     continue; 
                 }
                 if (field.value.trim() === '' || (field.type === 'checkbox' && !field.checked)) {
-                    field.classList.add('border-red-500', 'ring-red-500'); // Resalta el campo inválido
+                    field.classList.add('border-red-500', 'ring-red-500');
                     isValid = false;
                 } else {
                     field.classList.remove('border-red-500', 'ring-red-500');
@@ -261,10 +260,10 @@
         }
 
         async function nextPhase() {
-            clearTimeout(autoSaveTimeout); // Guardar inmediatamente al cambiar de fase
+            clearTimeout(autoSaveTimeout);
             
             if (validateCurrentPhase()) {
-                await saveFormData(); // Guardar antes de avanzar
+                await saveFormData();
                 if (currentPhase < totalPhases) {
                     showPhase(currentPhase + 1);
                 }
@@ -272,8 +271,8 @@
         }
 
         async function prevPhase() {
-            clearTimeout(autoSaveTimeout); // Guardar inmediatamente al cambiar de fase
-            await saveFormData(); // Guardar antes de retroceder
+            clearTimeout(autoSaveTimeout);
+            await saveFormData();
             
             if (currentPhase > 1) {
                 showPhase(currentPhase - 1);
@@ -292,16 +291,14 @@
                 const userProfileSnap = await getDoc(userProfileRef);
                 const userProfileData = userProfileSnap.exists() ? userProfileSnap.data() : {};
 
-                // Cargar la fase actual del usuario desde Firestore, si existe
                 if (userProfileData.dataCollected === true) {
                     console.log("data-collection.html: Datos ya recolectados. Redirigiendo a dashboard.html.");
                     window.location.href = 'dashboard.html';
                     return;
                 }
 
-                currentPhase = userProfileData.currentPhase || 1; // Cargar la fase guardada o empezar en 1
+                currentPhase = userProfileData.currentPhase || 1;
 
-                // Pre-fill fields from Firebase Auth and Firestore profile
                 firstNameDisplay.textContent = userProfileData.firstName || 'N/A';
                 lastNameDisplay.textContent = userProfileData.lastName || 'N/A';
                 emailDisplay.textContent = user.email || 'N/A';
@@ -309,19 +306,19 @@
                 // Cargar datos en los campos editables
                 // Teléfono
                 const fullPhone = userProfileData.phone || '';
-                if (fullPhone.length > 4) {
+                if (fullPhone.length > 4) { // Asume que el prefijo siempre es de 4 dígitos (04XX)
                     phonePrefixInput.value = fullPhone.substring(0, 4);
                     phoneNumberInput.value = fullPhone.substring(4);
                 } else {
-                    phoneNumberInput.value = fullPhone;
+                    phoneNumberInput.value = fullPhone; // Si no tiene el formato esperado, cargarlo tal cual
                 }
                 
                 // Cédula de Identidad
-                const ciFull = userProfileData.ciNumber ? `${userProfileData.ciType || ''}${userProfileData.ciNumber}` : (userProfileData.ci || ''); // Manejar formato antiguo si existe
-                if (ciFull.startsWith('V-') || ciFull.startsWith('E-')) {
+                const ciFull = userProfileData.ciNumber ? `${userProfileData.ciType || ''}${userProfileData.ciNumber}` : (userProfileData.ci || '');
+                if (ciFull.startsWith('V') || ciFull.startsWith('E')) {
                     ciTypeInput.value = ciFull.substring(0,1);
-                    ciNumberInput.value = ciFull.substring(2);
-                } else if (ciFull.length > 0) { // Si solo hay un número, asumir V por defecto o dejar vacío el tipo
+                    ciNumberInput.value = ciFull.substring(1); // El número va desde el segundo caracter
+                } else if (ciFull.length > 0) {
                     ciNumberInput.value = ciFull;
                 }
 
@@ -339,7 +336,7 @@
                 degreeInput.value = userProfileData.degree || '';
                 graduationYearInput.value = userProfileData.graduationYear || '';
 
-                ageDisplay.textContent = calculateAge(dobInput.value); // Recalcular edad
+                ageDisplay.textContent = calculateAge(dobInput.value);
 
                 // Ejecutar la lógica condicional de turno de estudio al cargar los datos
                 const status = educationStatusInput.value;
@@ -351,8 +348,8 @@
                     studyShiftInput.removeAttribute('required');
                 }
 
-                showPhase(currentPhase); // Muestra la fase correcta al cargar
-                document.body.classList.remove('hidden'); // Muestra el contenido de la página
+                showPhase(currentPhase);
+                document.body.classList.remove('hidden');
             } else {
                 console.log("data-collection.html: Usuario no autenticado o no verificado. Redirigiendo a auth.html.");
                 await signOut(auth);
@@ -360,14 +357,13 @@
             }
         });
 
-        // Función para enviar los datos finales
         async function handleSubmitData(event) {
             event.preventDefault();
-            clearTimeout(autoSaveTimeout); // Asegurar que el último cambio se guarde
-            await saveFormData(); // Guarda los datos de la última fase
+            clearTimeout(autoSaveTimeout);
+            await saveFormData();
 
             if (!validateCurrentPhase()) {
-                return; // Si la última fase no está validada, no se envía
+                return;
             }
 
             const currentUser = auth.currentUser;
@@ -376,32 +372,12 @@
                 window.location.href = 'auth.html';
                 return;
             }
-
-            // Lógica para subir documentos (solo placeholders por ahora)
-            // Esta parte requeriría Firebase Storage y su propia lógica asíncrona
-            // y luego guardar las URLs resultantes en Firestore.
-            // if (ciUploadInput.files.length > 0) {
-            //     console.log("Subiendo CI:", ciUploadInput.files[0].name);
-            //     // const ciUrl = await uploadFile(ciUploadInput.files[0], currentUser.uid, 'ci');
-            //     // dataToSave.ciDocumentUrl = ciUrl;
-            // }
-            // if (degreeUploadInput.files.length > 0) {
-            //     console.log("Subiendo Título:", degreeUploadInput.files[0].name);
-            //     // const degreeUrl = await uploadFile(degreeUploadInput.files[0], currentUser.uid, 'degree');
-            //     // dataToSave.degreeDocumentUrl = degreeUrl;
-            // }
-            // if (otherDocsUploadInput.files.length > 0) {
-            //     console.log("Subiendo Otros Documentos:", otherDocsUploadInput.files[0].name);
-            //     // const otherUrls = await uploadMultipleFiles(otherDocsUploadInput.files, currentUser.uid, 'other_docs');
-            //     // dataToSave.otherDocumentsUrls = otherUrls;
-            // }
-
+            
             try {
-                // Actualizar el perfil del usuario para marcar la recolección de datos como completa
                 const userProfileRef = doc(db, `artifacts/default-app-id/users/${currentUser.uid}/private_data/user_profile`);
                 await setDoc(userProfileRef, {
-                    dataCollected: true, // Marcar la recolección de datos como completa
-                    currentPhase: totalPhases, // Opcional: registrar la fase final
+                    dataCollected: true,
+                    currentPhase: totalPhases,
                     updatedAt: new Date()
                 }, { merge: true });
 
@@ -413,13 +389,12 @@
                 alert("Error al finalizar el registro. Por favor, inténtalo de nuevo.");
             }
         }
-        finishButton.addEventListener('click', handleSubmitData); // El botón de "Finalizar" de la fase 3
+        finishButton.addEventListener('click', handleSubmitData);
 
-        // Función para cerrar sesión (ya existente)
         async function handleLogout() {
             try {
                 await signOut(auth);
-                window.location.href = 'auth.html'; // Redirige al login después de cerrar sesión
+                window.location.href = 'auth.html';
             } catch (error) {
                 console.error("Error al cerrar sesión:", error.message);
                 alert("Error al cerrar sesión. Por favor, inténtalo de nuevo.");
@@ -432,7 +407,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Oculta el scroll de todo el html/body, para que solo el contenido scrollable lo tenga */
+            overflow: hidden;
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -445,22 +420,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Centra el container-card verticalmente */
+            justify-content: center;
         }
         .container-card {
             background-color: #1c1c24;
-            border-radius: 0; /* Eliminado: bordes redondeados para full screen */
+            border-radius: 0;
             padding: 2.5rem;
-            box-shadow: none; /* Eliminado: sombra para un look más full screen/app */
+            box-shadow: none;
             width: 100%;
-            height: 100vh; /* ¡100% del alto del viewport! */
-            margin: 0; /* Eliminado: cualquier margen para full screen */
-            max-width: none; /* Eliminado: límite de ancho para full screen */
+            height: 100vh;
+            margin: 0;
+            max-width: none;
             color: #e2e8f0;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            overflow-y: auto; /* Permite scroll solo dentro de la tarjeta si el contenido es mucho */
+            overflow-y: auto;
             position: relative;
         }
         @media (max-width: 768px) {
@@ -565,7 +540,7 @@
     </style>
 </head>
 <body class="bg-[#0e172a] min-h-screen flex items-center justify-center hidden">
-    <div class="container-card">
+    <div id="main-form-card" class="container-card"> <!-- ID añadido aquí -->
         <h1 class="text-3xl font-bold text-center mb-8 text-blue-400">Datos de Registro de Inscripción de IGT</h1>
         <p class="text-center text-gray-400 mb-6">Completa los siguientes pasos para finalizar tu inscripción.</p>
 
@@ -679,7 +654,7 @@
                             <option value="No estudiando">No estudiando</option>
                         </select>
                     </div>
-                    <div id="study-shift-container" class="mt-4 hidden"> <!-- Contenedor condicional -->
+                    <div id="study-shift-container" class="mt-4 hidden">
                         <label for="study-shift" class="form-label">Turno de estudio:</label>
                         <select id="study-shift" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input">
                             <option value="">Selecciona el turno</option>
