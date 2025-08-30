@@ -40,15 +40,26 @@
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         setLogLevel('error');
 
-        // Listener para verificar si el usuario ya está autenticado y redirigirlo
-        // NOTA: Con inMemoryPersistence, este onAuthStateChanged solo funcionará si la página NO se ha recargado
-        // o la pestaña NO se ha cerrado y reabierto. Si la pestaña se cierra, la sesión se pierde.
-        onAuthStateChanged(auth, (user) => {
+        // **CÓDIGO CLAVE PARA EVITAR EL INICIO DE SESIÓN AUTOMÁTICO**
+        // Este listener se ejecuta en cada carga de auth.html.
+        // Si detecta un usuario (incluso de una sesión persistente anterior),
+        // lo cierra de sesión inmediatamente para forzar un nuevo login.
+        onAuthStateChanged(auth, async (user) => {
             console.log("auth.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
-            if (user && user.emailVerified) {
-                console.log("auth.html: Usuario logueado y verificado en la sesión actual de la pestaña. Redirigiendo a data-collection.html.");
-                window.location.href = 'data-collection.html';
+            
+            if (user) {
+                // Si hay un usuario, incluso si ya está verificado, lo cerramos de sesión.
+                // Esto anula cualquier persistencia anterior (localStorage, sessionStorage)
+                // y asegura que la página de auth.html SIEMPRE muestre el formulario de login.
+                console.log("auth.html: Usuario detectado al cargar la página. Forzando cierre de sesión para que el usuario deba iniciar sesión de nuevo.");
+                await signOut(auth); // Cierra la sesión
+                // IMPORTANTE: NO redirigir aquí. Deja que la página se quede en auth.html y el
+                // onAuthStateChanged se disparará de nuevo con 'user = null'.
+                return; // Salir para evitar cualquier procesamiento con el objeto de usuario ahora inválido.
             }
+            // Si user es null (ya sea por defecto o después de un signOut forzado),
+            // la página permanece en auth.html, lista para un nuevo inicio de sesión.
+            console.log("auth.html: Usuario no autenticado. Mostrando formulario de inicio de sesión.");
         });
 
         // Función para manejar el registro de usuario
@@ -99,11 +110,12 @@
         // Nueva función para manejar el inicio de sesión
         async function handleLogin(email, password) {
             try {
-                // Establecer la persistencia ANTES de iniciar sesión
+                // **CÓDIGO CLAVE PARA LA PERSISTENCIA EN MEMORIA**
+                // Establecer la persistencia ANTES de iniciar sesión.
                 // inMemoryPersistence asegura que la sesión solo dura mientras la pestaña está abierta.
                 // Si la pestaña se cierra, la sesión se pierde.
                 await setPersistence(auth, inMemoryPersistence);
-                console.log("handleLogin: Persistencia establecida a 'inMemoryPersistence'.");
+                console.log("handleLogin: Persistencia establecida a 'inMemoryPersistence' para este inicio de sesión.");
 
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
