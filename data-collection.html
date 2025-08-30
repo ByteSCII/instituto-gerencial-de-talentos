@@ -41,8 +41,10 @@
 
         // Listener para verificar si el usuario ya está autenticado y redirigirlo
         onAuthStateChanged(auth, (user) => {
+            console.log("auth.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
             if (user && user.emailVerified) {
                 // Si el usuario ya está logueado y verificado, redirige a la página de datos
+                console.log("auth.html: Usuario ya logueado y verificado. Redirigiendo a data-collection.html.");
                 window.location.href = 'data-collection.html';
             }
             // Si no está logueado o no verificado, no hace nada (se queda en la página de login)
@@ -99,15 +101,18 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
+                console.log("handleLogin: Intento de inicio de sesión para:", user.email, "Correo verificado:", user.emailVerified);
+
                 if (user.emailVerified) {
                     showNotification("¡Inicio de sesión exitoso! Redirigiendo...", 'success');
+                    console.log("handleLogin: Correo verificado. Redirigiendo a data-collection.html.");
                     // Redirigir al usuario a la nueva página protegida
                     window.location.href = 'data-collection.html'; 
                 } else {
                     // Si el correo no está verificado, cierra la sesión del usuario
                     await signOut(auth);
                     showNotification("Tu correo electrónico no ha sido verificado. Por favor, revisa tu bandeja de entrada o spam.", 'error');
-                    console.warn("Intento de inicio de sesión con correo no verificado. Sesión cerrada.");
+                    console.warn("handleLogin: Correo NO verificado. Sesión cerrada.");
                 }
             } catch (error) {
                 console.error("Error al iniciar sesión:", error.message);
