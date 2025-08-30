@@ -6,8 +6,8 @@
     <title>Authentication</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Script de hCaptcha -->
-    <script src="https://js.hcaptcha.com/1.1/api.js" async defer></script>
+    <!-- Script de Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -136,15 +136,9 @@
                                     </svg>
                                 </div>
                             </div>
-                            <!-- hCaptcha integrado aquí -->
-                            <div id="reg-hcaptcha"
-                                 class="h-captcha"
-                                 data-sitekey="34640a98-19da-4c9e-83ce-d1c281e08a70"
-                                 data-size="invisible"
-                                 data-callback="onCaptchaSuccess"
-                                 data-expired-callback="onCaptchaExpire">
-                            </div>
-                            <input type="hidden" name="h-captcha-response" id="h-captcha-response">
+                            <!-- Google reCAPTCHA v2 "No soy un robot" aquí -->
+                            <div class="g-recaptcha" data-sitekey="6LcF2rcrAAAAAG6tgPsKEcp6QMqA0XB01pjvRurq" data-callback="onRecaptchaSuccess" data-expired-callback="onRecaptchaExpired"></div>
+                            
                             <button type="submit" class="w-full bg-purple-600 text-white rounded-lg p-3 hover:bg-purple-700 transition-colors">
                                 Crear cuenta
                             </button>
@@ -218,46 +212,36 @@
 
         confirmPassword.addEventListener('input', checkPasswordMatch);
 
-        // --- Lógica de hCaptcha ---
-        let captchaSolved = false;
+        // --- Lógica de Google reCAPTCHA ---
         const registrationForm = document.getElementById('registration-form');
-        const hcaptchaResponseInput = document.getElementById('h-captcha-response');
 
-        // Callback de éxito de hCaptcha
-        function onCaptchaSuccess(token) {
-            console.log("hCaptcha exitoso, token:", token);
-            hcaptchaResponseInput.value = token;
-            captchaSolved = true;
-            // Envía el formulario programáticamente una vez que el captcha se ha resuelto
-            registrationForm.submit();
+        // Callback de éxito de reCAPTCHA
+        function onRecaptchaSuccess(token) {
+            console.log("reCAPTCHA exitoso, token:", token);
+            // El token se guarda automáticamente en un campo oculto 'g-recaptcha-response' por reCAPTCHA.
+            // Para este tipo de reCAPTCHA (checkbox), el usuario normalmente hará clic en el botón de submit después de marcar la casilla.
         }
 
-        // Callback de expiración de hCaptcha
-        function onCaptchaExpire() {
-            console.log("hCaptcha ha expirado.");
-            hcaptchaResponseInput.value = '';
-            captchaSolved = false;
-            // Opcional: reiniciar el captcha o informar al usuario
-            hcaptcha.reset();
+        // Callback de expiración de reCAPTCHA
+        function onRecaptchaExpired() {
+            console.log("reCAPTCHA ha expirado. Reiniciando...");
+            grecaptcha.reset(); // Reinicia el widget de reCAPTCHA
         }
 
         // Manejador del evento de envío del formulario de registro
         registrationForm.addEventListener('submit', function(event) {
-            // Si el captcha no ha sido resuelto aún
-            if (!captchaSolved) {
+            const recaptchaResponse = grecaptcha.getResponse(); // Obtiene la respuesta del captcha
+
+            if (!recaptchaResponse) { // Si no hay respuesta del captcha (no se ha marcado o resuelto)
                 event.preventDefault(); // Detiene el envío del formulario
-                console.log("Intentando ejecutar hCaptcha...");
-                // Ejecuta el hCaptcha invisible para que aparezca como un modal
-                hcaptcha.execute();
+                alert("Por favor, marca la casilla 'No soy un robot' para continuar."); // Muestra una alerta
+                console.log("reCAPTCHA no resuelto, deteniendo envío.");
             } else {
-                // Si el captcha ya fue resuelto y el token está presente, permite el envío.
-                // Esta ruta se tomará cuando registrationForm.submit() se llame desde onCaptchaSuccess.
-                console.log("Formulario enviado con el token de hCaptcha.");
-                // Restablecer captchaSolved para la próxima vez o si el envío falla en el servidor
-                captchaSolved = false;
+                console.log("Formulario enviado con el token de reCAPTCHA.");
+                // El formulario se enviará automáticamente con el token incluido.
             }
         });
-        // --- Fin de la lógica de hCaptcha ---
+        // --- Fin de la lógica de Google reCAPTCHA ---
     </script>
 </body>
 </html>
