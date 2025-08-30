@@ -3,11 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication</title>
+    <title>Authentication | IGT Catia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Script de Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://igt-catia.vercel.app/auth.html"> <!-- ¡ACTUALIZA ESTO SI LA URL CAMBIA! -->
+    <meta property="og:title" content="Iniciar Sesión / Registrarse en IGT Catia">
+    <meta property="og:description" content="Accede o crea una cuenta en el Instituto Gerencial de Talentos Catia para gestionar tus momentos y recuerdos.">
+    <meta property="og:image" content="https://res.cloudinary.com/djv4xa6wu/image/upload/v1737831467/abhiraj_tdwxdf.webp"> <!-- ¡CAMBIA ESTA URL POR LA IMAGEN DE VISTA PREVIA QUE QUIERAS! -->
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://igt-catia.vercel.app/auth.html"> <!-- ¡ACTUALIZA ESTO SI LA URL CAMBIA! -->
+    <meta property="twitter:title" content="Iniciar Sesión / Registrarse en IGT Catia">
+    <meta property="twitter:description" content="Accede o crea una cuenta en el Instituto Gerencial de Talentos Catia para gestionar tus momentos y recuerdos.">
+    <meta property="twitter:image" content="https://res.cloudinary.com/djv4xa6wu/image/upload/v1737831467/abhiraj_tdwxdf.webp"> <!-- ¡CAMBIA ESTA URL POR LA IMAGEN DE VISTA PREVIA QUE QUIERAS! -->
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -218,8 +233,6 @@
         // Callback de éxito de reCAPTCHA
         function onRecaptchaSuccess(token) {
             console.log("reCAPTCHA exitoso, token:", token);
-            // El token se guarda automáticamente en un campo oculto 'g-recaptcha-response' por reCAPTCHA.
-            // Para este tipo de reCAPTCHA (checkbox), el usuario normalmente hará clic en el botón de submit después de marcar la casilla.
         }
 
         // Callback de expiración de reCAPTCHA
@@ -238,7 +251,6 @@
                 console.log("reCAPTCHA no resuelto, deteniendo envío.");
             } else {
                 console.log("Formulario enviado con el token de reCAPTCHA.");
-                // El formulario se enviará automáticamente con el token incluido.
             }
         });
         // --- Fin de la lógica de Google reCAPTCHA ---
