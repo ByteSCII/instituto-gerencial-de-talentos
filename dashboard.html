@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Instituto Gerencial de Talentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Importar Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // Importamos browserSessionPersistence para que la sesión dure lo que dure la pestaña.
+        import { setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+
+        // Tu configuración de Firebase (DEBE SER LA MISMA QUE EN auth.html y data-collection.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQPZiekhX6LOitpyAy1pYUNb0Lb74k8WQ",
+            authDomain: "instituto-gerencial-de-talento.firebaseapp.com",
+            projectId: "instituto-gerencial-de-talento",
+            storageBucket: "instituto-gerencial-de-talento.firebasestorage.app",
+            messagingSenderId: "549000895234",
+            appId: "1:549000895234:web:e3621a884d7078d350c01b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Ocultar mensajes de log de Firebase
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        setLogLevel('error');
+
+        // Listener para el estado de autenticación
+        onAuthStateChanged(auth, async (user) => {
+            console.log("dashboard.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
+
+            if (user && user.emailVerified) {
+                // Usuario está logueado y verificado. Mostrar el contenido del dashboard.
+                document.getElementById('user-email-dashboard').textContent = user.email;
+                document.body.classList.remove('hidden'); // Muestra el contenido de la página
+            } else {
+                // Si no hay usuario o no está verificado, redirigir al login.
+                console.log("dashboard.html: Usuario no autenticado o no verificado. Redirigiendo a auth.html.");
+                await signOut(auth); // Aseguramos que la sesión se cierre
+                window.location.href = 'auth.html';
+            }
+        });
+
+        // Función para cerrar sesión
+        async function handleLogout() {
+            try {
+                await signOut(auth);
+                window.location.href = 'auth.html'; // Redirige al login después de cerrar sesión
+            } catch (error) {
+                console.error("Error al cerrar sesión:", error.message);
+                alert("Error al cerrar sesión. Por favor, inténtalo de nuevo.");
+            }
+        }
+        window.handleLogout = handleLogout; // Hacer accesible globalmente
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0e172a;
+            color: #e2e8f0; /* Color de texto claro */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .container-card {
+            background-color: #1c1c24; /* Fondo oscuro para la tarjeta */
+            border-radius: 1rem; /* rounded-3xl */
+            padding: 2.5rem; /* p-10 */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
+        }
+        .animated-btn {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .animated-btn:hover {
+            transform: scale(1.02); /* Agrandamiento sutil */
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+        body.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center hidden">
+    <div class="max-w-xl mx-auto container-card w-full text-center">
+        <h1 class="text-3xl font-semibold text-white mb-6">¡Bienvenido al Dashboard!</h1>
+        <p class="text-gray-400 mb-4">Has iniciado sesión como: <span id="user-email-dashboard" class="font-medium text-blue-400"></span></p>
+        <p class="text-gray-400 mb-8">Esta es tu página principal después de completar tus datos. Aquí verás tu información personalizada.</p>
+        
+        <!-- Contenido futuro del dashboard aquí -->
+        <div class="bg-gray-700 p-4 rounded-lg text-white">
+            <p>Aquí irá el contenido personalizado del usuario.</p>
+            <p>Por ahora, es un placeholder.</p>
+        </div>
+
+        <div class="mt-8">
+            <button onclick="handleLogout()" class="bg-red-600 text-white rounded-lg p-3 hover:bg-red-700 transition-colors animated-btn">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+</body>
+</html>
