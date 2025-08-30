@@ -14,7 +14,8 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // Importar inMemoryPersistence
+        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Variables globales (proporcionadas por el entorno de Canvas)
@@ -40,14 +41,14 @@
         setLogLevel('error');
 
         // Listener para verificar si el usuario ya está autenticado y redirigirlo
+        // NOTA: Con inMemoryPersistence, este onAuthStateChanged solo funcionará si la página NO se ha recargado
+        // o la pestaña NO se ha cerrado y reabierto. Si la pestaña se cierra, la sesión se pierde.
         onAuthStateChanged(auth, (user) => {
             console.log("auth.html: onAuthStateChanged fired. User:", user ? user.email : "null", "Verified:", user ? user.emailVerified : "N/A");
             if (user && user.emailVerified) {
-                // Si el usuario ya está logueado y verificado, redirige a la página de datos
-                console.log("auth.html: Usuario ya logueado y verificado. Redirigiendo a data-collection.html.");
+                console.log("auth.html: Usuario logueado y verificado en la sesión actual de la pestaña. Redirigiendo a data-collection.html.");
                 window.location.href = 'data-collection.html';
             }
-            // Si no está logueado o no verificado, no hace nada (se queda en la página de login)
         });
 
         // Función para manejar el registro de usuario
@@ -98,9 +99,11 @@
         // Nueva función para manejar el inicio de sesión
         async function handleLogin(email, password) {
             try {
-                // Establecer la persistencia antes de iniciar sesión
-                await setPersistence(auth, browserSessionPersistence);
-                console.log("handleLogin: Persistencia establecida a 'session'.");
+                // Establecer la persistencia ANTES de iniciar sesión
+                // inMemoryPersistence asegura que la sesión solo dura mientras la pestaña está abierta.
+                // Si la pestaña se cierra, la sesión se pierde.
+                await setPersistence(auth, inMemoryPersistence);
+                console.log("handleLogin: Persistencia establecida a 'inMemoryPersistence'.");
 
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
@@ -409,26 +412,22 @@
     <script>
         function flipCard() {
             const formContainer = document.getElementById('form-container');
-            // Si estamos en la tarjeta de éxito, primero removemos la clase 'registered'
             if (formContainer.classList.contains('registered')) {
                 formContainer.classList.remove('registered');
-                // Esperamos un breve momento para que la transición de registered a default comience
                 setTimeout(() => {
-                    formContainer.classList.toggle('flipped'); // Luego, alternamos 'flipped'
-                }, 10); // Un pequeño retraso para permitir la transición inicial
+                    formContainer.classList.toggle('flipped');
+                }, 10);
             } else {
-                // Si no estamos en la tarjeta de éxito, simplemente alternamos 'flipped'
                 formContainer.classList.toggle('flipped');
             }
         }
 
-        // Nueva función para volver del estado de éxito al login
         function resetToLogin() {
             const formContainer = document.getElementById('form-container');
-            formContainer.classList.remove('registered'); // Vuelve al estado inicial (login)
-            formContainer.classList.remove('flipped'); // Asegura que la clase 'flipped' también se elimine
+            formContainer.classList.remove('registered');
+            formContainer.classList.remove('flipped');
         }
-        window.resetToLogin = resetToLogin; // Hacer la función accesible globalmente
+        window.resetToLogin = resetToLogin;
 
         const passwordReg = document.getElementById('password-reg');
         const confirmPassword = document.getElementById('confirm-password');
@@ -441,7 +440,7 @@
             notification.className = `message-container show ${type}`;
             setTimeout(() => {
                 notification.className = `message-container ${type}`;
-            }, 3000); // Ocultar después de 3 segundos
+            }, 3000);
         }
 
         function checkPasswordMatch() {
@@ -503,26 +502,22 @@
         let loginRecaptchaWidgetId;
         let registrationRecaptchaWidgetId;
 
-        // Callback que se ejecuta cuando la API de reCAPTCHA está cargada
         function onloadCallback() {
-            // Renderizar el reCAPTCHA para el formulario de Login
             loginRecaptchaWidgetId = grecaptcha.render('login-recaptcha-container', {
                 'sitekey': RECAPTCHA_SITE_KEY,
                 'callback': onLoginRecaptchaSuccess,
                 'expired-callback': onLoginRecaptchaExpired,
-                'theme': 'dark' // O 'light' según tu diseño
+                'theme': 'dark'
             });
 
-            // Renderizar el reCAPTCHA para el formulario de Registro
             registrationRecaptchaWidgetId = grecaptcha.render('registration-recaptcha-container', {
                 'sitekey': RECAPTCHA_SITE_KEY,
                 'callback': onRegistrationRecaptchaSuccess,
                 'expired-callback': onRegistrationRecaptchaExpired,
-                'theme': 'dark' // O 'light' según tu diseño
+                'theme': 'dark'
             });
         }
 
-        // Callbacks de reCAPTCHA para el formulario de Login
         function onLoginRecaptchaSuccess(token) {
             console.log("reCAPTCHA de Login exitoso, token:", token);
         }
@@ -532,7 +527,6 @@
             grecaptcha.reset(loginRecaptchaWidgetId);
         }
 
-        // Callbacks de reCAPTCHA para el formulario de Registro
         function onRegistrationRecaptchaSuccess(token) {
             console.log("reCAPTCHA de Registro exitoso, token:", token);
         }
@@ -542,7 +536,6 @@
             grecaptcha.reset(registrationRecaptchaWidgetId);
         }
 
-        // Manejador del evento de envío del formulario de Login
         const loginForm = document.getElementById('login-form');
         loginForm.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -551,16 +544,15 @@
             if (!recaptchaResponse) {
                 showNotification("Por favor, marca la casilla 'No soy un robot' para iniciar sesión.", 'error');
                 console.log("reCAPTCHA de Login no resuelto, deteniendo envío.");
-                return; // Detener la ejecución si reCAPTCHA no está resuelto
+                return;
             }
             
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             
-            window.handleLogin(email, password); // Llama a la nueva función handleLogin
+            window.handleLogin(email, password);
         });
 
-        // Manejador del evento de envío del formulario de Registro
         const registrationForm = document.getElementById('registration-form');
         registrationForm.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -569,7 +561,7 @@
             if (!recaptchaResponse) {
                 showNotification("Por favor, marca la casilla 'No soy un robot' para crear una cuenta.", 'error');
                 console.log("reCAPTCHA de Registro no resuelto, deteniendo envío.");
-                return; // Detener la ejecución si reCAPTCHA no está resuelto
+                return;
             }
             
             const firstName = document.getElementById('firstName').value;
@@ -584,24 +576,18 @@
             
             window.handleRegistration(email, password, firstName, lastName);
         });
-        // --- Fin de la lógica de Google reCAPTCHA ---
 
-        // Función para alternar la visibilidad de la contraseña
         function togglePasswordVisibility(passwordInputId) {
             const passwordInput = document.getElementById(passwordInputId);
             if (passwordInput) {
                 if (passwordInput.type === 'password') {
                     passwordInput.type = 'text';
-                    // Opcional: Podrías cambiar el icono del SVG aquí para indicar que es visible.
-                    // Por ejemplo, añadiendo o quitando una clase al botón que contiene el SVG.
                 } else {
                     passwordInput.type = 'password';
-                    // Opcional: Cambiar el icono de nuevo.
                 }
             }
         }
 
-        // Asignar event listeners a los botones de toggle de contraseña
         document.getElementById('toggle-login-password')?.addEventListener('click', () => {
             togglePasswordVisibility('login-password');
         });
