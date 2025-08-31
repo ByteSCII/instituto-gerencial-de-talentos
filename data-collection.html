@@ -465,15 +465,26 @@
             const selectElement = document.getElementById(selectId);
             if (!selectElement) return;
 
-            // Obtener el valor actualmente seleccionado para resaltar
+            const isRequired = selectElement.hasAttribute('required');
             const selectedValue = selectElement.value;
 
-            // Iterar sobre las opciones del select oculto
+            // Añadir una opción "vacía" genérica solo si el select NO es requerido y NO tiene un valor seleccionado
+            if (!isRequired && !selectedValue) {
+                 const emptyOptionDiv = document.createElement('div');
+                 emptyOptionDiv.className = 'modal-option text-gray-500';
+                 emptyOptionDiv.textContent = 'Selecciona una opción...';
+                 emptyOptionDiv.dataset.value = '';
+                 emptyOptionDiv.addEventListener('click', () => selectCustomOption(selectId, displayElementId, '', 'Selecciona una opción...'));
+                 modalOptionsContainer.appendChild(emptyOptionDiv);
+            }
+
             Array.from(selectElement.options).forEach(option => {
-                // Si el select es requerido y la opción actual tiene un valor vacío, la saltamos.
-                // Esto elimina las opciones "Selecciona un curso" si el select es requerido.
-                if (selectElement.hasAttribute('required') && option.value === "") {
-                    return;
+                // Si el select es requerido, omitir la opción HTML con value=""
+                // que a veces se usa como placeholder en selects estándar.
+                // Si el select NO es requerido, incluimos todas las opciones,
+                // pero ya hemos manejado la opción "vacía" genérica arriba.
+                if (isRequired && option.value === "") {
+                    return; 
                 }
                 
                 const optionDiv = document.createElement('div');
@@ -481,7 +492,6 @@
                 optionDiv.textContent = option.textContent;
                 optionDiv.dataset.value = option.value;
                 
-                // Resaltar si esta opción es la seleccionada actualmente
                 if (option.value === selectedValue) {
                     optionDiv.classList.add('modal-option-selected');
                 }
@@ -503,11 +513,9 @@
 
             if (selectElement) {
                 selectElement.value = value;
-                selectElement.dispatchEvent(new Event('change')); // Disparar evento change para la lógica condicional (ej. study-shift)
+                selectElement.dispatchEvent(new Event('change'));
             }
             if (displayElement) {
-                // Actualizar el texto del display con el texto de la opción seleccionada.
-                // Si la opción vacía se selecciona, se mostrará su texto (ej. "Selecciona tu género").
                 displayElement.textContent = text;
                 displayElement.classList.remove('border-red-500', 'ring-red-500');
             }
@@ -520,7 +528,7 @@
             customSelectModal.classList.add('opacity-0');
             setTimeout(() => {
                 customSelectModal.classList.add('hidden');
-            }, 300); // Coincide con la duración de la transición CSS
+            }, 300);
         }
 
         // Asignar listeners a los divs que abrirán los modales
@@ -530,11 +538,11 @@
         document.getElementById('gender-display').addEventListener('click', () => openCustomSelectModal('gender-select', 'gender-display', 'Selecciona tu género'));
         document.getElementById('education-status-display').addEventListener('click', () => openCustomSelectModal('education-status-select', 'education-status-display', 'Selecciona tu estado educativo'));
         document.getElementById('study-shift-display').addEventListener('click', () => openCustomSelectModal('study-shift-select', 'study-shift-display', 'Selecciona el turno de estudio'));
-        document.getElementById('current-study-level-display').addEventListener('click', () => openCustomSelectModal('current-study-level-select', 'current-study-level-display', 'Selecciona tu nivel de estudio'));
+        document.getElementById('current-study-level-display').addEventListener('click', () => openCustomSelectModal('current-study-level-select', 'current-study-level-display', 'Selecciona el nivel de estudio'));
 
         // Cerrar modal al hacer clic fuera
         customSelectModal.addEventListener('click', (event) => {
-            if (event.target === customSelectModal) { // Solo si el clic es en el overlay
+            if (event.target === customSelectModal) {
                 closeCustomSelectModal();
             }
         });
@@ -792,7 +800,7 @@
                                 <div id="phone-prefix-display" class="custom-select-display w-1/3" required>
                                     04XX <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </div>
-                                <input type="tel" id="phone-number" placeholder="Ej: 1234567" class="w-2/3 rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" pattern="[0-9]{7}" title="7 dígitos numéricos" required>
+                                <input type="tel" id="phone-number" placeholder="Ej: 1234567" class="w-2/3 rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" pattern="[0-9]{7}" title="7 dígitos numéricos" maxlength="7" required>
                             </div>
                             <select id="phone-prefix-select" class="hidden"> <!-- SELECT OCULTO -->
                                 <option value="0412">0412</option>
@@ -848,6 +856,7 @@
                                 Selecciona tu género <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                             <select id="gender-select" class="hidden"> <!-- SELECT OCULTO -->
+                                <option value="">Selecciona tu género</option>
                                 <option value="Hombre">Hombre</option>
                                 <option value="Mujer">Mujer</option>
                                 <option value="Otro">Otro</option>
