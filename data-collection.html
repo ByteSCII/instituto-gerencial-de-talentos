@@ -49,7 +49,7 @@
 
         // Campos de la Fase 1
         const firstNameDisplay = document.getElementById('first-name-display');
-        const lastNameDisplay = document.getElementById('last-name-display'); // ¡CORREGIDO AQUÍ!
+        const lastNameDisplay = document.getElementById('last-name-display');
         const emailDisplay = document.getElementById('email-display');
         const phonePrefixInput = document.getElementById('phone-prefix-select');
         const phoneNumberInput = document.getElementById('phone-number');
@@ -75,6 +75,13 @@
         const otherDocsUploadInput = document.getElementById('other-docs-upload');
         const agreeTermsCheckbox = document.getElementById('agree-terms');
 
+        // Elementos del Modal (MOVIDOS AL PRINCIPIO PARA CORRECTA DEFINICIÓN)
+        const customSelectModal = document.getElementById('custom-select-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalOptionsContainer = document.getElementById('modal-options-container');
+        let currentModalTargetSelectId = '';
+        let currentModalTargetDisplayId = '';
+
 
         // Funciones auxiliares
         function calculateAge(dateOfBirth) {
@@ -91,7 +98,6 @@
 
         dobInput.addEventListener('change', () => {
             ageDisplay.textContent = calculateAge(dobInput.value);
-            // No triggerAutoSave, se guarda al pasar de fase.
         });
 
         // Lógica condicional para Turno de estudio
@@ -105,7 +111,6 @@
                 studyShiftContainer.classList.add('hidden');
                 studyShiftInput.removeAttribute('required');
                 studyShiftInput.value = ''; // Limpiar si se oculta
-                // También limpiar el display del modal
                 document.getElementById('study-shift-display').textContent = 'Selecciona el turno';
             }
         });
@@ -119,7 +124,6 @@
             console.log("Guardando datos al cambiar de fase...");
             const userProfileRef = doc(db, `artifacts/default-app-id/users/${currentUser.uid}/private_data/user_profile`);
             
-            // Recolectar todos los datos del formulario que pueden ser guardados
             const dataToSave = {
                 currentPhase: currentPhase,
                 phone: `${phonePrefixInput.value}${phoneNumberInput.value}`,
@@ -135,7 +139,6 @@
                 currentStudyLevel: currentStudyLevelInput.value,
                 institution: institutionInput.value,
                 degree: degreeInput.value,
-                // Si graduationYearInput está vacío, guardarlo como null para que Firestore acepte el tipo number o null
                 graduationYear: graduationYearInput.value ? parseInt(graduationYearInput.value) : null, 
 
                 updatedAt: new Date()
@@ -268,7 +271,7 @@
 
         async function nextPhase() {
             if (validateCurrentPhase()) {
-                await saveFormDataOnPhaseChange(); // Guardar antes de avanzar
+                await saveFormDataOnPhaseChange();
                 if (currentPhase < totalPhases) {
                     showPhase(currentPhase + 1);
                 }
@@ -276,7 +279,7 @@
         }
 
         async function prevPhase() {
-            await saveFormDataOnPhaseChange(); // Guardar antes de retroceder
+            await saveFormDataOnPhaseChange();
             
             if (currentPhase > 1) {
                 showPhase(currentPhase - 1);
@@ -454,7 +457,7 @@
 
         // Abrir modal genérico
         function openCustomSelectModal(selectId, displayElementId, titleText) {
-            currentModalTargetSelectId = selectId;
+            currentModalTargetSelectId = selectId; // Ahora estas variables ya están declaradas
             currentModalTargetDisplayId = displayElementId;
             modalTitle.textContent = titleText;
             modalOptionsContainer.innerHTML = ''; // Limpiar opciones anteriores
@@ -610,8 +613,8 @@
             background-color: #0e172a;
             color: #e2e8f0;
             border: 1px solid #4a5568;
-            padding: 0.75rem; /* Ajustar padding para que coincida con otros inputs */
-            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
             cursor: pointer;
             display: flex;
             align-items: center;
