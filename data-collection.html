@@ -49,7 +49,7 @@
 
         // Campos de la Fase 1
         const firstNameDisplay = document.getElementById('first-name-display');
-        const lastNameDisplay = document.getElementById('last-name-display'); // ¡CORREGIDO AQUÍ!
+        const lastNameDisplay = document.getElementById('last-name-display');
         const emailDisplay = document.getElementById('email-display');
         const phonePrefixInput = document.getElementById('phone-prefix-select');
         const phoneNumberInput = document.getElementById('phone-number');
@@ -319,7 +319,7 @@
                     phoneNumberInput.value = fullPhone.substring(4);
                 } else {
                     phonePrefixInput.value = ''; 
-                    document.getElementById('phone-prefix-display').textContent = '04XX';
+                    document.getElementById('phone-prefix-display').textContent = '04XX'; // Placeholder
                     phoneNumberInput.value = fullPhone;
                 }
                 
@@ -348,20 +348,20 @@
                 dobInput.value = userProfileData.dateOfBirth || '';
                 
                 courseToApplyInput.value = userProfileData.courseToApply || '';
-                document.getElementById('course-to-apply-display').textContent = courseToApplyInput.value || 'Selecciona un curso';
+                document.getElementById('course-to-apply-display').textContent = courseToApplyInput.value || 'Selecciona un curso'; // Placeholder
 
                 genderInput.value = userProfileData.gender || '';
-                document.getElementById('gender-display').textContent = genderInput.value || 'Selecciona tu género';
+                document.getElementById('gender-display').textContent = genderInput.value || 'Selecciona tu género'; // Placeholder
 
                 // Campos de Fase 2
                 educationStatusInput.value = userProfileData.educationStatus || '';
-                document.getElementById('education-status-display').textContent = educationStatusInput.value || 'Selecciona tu estado';
+                document.getElementById('education-status-display').textContent = educationStatusInput.value || 'Selecciona tu estado'; // Placeholder
 
                 studyShiftInput.value = userProfileData.studyShift || '';
-                document.getElementById('study-shift-display').textContent = studyShiftInput.value || 'Selecciona el turno';
+                document.getElementById('study-shift-display').textContent = studyShiftInput.value || 'Selecciona el turno'; // Placeholder
 
                 currentStudyLevelInput.value = userProfileData.currentStudyLevel || '';
-                document.getElementById('current-study-level-display').textContent = currentStudyLevelInput.value || 'Selecciona el nivel';
+                document.getElementById('current-study-level-display').textContent = currentStudyLevelInput.value || 'Selecciona el nivel'; // Placeholder
                 
                 institutionInput.value = userProfileData.institution || '';
                 degreeInput.value = userProfileData.degree || '';
@@ -465,36 +465,33 @@
             const selectElement = document.getElementById(selectId);
             if (!selectElement) return;
 
-            // Lógica corregida para añadir la opción "Selecciona una opción..."
-            // SOLO si el select NO es requerido Y no hay un valor seleccionado.
-            if (!selectElement.hasAttribute('required') && !selectElement.value) {
-                 const emptyOptionDiv = document.createElement('div');
-                 emptyOptionDiv.className = 'modal-option text-gray-500';
-                 emptyOptionDiv.textContent = 'Selecciona una opción...'; // O un texto más genérico si quieres
-                 emptyOptionDiv.dataset.value = '';
-                 emptyOptionDiv.addEventListener('click', () => selectCustomOption(selectId, displayElementId, '', 'Selecciona una opción...'));
-                 modalOptionsContainer.appendChild(emptyOptionDiv);
-            }
+            // Obtener el valor actualmente seleccionado para resaltar
+            const selectedValue = selectElement.value;
 
+            // Iterar sobre las opciones del select oculto
             Array.from(selectElement.options).forEach(option => {
-                // Si el select es requerido, NO queremos añadir opciones vacías.
-                // Si el option.value es vacío y el select es requerido, lo saltamos.
-                if (option.value === "" && selectElement.hasAttribute('required')) {
+                // Si el select es requerido y la opción actual tiene un valor vacío, la saltamos.
+                // Esto elimina las opciones "Selecciona un curso" si el select es requerido.
+                if (selectElement.hasAttribute('required') && option.value === "") {
                     return;
                 }
+                
                 const optionDiv = document.createElement('div');
                 optionDiv.className = 'modal-option';
                 optionDiv.textContent = option.textContent;
                 optionDiv.dataset.value = option.value;
-                if (option.value === selectElement.value) {
-                    optionDiv.classList.add('modal-option-selected'); // Resaltar opción seleccionada
+                
+                // Resaltar si esta opción es la seleccionada actualmente
+                if (option.value === selectedValue) {
+                    optionDiv.classList.add('modal-option-selected');
                 }
+
                 optionDiv.addEventListener('click', () => selectCustomOption(selectId, displayElementId, option.value, option.textContent));
                 modalOptionsContainer.appendChild(optionDiv);
             });
 
             customSelectModal.classList.remove('hidden');
-            setTimeout(() => { // Pequeño retraso para la transición de opacidad
+            setTimeout(() => {
                 customSelectModal.classList.add('opacity-100');
             }, 10);
         }
@@ -509,8 +506,9 @@
                 selectElement.dispatchEvent(new Event('change')); // Disparar evento change para la lógica condicional (ej. study-shift)
             }
             if (displayElement) {
+                // Actualizar el texto del display con el texto de la opción seleccionada.
+                // Si la opción vacía se selecciona, se mostrará su texto (ej. "Selecciona tu género").
                 displayElement.textContent = text;
-                // Remover la clase de error si existía del display element
                 displayElement.classList.remove('border-red-500', 'ring-red-500');
             }
             closeCustomSelectModal();
@@ -850,7 +848,6 @@
                                 Selecciona tu género <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                             <select id="gender-select" class="hidden"> <!-- SELECT OCULTO -->
-                                <option value="">Selecciona tu género</option>
                                 <option value="Hombre">Hombre</option>
                                 <option value="Mujer">Mujer</option>
                                 <option value="Otro">Otro</option>
