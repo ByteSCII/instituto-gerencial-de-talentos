@@ -122,8 +122,8 @@
             
             // Recolectar todos los datos del formulario que pueden ser guardados
             const dataToSave = {
-                currentPhase: currentPhase, // Guarda la fase actual
-                phone: `${phonePrefixInput.value}${phoneNumberInput.value}`, // Combinar prefijo y número
+                currentPhase: currentPhase,
+                phone: `${phonePrefixInput.value}${phoneNumberInput.value}`,
                 ciType: ciTypeInput.value,
                 ciNumber: ciNumberInput.value,
                 address: addressInput.value,
@@ -145,7 +145,7 @@
                 await setDoc(userProfileRef, dataToSave, { merge: true });
                 console.log("Datos autoguardados en Firestore.");
             } catch (error) {
-                console.error("Error al autoguardar datos:", error);
+                console.error("Error al autoguardar datos:", error); // Mostrar el error en la consola
             }
         }
 
@@ -207,7 +207,6 @@
             }
             currentPhase = phaseNumber;
             updatePhaseIndicator();
-            // Desplazar al principio del contenido del formulario al cambiar de fase
             if (mainFormCard) {
                 mainFormCard.scrollTop = 0;
             }
@@ -308,13 +307,12 @@
                 // Cargar datos en los campos editables
                 // Teléfono
                 const fullPhone = userProfileData.phone || '';
-                if (fullPhone.length > 4) { // Asume que el prefijo siempre es de 4 dígitos (04XX)
+                if (fullPhone.length >= 4) { // Asume que el prefijo siempre es de 4 dígitos (04XX)
                     phonePrefixInput.value = fullPhone.substring(0, 4);
                     phoneNumberInput.value = fullPhone.substring(4);
                 } else {
-                    phoneNumberInput.value = ''; // Asegurar que el prefijo no se ponga en el número si no hay teléfono completo
-                    phonePrefixInput.value = ''; // Resetea el prefijo si no hay un teléfono guardado
-                    phoneNumberInput.value = fullPhone; // Si no tiene el formato esperado, cargarlo tal cual (aunque debería ser vacío)
+                    phonePrefixInput.value = ''; 
+                    phoneNumberInput.value = fullPhone;
                 }
                 
                 // Cédula de Identidad
@@ -328,12 +326,11 @@
                      if (oldCi.startsWith('V') || oldCi.startsWith('E')) {
                         ciTypeInput.value = oldCi.substring(0,1);
                         ciNumberInput.value = oldCi.substring(1);
-                    } else if (oldCi.length > 0) { // Si solo hay un número, asumimos V por defecto si no hay tipo
+                    } else if (oldCi.length > 0) {
                         ciTypeInput.value = 'V'; // Asume V por defecto si solo hay número
                         ciNumberInput.value = oldCi;
                     }
                 }
-
 
                 addressInput.value = userProfileData.address || '';
                 dobInput.value = userProfileData.dateOfBirth || '';
@@ -553,7 +550,7 @@
     </style>
 </head>
 <body class="bg-[#0e172a] min-h-screen flex items-center justify-center hidden">
-    <div id="main-form-card" class="container-card"> <!-- ID añadido aquí -->
+    <div id="main-form-card" class="container-card">
         <h1 class="text-3xl font-bold text-center mb-8 text-blue-400">Datos de Registro de Inscripción de IGT</h1>
         <p class="text-center text-gray-400 mb-6">Completa los siguientes pasos para finalizar tu inscripción.</p>
 
@@ -632,7 +629,6 @@
                         <div>
                             <label for="course-to-apply" class="form-label">Curso a Postularse:</label>
                             <select id="course-to-apply" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                                <option value="">Selecciona un curso</option>
                                 <option value="Asistente Administrativo">Asistente Administrativo</option>
                                 <option value="Tecnico en refrigeracion y aires acondicionados">Técnico en refrigeración y aires acondicionados</option>
                                 <option value="Chef">Chef</option>
