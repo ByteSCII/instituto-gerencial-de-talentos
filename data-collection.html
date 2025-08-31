@@ -35,7 +35,6 @@
 
         let currentPhase = 1;
         const totalPhases = 3;
-        // ELIMINADO: autoSaveTimeout, AUTOSAVE_DELAY
 
         // Elementos de navegación y fases
         const mainFormCard = document.getElementById('main-form-card');
@@ -52,20 +51,27 @@
         const firstNameDisplay = document.getElementById('first-name-display');
         const lastNameDisplay = document.getElementById('last-name-display');
         const emailDisplay = document.getElementById('email-display');
-        const phonePrefixInput = document.getElementById('phone-prefix');
+        const phonePrefixSelect = document.getElementById('phone-prefix-select'); // Select oculto
+        const phonePrefixDisplay = document.getElementById('phone-prefix-display'); // Div de display
         const phoneNumberInput = document.getElementById('phone-number');
-        const ciTypeInput = document.getElementById('ci-type');
+        const ciTypeSelect = document.getElementById('ci-type-select'); // Select oculto
+        const ciTypeDisplay = document.getElementById('ci-type-display'); // Div de display
         const ciNumberInput = document.getElementById('ci-number');
         const addressInput = document.getElementById('address');
         const dobInput = document.getElementById('dob');
         const ageDisplay = document.getElementById('age-display');
-        const courseToApplyInput = document.getElementById('course-to-apply');
-        const genderInput = document.getElementById('gender');
+        const courseToApplySelect = document.getElementById('course-to-apply-select'); // Select oculto
+        const courseToApplyDisplay = document.getElementById('course-to-apply-display'); // Div de display
+        const genderSelect = document.getElementById('gender-select'); // Select oculto
+        const genderDisplay = document.getElementById('gender-display'); // Div de display
 
         // Campos de la Fase 2
-        const educationStatusInput = document.getElementById('education-status');
-        const studyShiftInput = document.getElementById('study-shift');
-        const currentStudyLevelInput = document.getElementById('current-study-level');
+        const educationStatusSelect = document.getElementById('education-status-select'); // Select oculto
+        const educationStatusDisplay = document.getElementById('education-status-display'); // Div de display
+        const studyShiftSelect = document.getElementById('study-shift-select'); // Select oculto
+        const studyShiftDisplay = document.getElementById('study-shift-display'); // Div de display
+        const currentStudyLevelSelect = document.getElementById('current-study-level-select'); // Select oculto
+        const currentStudyLevelDisplay = document.getElementById('current-study-level-display'); // Div de display
         const institutionInput = document.getElementById('institution');
         const degreeInput = document.getElementById('degree');
         const graduationYearInput = document.getElementById('graduation-year');
@@ -75,6 +81,13 @@
         const degreeUploadInput = document.getElementById('degree-upload');
         const otherDocsUploadInput = document.getElementById('other-docs-upload');
         const agreeTermsCheckbox = document.getElementById('agree-terms');
+
+        // Elementos del Modal
+        const customSelectModal = document.getElementById('custom-select-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalOptionsContainer = document.getElementById('modal-options-container');
+        let currentModalTargetSelectId = '';
+        let currentModalTargetDisplayId = '';
 
 
         // Funciones auxiliares
@@ -92,22 +105,24 @@
 
         dobInput.addEventListener('change', () => {
             ageDisplay.textContent = calculateAge(dobInput.value);
-            // ELIMINADO: triggerAutoSave();
+            // No triggerAutoSave, se guarda al pasar de fase.
         });
 
         // Lógica condicional para Turno de estudio
-        educationStatusInput.addEventListener('change', () => {
-            const status = educationStatusInput.value;
+        educationStatusSelect.addEventListener('change', () => { // Escucha el select oculto
+            const status = educationStatusSelect.value;
             const studyShiftContainer = document.getElementById('study-shift-container');
             if (status === 'Estudiando Liceo' || status === 'Estudiando Universidad') {
                 studyShiftContainer.classList.remove('hidden');
-                studyShiftInput.setAttribute('required', 'required');
+                studyShiftSelect.setAttribute('required', 'required'); // El select oculto
+                studyShiftDisplay.setAttribute('required', 'required'); // El div de display
             } else {
                 studyShiftContainer.classList.add('hidden');
-                studyShiftInput.removeAttribute('required');
-                studyShiftInput.value = ''; // Limpiar si se oculta
+                studyShiftSelect.removeAttribute('required');
+                studyShiftDisplay.removeAttribute('required');
+                studyShiftSelect.value = ''; // Limpiar select oculto
+                studyShiftDisplay.textContent = 'Selecciona el turno'; // Limpiar div de display
             }
-            // ELIMINADO: triggerAutoSave();
         });
 
 
@@ -119,20 +134,19 @@
             console.log("Guardando datos al cambiar de fase...");
             const userProfileRef = doc(db, `artifacts/default-app-id/users/${currentUser.uid}/private_data/user_profile`);
             
-            // Recolectar todos los datos del formulario que pueden ser guardados
             const dataToSave = {
                 currentPhase: currentPhase,
-                phone: `${phonePrefixInput.value}${phoneNumberInput.value}`,
-                ciType: ciTypeInput.value,
+                phone: `${phonePrefixSelect.value}${phoneNumberInput.value}`,
+                ciType: ciTypeSelect.value,
                 ciNumber: ciNumberInput.value,
                 address: addressInput.value,
                 dateOfBirth: dobInput.value,
-                courseToApply: courseToApplyInput.value,
-                gender: genderInput.value,
+                courseToApply: courseToApplySelect.value,
+                gender: genderSelect.value,
                 
-                educationStatus: educationStatusInput.value,
-                studyShift: studyShiftInput.value,
-                currentStudyLevel: currentStudyLevelInput.value,
+                educationStatus: educationStatusSelect.value,
+                studyShift: studyShiftSelect.value,
+                currentStudyLevel: currentStudyLevelSelect.value,
                 institution: institutionInput.value,
                 degree: degreeInput.value,
                 graduationYear: graduationYearInput.value ? parseInt(graduationYearInput.value) : null, 
@@ -147,7 +161,6 @@
                 console.error("Error al guardar datos:", error);
             }
         }
-        // ELIMINADO: Funciones y event listeners de autoguardado
 
 
         // Lógica de fases
@@ -207,16 +220,16 @@
             switch (currentPhase) {
                 case 1:
                     fieldsToValidate = [
-                        phonePrefixInput, phoneNumberInput, ciTypeInput, ciNumberInput, addressInput, dobInput, courseToApplyInput, genderInput
+                        phonePrefixSelect, phoneNumberInput, ciTypeSelect, ciNumberInput, addressInput, dobInput, courseToApplySelect, genderSelect
                     ];
                     break;
                 case 2:
                     fieldsToValidate = [
-                        educationStatusInput, currentStudyLevelInput, institutionInput, graduationYearInput
+                        educationStatusSelect, currentStudyLevelSelect, institutionInput, graduationYearInput
                     ];
-                    const status = educationStatusInput.value;
+                    const status = educationStatusSelect.value;
                     if (status === 'Estudiando Liceo' || status === 'Estudiando Universidad') {
-                        fieldsToValidate.push(studyShiftInput);
+                        fieldsToValidate.push(studyShiftSelect);
                     }
                     // degreeInput es opcional
                     break;
@@ -250,7 +263,7 @@
 
         async function nextPhase() {
             if (validateCurrentPhase()) {
-                await saveFormDataOnPhaseChange(); // Guardar antes de avanzar
+                await saveFormDataOnPhaseChange();
                 if (currentPhase < totalPhases) {
                     showPhase(currentPhase + 1);
                 }
@@ -258,7 +271,7 @@
         }
 
         async function prevPhase() {
-            await saveFormDataOnPhaseChange(); // Guardar antes de retroceder
+            await saveFormDataOnPhaseChange();
             
             if (currentPhase > 1) {
                 showPhase(currentPhase - 1);
@@ -289,14 +302,16 @@
                 lastNameDisplay.textContent = userProfileData.lastName || 'N/A';
                 emailDisplay.textContent = user.email || 'N/A';
                 
-                // Cargar datos en los campos editables
+                // Cargar datos en los campos editables y actualizar los displays de modal
                 // Teléfono
                 const fullPhone = userProfileData.phone || '';
                 if (fullPhone.length >= 4) {
-                    phonePrefixInput.value = fullPhone.substring(0, 4);
+                    phonePrefixSelect.value = fullPhone.substring(0, 4);
+                    phonePrefixDisplay.textContent = phonePrefixSelect.value;
                     phoneNumberInput.value = fullPhone.substring(4);
                 } else {
-                    phonePrefixInput.value = ''; 
+                    phonePrefixSelect.value = ''; 
+                    phonePrefixDisplay.textContent = '04XX';
                     phoneNumberInput.value = fullPhone;
                 }
                 
@@ -304,15 +319,18 @@
                 const ciNumber = userProfileData.ciNumber || '';
                 const ciType = userProfileData.ciType || '';
                 if (ciType && ciNumber) {
-                    ciTypeInput.value = ciType;
+                    ciTypeSelect.value = ciType;
+                    ciTypeDisplay.textContent = ciType;
                     ciNumberInput.value = ciNumber;
                 } else if (userProfileData.ci) {
                     const oldCi = userProfileData.ci;
                      if (oldCi.startsWith('V') || oldCi.startsWith('E')) {
-                        ciTypeInput.value = oldCi.substring(0,1);
+                        ciTypeSelect.value = oldCi.substring(0,1);
+                        ciTypeDisplay.textContent = ciTypeSelect.value;
                         ciNumberInput.value = oldCi.substring(1);
                     } else if (oldCi.length > 0) {
-                        ciTypeInput.value = 'V';
+                        ciTypeSelect.value = 'V';
+                        ciTypeDisplay.textContent = 'V';
                         ciNumberInput.value = oldCi;
                     }
                 }
@@ -320,13 +338,23 @@
 
                 addressInput.value = userProfileData.address || '';
                 dobInput.value = userProfileData.dateOfBirth || '';
-                courseToApplyInput.value = userProfileData.courseToApply || '';
-                genderInput.value = userProfileData.gender || '';
+                
+                courseToApplySelect.value = userProfileData.courseToApply || '';
+                courseToApplyDisplay.textContent = courseToApplySelect.value || 'Selecciona un curso';
+
+                genderSelect.value = userProfileData.gender || '';
+                genderDisplay.textContent = genderSelect.value || 'Selecciona tu género';
 
                 // Campos de Fase 2
-                educationStatusInput.value = userProfileData.educationStatus || '';
-                studyShiftInput.value = userProfileData.studyShift || '';
-                currentStudyLevelInput.value = userProfileData.currentStudyLevel || '';
+                educationStatusSelect.value = userProfileData.educationStatus || '';
+                educationStatusDisplay.textContent = educationStatusSelect.value || 'Selecciona tu estado';
+
+                studyShiftSelect.value = userProfileData.studyShift || '';
+                studyShiftDisplay.textContent = studyShiftSelect.value || 'Selecciona el turno';
+
+                currentStudyLevelSelect.value = userProfileData.currentStudyLevel || '';
+                currentStudyLevelDisplay.textContent = currentStudyLevelSelect.value || 'Selecciona el nivel';
+                
                 institutionInput.value = userProfileData.institution || '';
                 degreeInput.value = userProfileData.degree || '';
                 graduationYearInput.value = userProfileData.graduationYear || '';
@@ -334,14 +362,16 @@
                 ageDisplay.textContent = calculateAge(dobInput.value);
 
                 // Ejecutar la lógica condicional de turno de estudio al cargar los datos
-                const status = educationStatusInput.value;
+                const status = educationStatusSelect.value;
                 const studyShiftContainer = document.getElementById('study-shift-container');
                 if (status === 'Estudiando Liceo' || status === 'Estudiando Universidad') {
                     studyShiftContainer.classList.remove('hidden');
-                    studyShiftInput.setAttribute('required', 'required');
+                    studyShiftSelect.setAttribute('required', 'required');
+                    studyShiftDisplay.setAttribute('required', 'required');
                 } else {
                     studyShiftContainer.classList.add('hidden');
-                    studyShiftInput.removeAttribute('required');
+                    studyShiftSelect.removeAttribute('required');
+                    studyShiftDisplay.removeAttribute('required');
                 }
 
                 showPhase(currentPhase);
@@ -355,8 +385,7 @@
 
         async function handleSubmitData(event) {
             event.preventDefault();
-            // ELIMINADO: clearTimeout(autoSaveTimeout);
-            // ELIMINADO: await saveFormData();
+            await saveFormDataOnPhaseChange(); // Guardar los datos de la última fase
 
             if (!validateCurrentPhase()) {
                 return;
@@ -369,25 +398,24 @@
                 return;
             }
             
-            // Recopilar todos los datos del formulario para el envío final
             const dataToSaveFinal = {
-                currentPhase: totalPhases, // La fase final
-                phone: `${phonePrefixInput.value}${phoneNumberInput.value}`,
-                ciType: ciTypeInput.value,
+                currentPhase: totalPhases,
+                phone: `${phonePrefixSelect.value}${phoneNumberInput.value}`,
+                ciType: ciTypeSelect.value,
                 ciNumber: ciNumberInput.value,
                 address: addressInput.value,
                 dateOfBirth: dobInput.value,
-                courseToApply: courseToApplyInput.value,
-                gender: genderInput.value,
+                courseToApply: courseToApplySelect.value,
+                gender: genderSelect.value,
                 
-                educationStatus: educationStatusInput.value,
-                studyShift: studyShiftInput.value,
-                currentStudyLevel: currentStudyLevelInput.value,
+                educationStatus: educationStatusSelect.value,
+                studyShift: studyShiftSelect.value,
+                currentStudyLevel: currentStudyLevelSelect.value,
                 institution: institutionInput.value,
                 degree: degreeInput.value,
                 graduationYear: graduationYearInput.value ? parseInt(graduationYearInput.value) : null,
                 
-                dataCollected: true, // Marcar la recolección de datos como completa
+                dataCollected: true,
                 updatedAt: new Date()
             };
 
@@ -415,6 +443,95 @@
             }
         }
         window.handleLogout = handleLogout;
+
+
+        // --- Lógica de Modales Personalizados ---
+
+        // Abrir modal genérico
+        function openCustomSelectModal(selectId, displayElementId, titleText) {
+            currentModalTargetSelectId = selectId;
+            currentModalTargetDisplayId = displayElementId;
+            modalTitle.textContent = titleText;
+            modalOptionsContainer.innerHTML = ''; // Limpiar opciones anteriores
+
+            const selectElement = document.getElementById(selectId);
+            if (!selectElement) return;
+
+            // Añadir una opción "vacía" si el select lo permite y no está ya seleccionado
+            if (!selectElement.hasAttribute('required') && selectElement.value === '') {
+                 const emptyOptionDiv = document.createElement('div');
+                 emptyOptionDiv.className = 'modal-option text-gray-500';
+                 emptyOptionDiv.textContent = 'Selecciona una opción...';
+                 emptyOptionDiv.dataset.value = '';
+                 emptyOptionDiv.addEventListener('click', () => selectCustomOption(selectId, displayElementId, '', 'Selecciona una opción...'));
+                 modalOptionsContainer.appendChild(emptyOptionDiv);
+            }
+
+            Array.from(selectElement.options).forEach(option => {
+                if (option.value === "" && !selectElement.hasAttribute('required')) {
+                    // Evitar duplicar la opción "vacía" si ya la añadimos o si el select es required
+                    return;
+                }
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'modal-option';
+                optionDiv.textContent = option.textContent;
+                optionDiv.dataset.value = option.value;
+                if (option.value === selectElement.value) {
+                    optionDiv.classList.add('modal-option-selected'); // Resaltar opción seleccionada
+                }
+                optionDiv.addEventListener('click', () => selectCustomOption(selectId, displayElementId, option.value, option.textContent));
+                modalOptionsContainer.appendChild(optionDiv);
+            });
+
+            customSelectModal.classList.remove('hidden');
+            setTimeout(() => { // Pequeño retraso para la transición de opacidad
+                customSelectModal.classList.add('opacity-100');
+            }, 10);
+        }
+
+        // Seleccionar opción y cerrar modal
+        function selectCustomOption(selectId, displayElementId, value, text) {
+            const selectElement = document.getElementById(selectId);
+            const displayElement = document.getElementById(displayElementId);
+
+            if (selectElement) {
+                selectElement.value = value;
+                selectElement.dispatchEvent(new Event('change')); // Disparar evento change para la lógica condicional (ej. study-shift)
+            }
+            if (displayElement) {
+                displayElement.textContent = text;
+                // Remover la clase de error si existía
+                displayElement.classList.remove('border-red-500', 'ring-red-500');
+                // Para los divs que actúan como inputs, puedes querer agregar una clase 'filled'
+            }
+            closeCustomSelectModal();
+        }
+
+        // Cerrar modal
+        function closeCustomSelectModal() {
+            customSelectModal.classList.remove('opacity-100');
+            customSelectModal.classList.add('opacity-0');
+            setTimeout(() => {
+                customSelectModal.classList.add('hidden');
+            }, 300); // Coincide con la duración de la transición CSS
+        }
+
+        // Asignar listeners a los divs que abrirán los modales
+        document.getElementById('phone-prefix-display').addEventListener('click', () => openCustomSelectModal('phone-prefix-select', 'phone-prefix-display', 'Selecciona un prefijo'));
+        document.getElementById('ci-type-display').addEventListener('click', () => openCustomSelectModal('ci-type-select', 'ci-type-display', 'Selecciona el tipo de C.I.'));
+        document.getElementById('course-to-apply-display').addEventListener('click', () => openCustomSelectModal('course-to-apply-select', 'course-to-apply-display', 'Selecciona el curso'));
+        document.getElementById('gender-display').addEventListener('click', () => openCustomSelectModal('gender-select', 'gender-display', 'Selecciona tu género'));
+        document.getElementById('education-status-display').addEventListener('click', () => openCustomSelectModal('education-status-select', 'education-status-display', 'Selecciona tu estado educativo'));
+        document.getElementById('study-shift-display').addEventListener('click', () => openCustomSelectModal('study-shift-select', 'study-shift-display', 'Selecciona el turno de estudio'));
+        document.getElementById('current-study-level-display').addEventListener('click', () => openCustomSelectModal('current-study-level-select', 'current-study-level-display', 'Selecciona tu nivel de estudio'));
+
+        // Cerrar modal al hacer clic fuera
+        customSelectModal.addEventListener('click', (event) => {
+            if (event.target === customSelectModal) { // Solo si el clic es en el overlay
+                closeCustomSelectModal();
+            }
+        });
+        // --- Fin Lógica de Modales Personalizados ---
     </script>
     <style>
         html, body {
@@ -551,6 +668,58 @@
         }
         /* Fin de Estilos de Scrollbar Personalizada */
 
+        /* --- Estilos del Modal Personalizado --- */
+        .custom-select-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .custom-select-modal-content {
+            background-color: #1c1c24; /* Color de la tarjeta */
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh; /* Para permitir scroll si hay muchas opciones */
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            transform: scale(0.95); /* Pequeña animación de entrada */
+            transition: transform 0.3s ease-in-out;
+        }
+        .custom-select-modal-overlay.opacity-100 .custom-select-modal-content {
+            transform: scale(1);
+        }
+
+        .modal-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease-in-out;
+            color: #e2e8f0;
+            margin-bottom: 0.25rem;
+        }
+        .modal-option:last-child {
+            margin-bottom: 0;
+        }
+        .modal-option:hover {
+            background-color: #2d3748; /* Fondo más claro al pasar el ratón */
+        }
+        .modal-option-selected {
+            background-color: #3b82f6; /* blue-600 */
+            color: white;
+            font-weight: 500;
+        }
+        /* Fin de Estilos del Modal Personalizado */
     </style>
 </head>
 <body class="bg-[#0e172a] min-h-screen flex items-center justify-center hidden">
@@ -592,27 +761,33 @@
                     <h2 class="section-title mb-4">Datos del Contacto e Identificación</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="phone-prefix" class="form-label">Número Telefónico:</label>
+                            <label class="form-label">Número Telefónico:</label>
                             <div class="flex gap-2">
-                                <select id="phone-prefix" class="w-1/3 rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                                    <option value="0412">0412</option>
-                                    <option value="0414">0414</option>
-                                    <option value="0416">0416</option>
-                                    <option value="0424">0424</option>
-                                    <option value="0426">0426</option>
-                                </select>
+                                <div id="phone-prefix-display" class="animated-input w-1/3 p-3 flex items-center justify-between cursor-pointer" required>
+                                    04XX <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
                                 <input type="tel" id="phone-number" placeholder="Ej: 1234567" class="w-2/3 rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" pattern="[0-9]{7}" title="7 dígitos numéricos" required>
                             </div>
+                            <select id="phone-prefix-select" class="hidden"> <!-- SELECT OCULTO -->
+                                <option value="0412">0412</option>
+                                <option value="0414">0414</option>
+                                <option value="0416">0416</option>
+                                <option value="0424">0424</option>
+                                <option value="0426">0426</option>
+                            </select>
                         </div>
                         <div>
-                            <label for="ci-type" class="form-label">Cédula de Identidad:</label>
+                            <label class="form-label">Cédula de Identidad:</label>
                             <div class="flex gap-2">
-                                <select id="ci-type" class="w-1/4 rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                                    <option value="V">V</option>
-                                    <option value="E">E</option>
-                                </select>
+                                <div id="ci-type-display" class="animated-input w-1/4 p-3 flex items-center justify-between cursor-pointer" required>
+                                    Tipo <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
                                 <input type="text" id="ci-number" placeholder="Ej: 12345678" class="w-3/4 rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" pattern="[0-9]{6,9}" title="6 a 9 dígitos numéricos" required>
                             </div>
+                            <select id="ci-type-select" class="hidden"> <!-- SELECT OCULTO -->
+                                <option value="V">V</option>
+                                <option value="E">E</option>
+                            </select>
                         </div>
                     </div>
                     <div>
@@ -631,16 +806,22 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="course-to-apply" class="form-label">Curso a Postularse:</label>
-                            <select id="course-to-apply" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                            <label class="form-label">Curso a Postularse:</label>
+                            <div id="course-to-apply-display" class="animated-input w-full p-3 flex items-center justify-between cursor-pointer" required>
+                                Selecciona un curso <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                            <select id="course-to-apply-select" class="hidden"> <!-- SELECT OCULTO -->
                                 <option value="Asistente Administrativo">Asistente Administrativo</option>
                                 <option value="Tecnico en refrigeracion y aires acondicionados">Técnico en refrigeración y aires acondicionados</option>
                                 <option value="Chef">Chef</option>
                             </select>
                         </div>
                         <div>
-                            <label for="gender" class="form-label">Género:</label>
-                            <select id="gender" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                            <label class="form-label">Género:</label>
+                            <div id="gender-display" class="animated-input w-full p-3 flex items-center justify-between cursor-pointer" required>
+                                Selecciona tu género <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                            <select id="gender-select" class="hidden"> <!-- SELECT OCULTO -->
                                 <option value="">Selecciona tu género</option>
                                 <option value="Hombre">Hombre</option>
                                 <option value="Mujer">Mujer</option>
@@ -656,8 +837,11 @@
                 <div class="border border-gray-700 rounded-lg p-4 bg-[#1c1c24]">
                     <h2 class="section-title mb-4">Datos Educativos</h2>
                     <div>
-                        <label for="education-status" class="form-label">Estado educativo actual:</label>
-                        <select id="education-status" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        <label class="form-label">Estado educativo actual:</label>
+                        <div id="education-status-display" class="animated-input w-full p-3 flex items-center justify-between cursor-pointer" required>
+                            Selecciona tu estado <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <select id="education-status-select" class="hidden"> <!-- SELECT OCULTO -->
                             <option value="">Selecciona tu estado</option>
                             <option value="Estudiando Liceo">Estudiando Liceo</option>
                             <option value="Graduado Liceo">Graduado Liceo</option>
@@ -666,16 +850,22 @@
                         </select>
                     </div>
                     <div id="study-shift-container" class="mt-4 hidden">
-                        <label for="study-shift" class="form-label">Turno de estudio:</label>
-                        <select id="study-shift" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input">
+                        <label class="form-label">Turno de estudio:</label>
+                        <div id="study-shift-display" class="animated-input w-full p-3 flex items-center justify-between cursor-pointer">
+                            Selecciona el turno <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <select id="study-shift-select" class="hidden"> <!-- SELECT OCULTO -->
                             <option value="">Selecciona el turno</option>
                             <option value="Tarde">Tarde</option>
                             <option value="Manana">Mañana</option>
                         </select>
                     </div>
                     <div>
-                        <label for="current-study-level" class="form-label">Nivel de Estudio cursado:</label>
-                        <select id="current-study-level" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        <label class="form-label">Nivel de Estudio cursado:</label>
+                        <div id="current-study-level-display" class="animated-input w-full p-3 flex items-center justify-between cursor-pointer" required>
+                            Selecciona el nivel <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <select id="current-study-level-select" class="hidden"> <!-- SELECT OCULTO -->
                             <option value="">Selecciona el nivel</option>
                             <option value="3er año">3er año</option>
                             <option value="4to año">4to año</option>
@@ -745,5 +935,16 @@
             </button>
         </div>
     </div>
+
+    <!-- Modal para Selectores Personalizados -->
+    <div id="custom-select-modal" class="custom-select-modal-overlay hidden opacity-0">
+        <div class="custom-select-modal-content">
+            <h3 id="modal-title" class="text-xl font-semibold mb-4 text-white"></h3>
+            <div id="modal-options-container" class="space-y-2">
+                <!-- Las opciones se cargarán aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
+    <!-- Fin Modal -->
 </body>
 </html>
