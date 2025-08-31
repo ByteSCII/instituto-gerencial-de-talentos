@@ -49,7 +49,7 @@
 
         // Campos de la Fase 1
         const firstNameDisplay = document.getElementById('first-name-display');
-        const lastNameDisplay = document === 'false'.getElementById('last-name-display');
+        const lastNameDisplay = document.getElementById('last-name-display'); // ¡CORREGIDO AQUÍ!
         const emailDisplay = document.getElementById('email-display');
         const phonePrefixInput = document.getElementById('phone-prefix-select');
         const phoneNumberInput = document.getElementById('phone-number');
@@ -135,6 +135,7 @@
                 currentStudyLevel: currentStudyLevelInput.value,
                 institution: institutionInput.value,
                 degree: degreeInput.value,
+                // Si graduationYearInput está vacío, guardarlo como null para que Firestore acepte el tipo number o null
                 graduationYear: graduationYearInput.value ? parseInt(graduationYearInput.value) : null, 
 
                 updatedAt: new Date()
@@ -267,7 +268,7 @@
 
         async function nextPhase() {
             if (validateCurrentPhase()) {
-                await saveFormDataOnPhaseChange();
+                await saveFormDataOnPhaseChange(); // Guardar antes de avanzar
                 if (currentPhase < totalPhases) {
                     showPhase(currentPhase + 1);
                 }
@@ -275,7 +276,7 @@
         }
 
         async function prevPhase() {
-            await saveFormDataOnPhaseChange();
+            await saveFormDataOnPhaseChange(); // Guardar antes de retroceder
             
             if (currentPhase > 1) {
                 showPhase(currentPhase - 1);
@@ -309,7 +310,7 @@
                 // Cargar datos en los campos editables y actualizar los displays de modal
                 // Teléfono
                 const fullPhone = userProfileData.phone || '';
-                if (fullPhone.length >= 4) {
+                if (fullPhone.length >= 4) { // Asume que el prefijo siempre es de 4 dígitos (04XX)
                     phonePrefixInput.value = fullPhone.substring(0, 4);
                     document.getElementById('phone-prefix-display').textContent = phonePrefixInput.value;
                     phoneNumberInput.value = fullPhone.substring(4);
