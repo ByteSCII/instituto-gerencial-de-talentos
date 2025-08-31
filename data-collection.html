@@ -30,7 +30,7 @@
         const db = getFirestore(app);
 
         // Ocultar mensajes de log de Firebase
-        import { setLogLevel } = "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         setLogLevel('error');
 
         let currentPhase = 1;
@@ -49,7 +49,7 @@
 
         // Campos de la Fase 1
         const firstNameDisplay = document.getElementById('first-name-display');
-        const lastNameDisplay = document.getElementById('last-name-display');
+        const lastNameDisplay = document.getElementById('last-name-display'); // ¡CORREGIDO AQUÍ!
         const emailDisplay = document.getElementById('email-display');
         const phonePrefixInput = document.getElementById('phone-prefix-select');
         const phoneNumberInput = document.getElementById('phone-number');
@@ -470,7 +470,7 @@
             if (!selectElement.hasAttribute('required') && !selectElement.value) {
                  const emptyOptionDiv = document.createElement('div');
                  emptyOptionDiv.className = 'modal-option text-gray-500';
-                 emptyOptionDiv.textContent = 'Selecciona una opción...';
+                 emptyOptionDiv.textContent = 'Selecciona una opción...'; // O un texto más genérico si quieres
                  emptyOptionDiv.dataset.value = '';
                  emptyOptionDiv.addEventListener('click', () => selectCustomOption(selectId, displayElementId, '', 'Selecciona una opción...'));
                  modalOptionsContainer.appendChild(emptyOptionDiv);
@@ -614,8 +614,8 @@
             background-color: #0e172a;
             color: #e2e8f0;
             border: 1px solid #4a5568;
-            padding: 0.75rem; /* Ajustar padding para que coincida con otros inputs */
-            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
             cursor: pointer;
             display: flex;
             align-items: center;
