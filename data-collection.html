@@ -136,7 +136,8 @@
                 currentStudyLevel: currentStudyLevelInput.value,
                 institution: institutionInput.value,
                 degree: degreeInput.value,
-                graduationYear: graduationYearInput.value ? parseInt(graduationYearInput.value) : null,
+                // Si graduationYearInput está vacío, guardarlo como null para que Firestore acepte el tipo number o null
+                graduationYear: graduationYearInput.value ? parseInt(graduationYearInput.value) : null, 
 
                 updatedAt: new Date()
             };
@@ -145,7 +146,7 @@
                 await setDoc(userProfileRef, dataToSave, { merge: true });
                 console.log("Datos autoguardados en Firestore.");
             } catch (error) {
-                console.error("Error al autoguardar datos:", error); // Mostrar el error en la consola
+                console.error("Error al autoguardar datos:", error);
             }
         }
 
@@ -166,14 +167,14 @@
         function updatePhaseIndicator() {
             const phaseElements = document.querySelectorAll('.phase-step');
             phaseElements.forEach((el, index) => {
-                if (index < currentPhase - 1) { // Fases completadas (con -1 porque currentPhase es 1-indexed)
+                if (index < currentPhase - 1) {
                     el.classList.add('bg-blue-600', 'text-white');
                     el.classList.remove('bg-gray-700', 'text-gray-400');
-                } else if (index === currentPhase - 1) { // Fase actual
+                } else if (index === currentPhase - 1) {
                     el.classList.add('bg-blue-600', 'text-white');
                     el.classList.remove('bg-gray-700', 'text-gray-400');
                 }
-                else { // Fases pendientes
+                else {
                     el.classList.add('bg-gray-700', 'text-gray-400');
                     el.classList.remove('bg-blue-600', 'text-white');
                 }
@@ -331,6 +332,7 @@
                         ciNumberInput.value = oldCi;
                     }
                 }
+
 
                 addressInput.value = userProfileData.address || '';
                 dobInput.value = userProfileData.dateOfBirth || '';
