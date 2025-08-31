@@ -39,7 +39,7 @@
         const AUTOSAVE_DELAY = 2000; // 2 segundos
 
         // Elementos de navegación y fases
-        const mainFormCard = document.getElementById('main-form-card'); // Corregido el ID
+        const mainFormCard = document.getElementById('main-form-card');
         const phaseIndicator = document.getElementById('phase-indicator');
         const phase1Div = document.getElementById('phase-1');
         const phase2Div = document.getElementById('phase-2');
@@ -208,7 +208,7 @@
             currentPhase = phaseNumber;
             updatePhaseIndicator();
             // Desplazar al principio del contenido del formulario al cambiar de fase
-            if (mainFormCard) { // Asegurarse de que el elemento exista
+            if (mainFormCard) {
                 mainFormCard.scrollTop = 0;
             }
         }
@@ -227,12 +227,11 @@
                     fieldsToValidate = [
                         educationStatusInput, currentStudyLevelInput, institutionInput, graduationYearInput
                     ];
-                    // Validación condicional para studyShiftInput
                     const status = educationStatusInput.value;
                     if (status === 'Estudiando Liceo' || status === 'Estudiando Universidad') {
                         fieldsToValidate.push(studyShiftInput);
                     }
-                    // degreeInput es opcional, no se añade a fieldsToValidate si se permite vacío
+                    // degreeInput es opcional
                     break;
                 case 3:
                     fieldsToValidate = [
@@ -313,7 +312,9 @@
                     phonePrefixInput.value = fullPhone.substring(0, 4);
                     phoneNumberInput.value = fullPhone.substring(4);
                 } else {
-                    phoneNumberInput.value = fullPhone; // Si no tiene el formato esperado, cargarlo tal cual
+                    phoneNumberInput.value = ''; // Asegurar que el prefijo no se ponga en el número si no hay teléfono completo
+                    phonePrefixInput.value = ''; // Resetea el prefijo si no hay un teléfono guardado
+                    phoneNumberInput.value = fullPhone; // Si no tiene el formato esperado, cargarlo tal cual (aunque debería ser vacío)
                 }
                 
                 // Cédula de Identidad
@@ -324,13 +325,15 @@
                     ciNumberInput.value = ciNumber;
                 } else if (userProfileData.ci) { // Compatibilidad con el campo antiguo 'ci' si existiera
                     const oldCi = userProfileData.ci;
-                     if (oldCi.startsWith('V-') || oldCi.startsWith('E-')) {
+                     if (oldCi.startsWith('V') || oldCi.startsWith('E')) {
                         ciTypeInput.value = oldCi.substring(0,1);
-                        ciNumberInput.value = oldCi.substring(2);
-                    } else if (oldCi.length > 0) {
+                        ciNumberInput.value = oldCi.substring(1);
+                    } else if (oldCi.length > 0) { // Si solo hay un número, asumimos V por defecto si no hay tipo
+                        ciTypeInput.value = 'V'; // Asume V por defecto si solo hay número
                         ciNumberInput.value = oldCi;
                     }
                 }
+
 
                 addressInput.value = userProfileData.address || '';
                 dobInput.value = userProfileData.dateOfBirth || '';
@@ -591,7 +594,6 @@
                             <label for="phone-prefix" class="form-label">Número Telefónico:</label>
                             <div class="flex gap-2">
                                 <select id="phone-prefix" class="w-1/3 rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                                    <option value="">Prefijo</option>
                                     <option value="0412">0412</option>
                                     <option value="0414">0414</option>
                                     <option value="0416">0416</option>
@@ -605,7 +607,6 @@
                             <label for="ci-type" class="form-label">Cédula de Identidad:</label>
                             <div class="flex gap-2">
                                 <select id="ci-type" class="w-1/4 rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
-                                    <option value="">Tipo</option>
                                     <option value="V">V</option>
                                     <option value="E">E</option>
                                 </select>
@@ -692,7 +693,7 @@
                     </div>
                     <div>
                         <label for="graduation-year" class="form-label">Año de Graduación (o Esperado):</label>
-                        <input type="number" id="graduation-year" min="1900" max="2099" step="1" value="" placeholder="Ej: 2025" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
+                        <input type="number" id="graduation-year" min="2023" max="2025" step="1" value="" placeholder="Ej: 2025" class="w-full rounded-lg p-3 focus:outline-none focus:ring-2 animated-input" required>
                         <p class="text-gray-500 text-xs mt-1">Ingresa el año en que obtuviste o esperas obtener tu título.</p>
                     </div>
                 </div>
