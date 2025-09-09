@@ -251,7 +251,7 @@
     <!-- ===== Main Content ===== -->
     <main>
         <!-- Section 1: Hero (Ahora contiene la navegación) -->
-        <section class="hero-section relative text-white flex items-center">
+        <section id="hero-section" class="hero-section relative text-white flex items-center">
             <!-- Contenedor fijo para la navegación (antes era el header) -->
             <div id="fixed-nav-container" class="header-blue fixed top-0 w-full z-20">
                 <nav>
@@ -261,7 +261,7 @@
                             <div class="flex items-center space-x-8">
                                 <!-- Logo Desktop -->
                                 <a href="#" class="hidden md:block">
-                                    <img src="./images/logo.webp" alt="Logo IGT" class="h-16"> <!-- Cambiado de h-10 a h-16 -->
+                                    <img src="./images/logo.webp" alt="Logo IGT" class="h-16"> <!-- Logo más grande -->
                                 </a>
                                 <!-- Mobile Menu Button -->
                                 <button id="mobile-menu-button" class="text-white focus:outline-none md:hidden">
@@ -299,8 +299,11 @@
                                 </div>
                             </div>
 
-                            <!-- Columna Derecha: Solo Email -->
+                            <!-- Columna Derecha: Botón de registro de navegación y Email -->
                             <div class="hidden md:flex items-center space-x-4">
+                                <a id="nav-register-button" href="#" class="btn-secondary font-bold py-2 px-4 rounded-full text-sm hidden">
+                                    Inscríbete ahora
+                                </a>
                                 <a href="#" class="hover:text-blue-300 social-icon-animation"><i class="fa fa-envelope text-xl"></i></a>
                             </div>
                         </div>
@@ -341,14 +344,14 @@
 
             <!-- Superposición semi-transparente para legibilidad -->
             <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-            <div class="container mx-auto px-6 lg:px-8 relative z-10">
+            <div class="container mx-auto px-6 lg:px-8 relative z-10 flex items-center h-full">
                 <!-- Contenido de la sección Hero, con padding para no quedar debajo de la navegación -->
-                <div class="max-w-3xl pt-20"> 
+                <div class="max-w-3xl pt-20"> <!-- Ajustado padding top aquí -->
                     <!-- Título actualizado con la capitalización correcta -->
                     <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">20 Años Formando y Proyectando Talentos</h1>
                     <p class="text-lg md:text-xl mb-6">En el IGT del INCES, unimos la experiencia productiva con la capacitación innovadora para fortalecer el liderazgo y la gestión socialista en el país.</p>
                     <p class="text-lg md:text-xl mb-8">Únete a nuestros programas y convierte tu talento en un motor de transformación para la nueva era productiva de Venezuela.</p>
-                    <a href="#" class="btn-primary font-bold py-3 px-8 rounded-full text-lg">
+                    <a id="hero-register-button" href="#" class="btn-primary font-bold py-3 px-8 rounded-full text-lg">
                         Inscríbete ahora
                     </a>
                 </div>
@@ -671,8 +674,6 @@
             });
         });
 
-        // La lógica de la barra de búsqueda ha sido eliminada del script, ya que el elemento fue retirado del HTML.
-
         // Lógica del botón "Back to Top"
         const toTopButton = document.getElementById('to-top-button');
 
@@ -722,8 +723,6 @@
             history.scrollRestoration = 'manual';
         }
 
-        // Se ejecuta tan pronto como el DOM esté listo, pero usamos un pequeño retraso
-        // para asegurarnos de que no haya elementos de la página que aún estén cargando.
         document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo(0, 0);
             setTimeout(() => {
@@ -731,7 +730,6 @@
             }, 50);
         });
 
-        // Una última medida de seguridad para forzar el scroll al final de la carga de la ventana
         window.addEventListener('load', () => {
             window.scrollTo(0, 0);
         });
@@ -750,17 +748,20 @@
             modal.style.display = 'none';
         }
 
-        // Cierra el modal si el usuario hace clic fuera de la imagen
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
         }
 
-        // JavaScript para la transparencia del header al hacer scroll
-        const fixedNav = document.getElementById('fixed-nav-container'); // Usamos el ID de la nueva navegación fija
-        const scrollThreshold = 100; // Píxeles a desplazar antes de que cambie la transparencia
+        // JavaScript para la transparencia del header al hacer scroll y la visibilidad del botón
+        const fixedNav = document.getElementById('fixed-nav-container');
+        const heroSection = document.getElementById('hero-section');
+        const heroRegisterButton = document.getElementById('hero-register-button');
+        const navRegisterButton = document.getElementById('nav-register-button');
+        const scrollThreshold = 100; // Píxeles a desplazar antes de que cambie la transparencia del nav
 
+        // Observer para el fondo del menú de navegación
         window.addEventListener('scroll', () => {
             if (window.scrollY > scrollThreshold) {
                 fixedNav.classList.add('header-scrolled');
@@ -768,6 +769,41 @@
                 fixedNav.classList.remove('header-scrolled');
             }
         });
+
+        // Observer para la visibilidad del botón de registro
+        const heroObserverOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // Activa cuando el 10% de la hero-section es visible o invisible
+        };
+
+        const heroIntersectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // hero-section está visible, muestra el botón del hero, oculta el del nav
+                    heroRegisterButton.classList.remove('hidden');
+                    navRegisterButton.classList.add('hidden');
+                } else {
+                    // hero-section no está visible, oculta el botón del hero, muestra el del nav
+                    heroRegisterButton.classList.add('hidden');
+                    navRegisterButton.classList.remove('hidden');
+                }
+            });
+        }, heroObserverOptions);
+
+        // Comienza a observar la hero-section
+        heroIntersectionObserver.observe(heroSection);
+
+        // Establecer el estado inicial del botón al cargar la página
+        // (ya que el observer podría no dispararse inmediatamente si la página se carga ya con scroll)
+        if (window.scrollY > 0) { // O cualquier otro umbral si heroSection no cubre toda la pantalla
+            heroRegisterButton.classList.add('hidden');
+            navRegisterButton.classList.remove('hidden');
+        } else {
+            heroRegisterButton.classList.remove('hidden');
+            navRegisterButton.classList.add('hidden');
+        }
+
     </script>
 </body>
 </html>
