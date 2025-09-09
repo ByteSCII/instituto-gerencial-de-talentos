@@ -13,10 +13,10 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Inter -->
+    <!-- Google Fonts: Roboto (cambiado de Inter a Roboto para un aspecto más profesional y limpio) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -24,7 +24,7 @@
     <style>
         /* Custom styles to match the design */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
             background-color: #f8f9fa;
         }
         .header-blue {
@@ -136,41 +136,7 @@
             pointer-events: auto; /* Allows interaction when visible */
         }
 
-        .search-container {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        .search-input {
-            width: 0;
-            opacity: 0;
-            transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            border-radius: 9999px;
-            padding: 0.5rem 1rem;
-            border: 2px solid #3b82f6;
-            background-color: #1e3a8a;
-            color: white;
-        }
-
-        .search-input.active {
-            width: 12rem;
-            opacity: 1;
-        }
-
-        .search-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: white;
-            padding: 0.5rem;
-        }
-        .search-button i {
-            transition: color 0.3s ease;
-        }
-        .search-button:hover i {
-            color: #a5b4fc;
-        }
+        /* Eliminadas las reglas para search-container, search-input, search-button */
 
         /* Social icon animation */
         .social-icon-animation {
@@ -321,20 +287,10 @@
                         </div>
                     </div>
 
-                    <!-- Columna Derecha: Búsqueda y Redes Sociales -->
+                    <!-- Columna Derecha: Solo Email (modificado) -->
+                    <!-- Eliminados el buscador y los otros iconos sociales -->
                     <div class="hidden md:flex items-center space-x-4">
-                        <!-- Search Bar -->
-                        <div class="search-container">
-                            <input type="text" id="search-input" placeholder="Buscar..." class="search-input focus:outline-none focus:border-white">
-                            <button id="search-button" class="search-button">
-                                <i class="fa fa-search text-xl"></i>
-                            </button>
-                        </div>
-                        <!-- Social and other icons -->
-                        <a href="#" class="hover:text-blue-300 social-icon-animation"><i class="fab fa-tiktok text-xl"></i></a>
-                        <a href="#" class="hover:text-blue-300 social-icon-animation"><i class="fab fa-instagram text-xl"></i></a>
                         <a href="#" class="hover:text-blue-300 social-icon-animation"><i class="fa fa-envelope text-xl"></i></a>
-                        <a href="#" class="hover:text-blue-300 social-icon-animation"><i class="fa fa-globe text-xl"></i></a>
                     </div>
                 </div>
             </div>
@@ -660,7 +616,8 @@
                 </p>
             </div>
             
-            <!-- Columna 4: Redes Sociales -->
+            <!-- Columna 4: Redes Sociales (footer) -->
+            <!-- En el footer, los iconos sociales se mantienen como estaban, esta modificación solo aplica al header -->
             <div>
                 <h4 class="font-bold text-lg mb-4">Síguenos</h4>
                 <div class="flex space-x-4">
@@ -709,16 +666,7 @@
             });
         });
 
-        // Lógica de la barra de búsqueda
-        const searchButton = document.getElementById('search-button');
-        const searchInput = document.getElementById('search-input');
-
-        searchButton.addEventListener('click', () => {
-            searchInput.classList.toggle('active');
-            if (searchInput.classList.contains('active')) {
-                searchInput.focus();
-            }
-        });
+        // La lógica de la barra de búsqueda ha sido eliminada del script, ya que el elemento fue retirado del HTML.
 
         // Lógica del botón "Back to Top"
         const toTopButton = document.getElementById('to-top-button');
