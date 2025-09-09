@@ -5,22 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Nueva descripción de la página -->
     <meta name="description" content="Instituto Gerencial de Talentos formando el mundo laboral del mañana">
-    <title>IGT - Formando Futuro</title>
+    <title>IGT - El Futuro de la Ciencia y Tecnología</title>
     
     <!-- Favicon (ahora usa el logo de la página) -->
     <link rel="icon" type="image/webp" href="./images/logo.webp">
     
-    <!-- Eliminada la precarga de la imagen de fondo crítica para la sección "About" -->
+    <!-- Preconectar a dominios críticos para acelerar la carga -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (se mantiene en head por ser CSS crítico) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts: Roboto (cambiado de Inter a Roboto para un aspecto más profesional y limpio) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome for Icons -->
+    <!-- Font Awesome for Icons (se mantiene en head por ser CSS crítico) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
@@ -28,9 +29,8 @@
         body {
             font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
             background-color: #f8f9fa;
-            /* Eliminadas las reglas de opacidad y transición del body */
+            /* Eliminadas las reglas de opacidad y transición del body para evitar FOUC */
         }
-        /* Eliminada la clase body.page-loaded */
 
         /* Color del encabezado por defecto (TRANSPARENTE al inicio con desenfoque) */
         .header-blue {
@@ -185,9 +185,6 @@
             transform: scale(1.2);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
-
-        /* Eliminadas todas las animaciones scroll-reveal para elementos genéricos */
-        /* La clase .scroll-reveal se elimina de los elementos HTML que no deben animarse */
         
         /* Custom styles for About Section with background image and overlay */
         #about-section {
@@ -224,13 +221,28 @@
             color: white; /* Ensure headings are white for readability */
         }
 
-        /* Eliminadas las animaciones para imagen y texto en About Section */
-        #about-section .about-image-wrapper {
-            /* Sin animaciones */
+        /* Animaciones para la imagen y el texto en About Section */
+        /* Animación de la IMAGEN */
+        .about-image-animation {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
+        }
+        #about-section.is-visible .about-image-animation {
+            opacity: 1;
+            transform: scale(1);
         }
 
-        #about-section .about-text-content {
-            /* Sin animaciones */
+        /* Animación del TEXTO */
+        .about-text-animation {
+            opacity: 0;
+            transform: translateX(100px); /* Inicia desde la derecha */
+            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
+            transition-delay: 0.3s; /* Pequeño retraso para que el texto aparezca después de la imagen */
+        }
+        #about-section.is-visible .about-text-animation {
+            opacity: 1;
+            transform: translateX(0); /* Se desliza a su posición original */
         }
         
         /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
@@ -422,7 +434,7 @@
         </section>
 
         <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
-        <!-- Eliminada la clase scroll-reveal de esta sección -->
+        <!-- Se ha eliminado la clase scroll-reveal de esta sección -->
         <section id="about-section" class="py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                 <div class="text-center mb-12">
@@ -430,13 +442,13 @@
                 </div>
                 
                 <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
-                    <!-- Mitad Izquierda: Imagen del Instituto (estática, sin animaciones) -->
-                    <div class="md:w-1/2 w-full p-8 flex justify-center items-center">
-                        <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" class="rounded-lg shadow-lg w-full h-full object-cover">
+                    <!-- Mitad Izquierda: Imagen del Instituto (estática, con animación de aparición) -->
+                    <div class="md:w-1/2 w-full p-8 flex justify-center items-center about-image-wrapper about-image-animation">
+                        <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" class="rounded-lg shadow-lg w-full h-full object-cover" loading="lazy">
                     </div>
 
-                    <!-- Mitad Derecha: Breve historia de IGT (sin animaciones) -->
-                    <div class="md:w-1/2 w-full p-8 text-center md:text-left">
+                    <!-- Mitad Derecha: Breve historia de IGT con animación -->
+                    <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content about-text-animation">
                         <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3>
                         <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p>
                         <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p>
@@ -458,7 +470,7 @@
                     <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
                         <!-- Contenedor para la imagen más grande -->
                         <div class="w-full h-48">
-                            <img src="./cursos/adminsitrativo.webp" alt="Imagen de Secretario Administrativo" class="w-full h-full object-cover">
+                            <img src="./cursos/adminsitrativo.webp" alt="Imagen de Secretario Administrativo" class="w-full h-full object-cover" loading="lazy">
                         </div>
                         <div class="p-6 text-center">
                             <!-- Título con fuente más profesional y llamativa -->
@@ -470,7 +482,7 @@
                     <!-- He eliminado la imagen de refrigeración según tu solicitud y he agregado una de marcador de posición para mantener el diseño -->
                     <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
                         <div class="w-full h-48">
-                           <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Refrigeración+y+Aires+Acondicionados" alt="Imagen de Refrigeración y Aires Acondicionados" class="w-full h-full object-cover">
+                           <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Refrigeración+y+Aires+Acondicionados" alt="Imagen de Refrigeración y Aires Acondicionados" class="w-full h-full object-cover" loading="lazy">
                         </div>
                         <div class="p-6 text-center">
                             <h3 class="text-2xl font-bold text-dark-blue mb-2">Técnico Mecánico de Refrigeración y Aires Acondicionados</h3>
@@ -483,7 +495,7 @@
                         <!-- Contenedor para la imagen más grande -->
                         <div class="w-full h-48">
                             <!-- Imagen de marcador de posición para consistencia -->
-                            <img src="https://placehold.co/600x400/FFD18C/003366?text=Chef" alt="Imagen de Chef" class="w-full h-full object-cover">
+                            <img src="https://placehold.co/600x400/FFD18C/003366?text=Chef" alt="Imagen de Chef" class="w-full h-full object-cover" loading="lazy">
                         </div>
                         <div class="p-6 text-center">
                             <!-- Título con fuente más profesional y llamativa -->
@@ -562,22 +574,22 @@
                     <!-- Gallery Item 1 -->
                     <!-- Agregado el evento onclick para abrir la imagen en el modal -->
                     <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia')">
-                        <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia" alt="Laboratorio" class="w-full h-auto object-cover">
+                        <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia" alt="Laboratorio" class="w-full h-auto object-cover" loading="lazy">
                     </div>
                     <!-- Gallery Item 2 -->
                     <!-- Agregado el evento onclick para abrir la imagen en el modal -->
                     <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica')">
-                        <img src="https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica" alt="Clase práctica" class="w-full h-auto object-cover">
+                        <img src="https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica" alt="Clase práctica" class="w-full h-auto object-cover" loading="lazy">
                     </div>
                     <!-- Gallery Item 3 -->
                     <!-- Agregado el evento onclick para abrir la imagen en el modal -->
                     <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo')">
-                        <img src="https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo" alt="Trabajo en equipo" class="w-full h-auto object-cover">
+                        <img src="https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo" alt="Trabajo en equipo" class="w-full h-auto object-cover" loading="lazy">
                     </div>
                     <!-- Gallery Item 4 -->
                     <!-- Agregado el evento onclick para abrir la imagen en el modal -->
                     <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final')">
-                        <img src="https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final" alt="Proyecto final" class="w-full h-auto object-cover">
+                        <img src="https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final" alt="Proyecto final" class="w-full h-auto object-cover" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -592,55 +604,55 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     <!-- Empresa 1: Banco Mercantil C.A Banco Universal -->
                     <div class="text-center p-4">
-                        <img src="./empresas/mercantil.webp" alt="Logo de Banco Mercantil" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/mercantil.webp" alt="Logo de Banco Mercantil" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">Banco Mercantil C.A Banco Universal</h3>
                         <p class="text-gray-600">Líder en servicios financieros, ha contratado a nuestros egresados para proyectos de transformación digital y análisis de datos.</p>
                     </div>
                     <!-- Empresa 2: Restoven de Venezuela -->
                     <div class="text-center p-4">
-                        <img src="./empresas/restoven.webp" alt="Logo de Restoven" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/restoven.webp" alt="Logo de Restoven" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">Restoven de Venezuela</h3>
                         <p class="text-gray-600">Empresa líder en el sector de servicios alimentarios, ha integrado a nuestros talentos en la gestión de operaciones y logística.</p>
                     </div>
                     <!-- Empresa 3: Fospuca -->
                     <div class="text-center p-4">
-                        <img src="./empresas/fospuca.webp" alt="Logo de Fospuca" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/fospuca.webp" alt="Logo de Fospuca" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">Fospuca</h3>
                         <p class="text-gray-600">Empresa especializada en servicios ambientales, valora la formación de nuestros profesionales en gestión de recursos y sostenibilidad.</p>
                     </div>
                     <!-- Empresa 4: Coca-Cola FEMSA -->
                     <div class="text-center p-4">
-                        <img src="./empresas/cocacola.webp" alt="Logo de Coca-Cola FEMSA" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/cocacola.webp" alt="Logo de Coca-Cola FEMSA" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">Coca-Cola FEMSA</h3>
                         <p class="text-gray-600">Gigante de la industria de bebidas, ha incorporado a nuestros talentos en su cadena de suministro y procesos de producción.</p>
                     </div>
                     <!-- Empresa 5: Iglesia Universal del Reino de Dios -->
                     <div class="text-center p-4">
-                        <img src="./empresas/iglesia universal.webp" alt="Logo de Iglesia Universal del Reino de Dios" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/iglesia universal.webp" alt="Logo de Iglesia Universal del Reino de Dios" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">Iglesia Universal del Reino de Dios</h3>
                         <p class="text-gray-600">Organización con enfoque en labor social, confía en nuestros egresados para roles de gestión administrativa y coordinación de proyectos comunitarios.</p>
                     </div>
                     <!-- Empresa 6: Unicasa -->
                     <div class="text-center p-4">
-                        <img src="./empresas/unicasa.webp" alt="Logo de Unicasa" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/unicasa.webp" alt="Logo de Unicasa" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">Unicasa</h3>
                         <p class="text-gray-600">Reconocida cadena de supermercados, aprecia las habilidades de nuestros egresados en gestión de inventario y optimización de la cadena de valor.</p>
                     </div>
                     <!-- Empresa 7: Banesco Banco Universal C.A -->
                     <div class="text-center p-4">
-                        <img src="./empresas/banesco.webp" alt="Logo de Banesco" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/banesco.webp" alt="Logo de Banesco" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">Banesco Banco Universal C.A</h3>
                         <p class="text-gray-600">Uno de los principales bancos del país, ha establecido una colaboración para la capacitación de su personal en nuevas tecnologías.</p>
                     </div>
                     <!-- Empresa 8: Venevisión -->
                     <div class="text-center p-4">
-                        <img src="./empresas/venevision.webp" alt="Logo de Venevisión" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/venevision.webp" alt="Logo de Venevisión" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">Venevisión</h3>
                         <p class="text-gray-600">Canal de televisión de gran trayectoria, integra a nuestros egresados en sus equipos de producción y desarrollo de contenido.</p>
                     </div>
                     <!-- Empresa 9: KFC -->
                     <div class="text-center p-4">
-                        <img src="./empresas/kfc.webp" alt="Logo de KFC" class="mx-auto mb-4 company-logo">
+                        <img src="./empresas/kfc.webp" alt="Logo de KFC" class="mx-auto mb-4 company-logo" loading="lazy">
                         <h3 class="text-2xl font-bold text-dark-blue mb-2">KFC</h3>
                         <p class="text-gray-600">Cadena global de comida rápida, ha contratado a nuestros talentos para roles de liderazgo en operaciones y servicio al cliente.</p>
                     </div>
@@ -655,7 +667,7 @@
             
             <!-- Columna 1: Logo y Misión -->
             <div>
-                <img src="./images/logo.webp" alt="Logo IGT" class="mb-4">
+                <img src="./images/logo.webp" alt="Logo IGT" class="mb-4" loading="lazy">
                 <p class="text-gray-300 text-sm">Nuestra misión es capacitar a la fuerza laboral del mañana, formando profesionales con visión de futuro y un compromiso con el desarrollo del país.</p>
             </div>
             
@@ -711,14 +723,12 @@
     <div id="image-modal" class="image-modal-container">
         <span id="modal-close-button" class="image-modal-close">&times;</span>
         <div class="image-modal-content">
-            <img id="modal-image" src="" alt="Imagen ampliada">
+            <img id="modal-image" src="" alt="Imagen ampliada" loading="lazy">
         </div>
     </div>
     
-    <!-- JavaScript para el botón "Back to Top", menú móvil, barra de búsqueda y efectos de scroll -->
+    <!-- JavaScript para el botón "Back to Top", menú móvil, y efectos de scroll -->
     <script>
-        // Eliminada la Transición de aparición de la página completa y la precarga en JS
-
         // Lógica del menú móvil
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -751,8 +761,47 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Eliminado el Intersection Observer para scroll-reveal effect en generic elements.
-        // La clase .scroll-reveal se eliminará de los elementos HTML que no deben animarse.
+        // Intersection Observer para animaciones de entrada (scroll-reveal, about-section animations)
+        document.addEventListener("DOMContentLoaded", function() {
+            // Observador para elementos con clase .scroll-reveal
+            const genericRevealElements = document.querySelectorAll('.scroll-reveal');
+            const genericObserverOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            const genericObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, genericObserverOptions);
+            genericRevealElements.forEach(element => {
+                genericObserver.observe(element);
+            });
+
+            // Observador específico para la sección #about-section
+            const aboutSection = document.getElementById('about-section');
+            const aboutObserverOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1 // Activa cuando el 10% de la sección es visible
+            };
+            const aboutObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.target.id === 'about-section') {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible'); 
+                        } else {
+                            // Puedes decidir si quieres que las animaciones se reinicien al salir de vista
+                            // entry.target.classList.remove('is-visible');
+                        }
+                    }
+                });
+            }, aboutObserverOptions);
+            aboutObserver.observe(aboutSection);
+        });
 
         // Solución para forzar el scroll al inicio de la página
         if ('scrollRestoration' in history) {
@@ -764,7 +813,7 @@
         });
 
         window.addEventListener('load', () => {
-            window.scrollTo(0, 0); // Forzar scroll al inicio de nuevo por si acaso
+            window.scrollTo(0, 0); // Forzar scroll al inicio de nuevo por si acaso, después de la carga completa
         });
 
         // Lógica del modal de imágenes
@@ -793,7 +842,6 @@
         const heroRegisterButton = document.getElementById('hero-register-button');
         const navRegisterButton = document.getElementById('nav-register-button');
         const scrollThreshold = 100; // Píxeles a desplazar antes de que cambie la transparencia del nav
-        // Eliminada la referencia a aboutSection para animaciones específicas
 
         // Observer para el fondo del menú de navegación
         window.addEventListener('scroll', () => {
@@ -804,14 +852,14 @@
             }
         });
 
-        // Observer para la visibilidad del botón de registro (manteniendo la animación de aparición/desaparición)
-        const heroObserverOptions = {
+        // Observer para la visibilidad del botón de registro (Hero vs Nav)
+        const heroButtonObserverOptions = {
             root: null,
             rootMargin: '0px',
             threshold: 0.1 // Activa cuando el 10% de la hero-section es visible o invisible
         };
 
-        const heroIntersectionObserver = new IntersectionObserver((entries) => {
+        const heroButtonIntersectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.target.id === 'hero-section') {
                     if (entry.isIntersecting) {
@@ -830,16 +878,13 @@
                         navRegisterButton.classList.add('btn-visible-state');
                     }
                 } 
-                // Eliminada la lógica para about-section aquí
             });
-        }, heroObserverOptions);
+        }, heroButtonObserverOptions);
 
-        // Comienza a observar la hero-section
-        heroIntersectionObserver.observe(heroSection);
-        // Eliminada la observación de about-section ya que no tiene animaciones específicas
+        // Comienza a observar la hero-section para el cambio de botón
+        heroButtonIntersectionObserver.observe(heroSection);
 
-        // Establecer el estado inicial de los botones al cargar la página
-        // (Esto es importante para manejar recargas con scroll, etc.)
+        // Establecer el estado inicial de los botones al cargar el DOM
         const initialSetButtonState = () => {
             const initialHeroRect = heroSection.getBoundingClientRect();
             if (initialHeroRect.top >= 0 && initialHeroRect.bottom > 0) { // Si la hero-section es visible al cargar
@@ -861,4 +906,3 @@
     </script>
 </body>
 </html>
-
