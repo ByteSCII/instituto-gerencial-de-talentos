@@ -241,6 +241,40 @@
         .company-logo:hover {
             transform: scale(1.1); /* Efecto de agrandamiento al pasar el cursor */
         }
+
+        /* Custom styles for About Section with background image and overlay */
+        #about-section {
+            background-image: url('./images/fondoseccion2.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative; /* Needed for the pseudo-element overlay */
+            overflow: hidden; /* To ensure the overlay doesn't spill out */
+            color: white; /* Default text color for the section */
+        }
+
+        /* Overlay for the background image to improve text readability */
+        #about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            z-index: 1;
+        }
+
+        /* Ensure content is above the overlay */
+        #about-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Specific text colors within the about section (headings) */
+        #about-section h2, #about-section h3 {
+            color: white; /* Ensure headings are white for readability */
+        }
     </style>
 </head>
 <body>
@@ -358,8 +392,8 @@
         </section>
 
         <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
-        <section id="about-section" class="scroll-reveal py-16 lg:py-24 bg-[#004080] text-white">
-            <div class="container mx-auto px-6 lg:px-8">
+        <section id="about-section" class="scroll-reveal py-16 lg:py-24">
+            <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2>
                 </div>
