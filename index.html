@@ -18,6 +18,7 @@
     <link rel="preload" href="./images/logo.webp" as="image">
     <link rel="preload" href="./images/fondo.webp" as="image">
     <link rel="preload" href="./images/fondoseccion2.webp" as="image">
+    <link rel="preload" href="./images/cursos.webp" as="image"> <!-- Nueva precarga para la imagen de cursos -->
 
     <!-- Tailwind CSS (se mantiene en head por ser CSS crítico) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -247,6 +248,40 @@
             opacity: 1;
             transform: translateX(0); /* Se desliza a su posición original */
         }
+
+        /* Custom styles for Qualified Occupations Section with background image and overlay */
+        #qualified-occupations-section {
+            background-image: url('./images/cursos.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative; /* Needed for the pseudo-element overlay */
+            overflow: hidden; /* To ensure the overlay doesn't spill out */
+            color: white; /* Default text color for the section */
+        }
+
+        /* Overlay for the background image to improve text readability */
+        #qualified-occupations-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            z-index: 1;
+        }
+
+        /* Ensure content is above the overlay */
+        #qualified-occupations-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Specific text colors within the qualified occupations section (headings and paragraphs) */
+        #qualified-occupations-section h2, #qualified-occupations-section h3, #qualified-occupations-section p {
+            color: white; /* Ensure text is white for readability */
+        }
         
         /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
         ::-webkit-scrollbar {
@@ -437,7 +472,6 @@
         </section>
 
         <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
-        <!-- Se ha eliminado la clase scroll-reveal de esta sección -->
         <section id="about-section" class="py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                 <div class="text-center mb-12">
@@ -460,12 +494,12 @@
             </div>
         </section>
         
-        <!-- Section 3: Qualified Occupations -->
-        <section class="scroll-reveal section-light-blue py-16 lg:py-24">
-            <div class="container mx-auto px-6 lg:px-8">
+        <!-- Section 3: Nuestras Ocupaciones Cualificadas -->
+        <section id="qualified-occupations-section" class="scroll-reveal py-16 lg:py-24">
+            <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-dark-blue">Nuestras Ocupaciones Cualificadas</h2>
-                    <p class="text-lg text-gray-500 mt-2">Programas diseñados para impulsar tu futuro profesional.</p>
+                    <h2 class="text-4xl font-bold">Nuestras Ocupaciones Cualificadas</h2>
+                    <p class="text-lg mt-2">Programas diseñados para impulsar tu futuro profesional.</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     <!-- Card 1: Secretario(a) Administrativo -->
@@ -474,7 +508,7 @@
                             <img src="./cursos/adminsitrativo.webp" alt="Imagen de Secretario Administrativo" class="w-full h-full object-cover" loading="lazy">
                         </div>
                         <div class="p-6 text-center">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Secretario (a) Administrativo</h3>
+                            <h3 class="text-2xl font-bold mb-2">Secretario (a) Administrativo</h3>
                             <p class="text-gray-600">Domina la gestión de oficinas, la organización de documentos y la comunicación profesional para ser un pilar en cualquier empresa.</p>
                         </div>
                     </div>
@@ -484,7 +518,7 @@
                            <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Refrigeración+y+Aires+Acondicionados" alt="Imagen de Refrigeración y Aires Acondicionados" class="w-full h-full object-cover" loading="lazy">
                         </div>
                         <div class="p-6 text-center">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Técnico Mecánico de Refrigeración y Aires Acondicionados</h3>
+                            <h3 class="text-2xl font-bold mb-2">Técnico Mecánico de Refrigeración y Aires Acondicionados</h3>
                             <p class="text-gray-600">Capacítate en la instalación, mantenimiento y reparación de sistemas de refrigeración y climatización, una profesión con alta demanda.</p>
                         </div>
                     </div>
@@ -494,7 +528,7 @@
                             <img src="https://placehold.co/600x400/FFD18C/003366?text=Chef" alt="Imagen de Chef" class="w-full h-full object-cover" loading="lazy">
                         </div>
                         <div class="p-6 text-center">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Chef</h3>
+                            <h3 class="text-2xl font-bold mb-2">Chef</h3>
                             <p class="text-gray-600 text-center">Desarrolla habilidades culinarias y de gestión en la cocina. Aprende a crear menús, liderar equipos y deleitar a los comensales.</p>
                         </div>
                     </div>
@@ -745,7 +779,7 @@
 
         // Intersection Observer para animaciones de entrada (scroll-reveal, about-section animations)
         document.addEventListener("DOMContentLoaded", function() {
-            // Observador para elementos con clase .scroll-reveal
+            // Observador para elementos con clase .scroll-reveal (para secciones que sí deben animarse)
             const genericRevealElements = document.querySelectorAll('.scroll-reveal');
             const genericObserverOptions = {
                 root: null,
@@ -763,7 +797,7 @@
                 genericObserver.observe(element);
             });
 
-            // Observador específico para la sección #about-section (para sus animaciones internas)
+            // Observador específico para la sección #about-section (para sus animaciones internas de imagen/texto)
             const aboutSection = document.getElementById('about-section');
             const aboutObserverOptions = {
                 root: null,
@@ -776,7 +810,7 @@
                         if (entry.isIntersecting) {
                             entry.target.classList.add('is-visible'); 
                         } else {
-                            // Puedes decidir si quieres que las animaciones se reinicien al salir de vista
+                            // Opcional: Reiniciar animaciones al salir de la vista
                             // entry.target.classList.remove('is-visible');
                         }
                     }
@@ -869,9 +903,9 @@
             }
         };
 
-        // Ejecuta la configuración inicial al cargar el DOM (sin esperar todas las imágenes)
+        // Ejecuta la configuración inicial al cargar el DOM
         document.addEventListener('DOMContentLoaded', initialSetButtonState);
 
     </script>
 </body>
-</html>
+</html>```
