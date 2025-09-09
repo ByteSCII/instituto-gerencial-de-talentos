@@ -18,7 +18,9 @@
     <link rel="preload" href="./images/logo.webp" as="image">
     <link rel="preload" href="./images/fondo.webp" as="image">
     <link rel="preload" href="./images/fondoseccion2.webp" as="image">
-    <link rel="preload" href="./images/cursos.webp" as="image"> <!-- Nueva precarga para la imagen de cursos -->
+    <link rel="preload" href="./images/cursos.webp" as="image">
+    <link rel="preload" href="./images/docentes.webp" as="image"> <!-- Precarga para la imagen de docentes -->
+
 
     <!-- Tailwind CSS (se mantiene en head por ser CSS crítico) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -360,6 +362,17 @@
         #to-top-button {
             z-index: 50; 
         }
+
+        /* Animación de la imagen docentes.webp en la sección Hero */
+        .hero-docentes-animation {
+            opacity: 0;
+            transform: translateX(100px); /* Inicia fuera de pantalla a la derecha */
+            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
+        }
+        .hero-docentes-animation.is-active {
+            opacity: 1;
+            transform: translateX(0); /* Se desliza a su posición final */
+        }
     </style>
 </head>
 <body>
@@ -460,10 +473,19 @@
 
             <!-- Superposición semi-transparente para legibilidad -->
             <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+            
+            <!-- Nueva imagen "docentes.webp" en la sección principal, de lado derecho, encima de todo -->
+            <!-- Posicionado absoluto, a la derecha, ocupando la mayor parte de la altura restante. -->
+            <!-- Z-index alto para estar encima de la superposición y el contenido del texto, pero debajo del nav fijo. -->
+            <img src="./images/docentes.webp" alt="Docentes IGT" 
+                 class="absolute right-0 bottom-0 h-full max-h-[85vh] w-auto object-contain z-12 
+                        hero-docentes-animation md:block hidden" 
+                 loading="eager" id="hero-docentes-image">
+
             <div class="container mx-auto px-6 lg:px-8 relative z-10 flex items-center h-full">
                 <!-- Contenido de la sección Hero, con padding para no quedar debajo de la navegación -->
                 <div class="max-w-3xl pt-20"> 
-                    <!-- Título principal (sin logo aquí) -->
+                    <!-- Título principal -->
                     <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">20 Años Formando y Proyectando Talentos</h1>
                     <!-- Los párrafos de descripción y el botón siguen al título -->
                     <p class="text-lg md:text-xl mb-6">En el IGT del INCES, unimos la experiencia productiva con la capacitación innovadora para fortalecer el liderazgo y la gestión socialista en el país.</p>
@@ -746,6 +768,11 @@
         }
         document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo(0, 0); // Forzar scroll al inicio
+            // Activar la animación de la imagen docentes.webp al cargar el DOM
+            const heroDocentesImage = document.getElementById('hero-docentes-image');
+            if (heroDocentesImage) {
+                heroDocentesImage.classList.add('is-active');
+            }
         });
         window.addEventListener('load', () => {
             window.scrollTo(0, 0); // Forzar scroll al inicio de nuevo por si acaso, después de la carga completa
