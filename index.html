@@ -257,8 +257,9 @@
                 <nav>
                     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex items-center justify-between h-20">
-                            <!-- Columna Izquierda: Solo Logo -->
-                            <div class="flex items-center">
+                            <!-- Columna Izquierda: Logo y Menú de Navegación -->
+                            <div class="flex items-center space-x-8"> <!-- Agrupación de logo y nav-links -->
+                                <!-- Logo Desktop -->
                                 <a href="#" class="hidden md:block">
                                     <img src="./images/logo.webp" alt="Logo IGT" class="h-16">
                                 </a>
@@ -266,36 +267,36 @@
                                 <button id="mobile-menu-button" class="text-white focus:outline-none md:hidden">
                                     <i class="fa fa-bars text-2xl"></i>
                                 </button>
-                            </div>
 
-                            <!-- Columna Central: Menú de Navegación (centrado) -->
-                            <div class="hidden md:flex items-center h-full flex-grow justify-center space-x-4">
-                                <a href="#" class="nav-link font-semibold py-2 rounded-md">Inicio</a>
+                                <!-- Menú de Navegación para Desktop (alineado a la izquierda, junto al logo) -->
+                                <div class="hidden md:flex items-center h-full space-x-4"> <!-- Espacio entre los enlaces -->
+                                    <a href="#" class="nav-link font-semibold py-2 rounded-md">Inicio</a>
 
-                                <!-- "Acerca de" Dropdown -->
-                                <div class="relative group h-full flex items-center">
-                                    <a href="#" class="nav-link font-semibold py-2 rounded-md">Acerca de</a>
-                                    <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[rgba(0,0,0,0.8)] ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <div class="py-1">
-                                            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">¿Quiénes somos?</a>
-                                            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Autoridades</a>
-                                            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Nuestro epónimo</a>
+                                    <!-- "Acerca de" Dropdown -->
+                                    <div class="relative group h-full flex items-center">
+                                        <a href="#" class="nav-link font-semibold py-2 rounded-md">Acerca de</a>
+                                        <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[rgba(0,0,0,0.8)] ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            <div class="py-1">
+                                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">¿Quiénes somos?</a>
+                                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Autoridades</a>
+                                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Nuestro epónimo</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- "Programas" Dropdown -->
-                                <div class="relative group h-full flex items-center">
-                                    <a href="#" class="nav-link font-semibold py-2 rounded-md">Programas</a>
-                                    <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[rgba(0,0,0,0.8)] ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <div class="py-1">
-                                            <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Ocupaciones Cualificadas</a>
+                                    <!-- "Programas" Dropdown -->
+                                    <div class="relative group h-full flex items-center">
+                                        <a href="#" class="nav-link font-semibold py-2 rounded-md">Programas</a>
+                                        <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[rgba(0,0,0,0.8)] ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            <div class="py-1">
+                                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Ocupaciones Cualificadas</a>
+                                            </div>
                                         </div>
                                     </div>
+                                    
+                                    <a href="#" class="nav-link font-semibold py-2 rounded-md">Noticias</a>
+                                    <a href="#" class="nav-link font-semibold py-2 rounded-md">Contacto</a>
                                 </div>
-                                
-                                <a href="#" class="nav-link font-semibold py-2 rounded-md">Noticias</a>
-                                <a href="#" class="nav-link font-semibold py-2 rounded-md">Contacto</a>
                             </div>
 
                             <!-- Columna Derecha: Botón de registro de navegación y Email -->
@@ -431,7 +432,7 @@
                 <!-- Contenedor de la cuadrícula con 3 columnas en pantallas grandes -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto justify-center">
                     <!-- Card 1: Clases Prácticas -->
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="bg-gray-500 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
                         <div class="card-icon mb-4 text-center">
                             <i class="fas fa-hammer"></i>
                         </div>
@@ -439,7 +440,7 @@
                         <p class="text-gray-600 text-center">Aprende haciendo. Nuestros talleres y laboratorios te permiten aplicar la teoría de inmediato para dominar tus habilidades.</p>
                     </div>
                     <!-- Card 2: Reflexión (Updated title) -->
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="bg-gray-500 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
                         <div class="card-icon mb-4 text-center">
                             <i class="fas fa-lightbulb"></i>
                         </div>
@@ -447,7 +448,7 @@
                         <p class="text-gray-600 text-center">Un espacio de reflexión y crecimiento donde las ideas se transforman en proyectos innovadores.</p>
                     </div>
                     <!-- Card 3: Profesores Orientadores -->
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="bg-gray-500 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
                         <div class="card-icon mb-4 text-center">
                             <i class="fas fa-chalkboard-teacher"></i>
                         </div>
@@ -458,7 +459,7 @@
                 <!-- Nuevo contenedor flex para centrar los dos últimos elementos -->
                 <div class="flex flex-wrap justify-center mt-8 gap-8">
                     <!-- Card 4: Proyectos Finales -->
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
+                    <div class="bg-gray-500 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
                         <div class="card-icon mb-4 text-center">
                             <i class="fas fa-rocket"></i>
                         </div>
@@ -466,7 +467,7 @@
                         <p class="text-gray-600 text-center">Demuestra tus conocimientos y talentos a través de proyectos que reflejan las demandas del mundo real y te preparan para el éxito.</p>
                     </div>
                     <!-- Card 5: Valores Agregados -->
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
+                    <div class="bg-gray-500 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
                         <div class="card-icon mb-4 text-center">
                             <i class="fas fa-award"></i>
                         </div>
