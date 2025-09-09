@@ -167,85 +167,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Estilos para las piezas del rompecabezas */
-        #about-section {
-            overflow: hidden; /* Asegura que las piezas estén ocultas antes de la animación */
-            padding-top: 0; /* Asegura que las piezas suban hasta el borde de la sección */
-            padding-bottom: 0;
-        }
-        #puzzle-pieces-container {
-            position: relative; /* Para el posicionamiento absoluto de las piezas */
-            width: 100%; /* Ocupa todo el ancho de su padre */
-            height: 400px; /* Altura definida para el contenedor de las piezas. Ajusta si es necesario */
-            overflow: hidden; /* Para que las piezas que se mueven fuera no se vean */
-            margin: 0 auto; /* Centrar el contenedor si el padre no lo es */
-        }
-        .puzzle-piece {
-            opacity: 0;
-            transition: transform 1.8s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 1.8s ease-out; /* Animación de rebote más lenta */
-            height: 100%; /* Las piezas llenan la altura del contenedor */
-            width: 50%; /* Cada pieza ocupa la mitad del ancho */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: absolute; /* Para control preciso del movimiento */
-            top: 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Sombra sutil para profundidad */
-        }
-        .puzzle-left {
-            transform: translateX(-100%); /* Inicia completamente a la izquierda */
-            left: 0; /* Posiciona la pieza izquierda en el borde izquierdo */
-            background-color: #F3F4F6; /* Color de fondo para la pieza izquierda */
-            clip-path: url(#puzzle-left-shape);
-            -webkit-clip-path: url(#puzzle-left-shape);
-        }
-        .puzzle-right {
-            transform: translateX(100%); /* Inicia completamente a la derecha */
-            right: 0; /* Posiciona la pieza derecha en el borde derecho */
-            background-color: #E5E7EB; /* Color de fondo para la pieza derecha */
-            clip-path: url(#puzzle-right-shape);
-            -webkit-clip-path: url(#puzzle-right-shape);
-        }
-        /* Estado final cuando la sección principal es visible */
-        #about-section.is-visible .puzzle-piece {
-            opacity: 1;
-            transform: translateX(0); /* Se mueven a su posición original */
-        }
-        /* Asegurarse de que el texto dentro de las piezas sea legible */
-        .puzzle-piece h3 {
-            color: #004080; /* Color del texto para los títulos */
-        }
-        .puzzle-piece p {
-            color: #4A5568; /* Color del texto para los párrafos */
-            max-width: 80%; /* Limita el ancho del texto para mejor lectura */
-            margin: 0 auto; /* Centra el texto */
-        }
-
-
-        /* Media query para móviles - Desactiva el clip-path y los apila */
-        @media (max-width: 768px) {
-            #puzzle-pieces-container {
-                height: auto; /* Altura automática para apilar */
-                flex-direction: column; /* Apilar en columnas */
-            }
-            .puzzle-piece {
-                position: static; /* Quitar posicionamiento absoluto */
-                width: 100%; /* Ocupa todo el ancho */
-                height: auto; /* Altura automática */
-                clip-path: none !important; /* Desactiva el clip-path */
-                -webkit-clip-path: none !important;
-                transform: translateY(30px); /* Reinicia la animación de deslizamiento simple */
-                opacity: 0;
-            }
-            #about-section.is-visible .puzzle-piece {
-                opacity: 1;
-                transform: translateY(0);
-                transition: transform 0.8s ease-out, opacity 0.8s ease-out; /* Animación más simple para móvil */
-            }
-        }
         
         /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
         ::-webkit-scrollbar {
@@ -323,21 +244,7 @@
     </style>
 </head>
 <body>
-    <!-- SVG Definitions for Clip Paths - Visible but not rendered on screen -->
-    <svg width="0" height="0" class="absolute">
-        <defs>
-            <!-- Clip Path for the Left Puzzle Piece -->
-            <clipPath id="puzzle-left-shape" clipPathUnits="objectBoundingBox">
-                <!-- Path for the left piece with a tab on the right -->
-                <path d="M0 0 H0.5 C0.54 0, 0.56 0.05, 0.56 0.1 L0.56 0.4 C0.56 0.45, 0.6 0.48, 0.6 0.5 C0.6 0.52, 0.56 0.55, 0.56 0.6 L0.56 0.9 C0.56 0.95, 0.54 1, 0.5 1 H0 V0 Z" />
-            </clipPath>
-            <!-- Clip Path for the Right Puzzle Piece -->
-            <clipPath id="puzzle-right-shape" clipPathUnits="objectBoundingBox">
-                <!-- Path for the right piece with an indent on the left -->
-                <path d="M0.5 0 H1 V1 H0.5 C0.46 1, 0.44 0.95, 0.44 0.9 L0.44 0.6 C0.44 0.55, 0.4 0.52, 0.4 0.5 C0.4 0.48, 0.44 0.45, 0.44 0.4 L0.44 0.1 C0.44 0.05, 0.46 0, 0.5 0 Z" />
-            </clipPath>
-        </defs>
-    </svg>
+    <!-- Eliminadas las definiciones de SVG Clip Paths para el rompecabezas -->
 
     <!-- ===== Main Content ===== -->
     <main>
@@ -452,25 +359,14 @@
             </div>
         </section>
 
-        <!-- Section 2: Conoce el Instituto Gerencial de Talentos (con animación de rompecabezas) -->
-        <section id="about-section" class="scroll-reveal bg-white overflow-hidden py-16 lg:py-24">
+        <!-- Section 2: About (restaurada a su estado original, vacía de contenido específico de rompecabezas) -->
+        <section id="about-section" class="scroll-reveal py-16 lg:py-24 bg-white">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
+                    <!-- Título actualizado según la solicitud -->
                     <h2 class="text-4xl font-bold text-dark-blue">Conoce el Instituto Gerencial de Talentos</h2>
                 </div>
-                
-                <div id="puzzle-pieces-container" class="relative max-w-5xl mx-auto">
-                    <!-- Pieza Izquierda del Rompecabezas -->
-                    <div class="puzzle-piece puzzle-left left-0 p-8">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-4">Nuestra Misión</h3>
-                        <p class="text-gray-700">Formamos líderes y profesionales altamente cualificados, impulsando el desarrollo socio-productivo del país con innovación y compromiso social.</p>
-                    </div>
-                    <!-- Pieza Derecha del Rompecabezas -->
-                    <div class="puzzle-piece puzzle-right right-0 p-8">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-4">Nuestra Visión</h3>
-                        <p class="text-gray-700">Ser el referente nacional en formación gerencial y tecnológica, generando soluciones sostenibles para los desafíos del futuro.</p>
-                    </div>
-                </div>
+                <!-- La sección "Acerca de" ha sido vaciada según tu petición. Puedes añadir contenido aquí más tarde. -->
             </div>
         </section>
         
@@ -865,14 +761,14 @@
             }
         });
 
-        // Observer para la visibilidad del botón de registro y la animación de la sección About
-        const sectionObserverOptions = {
+        // Observer para la visibilidad del botón de registro
+        const heroObserverOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.1 // Activa cuando el 10% de la hero-section o about-section es visible o invisible
+            threshold: 0.1 // Activa cuando el 10% de la hero-section es visible o invisible
         };
 
-        const sectionIntersectionObserver = new IntersectionObserver((entries) => {
+        const heroIntersectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.target.id === 'hero-section') {
                     if (entry.isIntersecting) {
@@ -886,18 +782,14 @@
                         navRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
                         navRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
                     }
-                } else if (entry.target.id === 'about-section') {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible'); // Activa la animación del rompecabezas
-                        // sectionIntersectionObserver.unobserve(entry.target); // Desactivado para permitir re-animación si es necesario o dejarlo visible
-                    }
-                }
+                } 
+                // Se eliminó la lógica específica para about-section aquí.
             });
-        }, sectionObserverOptions);
+        }, heroObserverOptions);
 
-        // Comienza a observar la hero-section y la about-section
-        sectionIntersectionObserver.observe(heroSection);
-        sectionIntersectionObserver.observe(document.getElementById('about-section')); // Observa la sección de rompecabezas
+        // Comienza a observar la hero-section
+        heroIntersectionObserver.observe(heroSection);
+        // Eliminada la observación de about-section para el efecto de rompecabezas.
 
         // Establecer el estado inicial del botón al cargar la página
         if (window.scrollY > 0) { 
