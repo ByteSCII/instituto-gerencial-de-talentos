@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Nueva descripción de la página -->
     <meta name="description" content="Instituto Gerencial de Talentos formando el mundo laboral del mañana">
-    <title>IGT - El Futuro de la Ciencia y Tecnología</title>
+    <title>IGT - Formando Futuro</title>
     
     <!-- Favicon (ahora usa el logo de la página) -->
     <link rel="icon" type="image/webp" href="./images/logo.webp">
     
-    <!-- Precarga de la imagen de fondo crítica para la sección "About" -->
-    <link rel="preload" href="./images/fondoseccion2.webp" as="image">
+    <!-- Eliminada la precarga de la imagen de fondo crítica para la sección "About" -->
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,12 +28,9 @@
         body {
             font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
             background-color: #f8f9fa;
-            opacity: 0; /* Oculta el cuerpo inicialmente */
-            transition: opacity 0.5s ease-in; /* Transición para la aparición del cuerpo */
+            /* Eliminadas las reglas de opacidad y transición del body */
         }
-        body.page-loaded {
-            opacity: 1; /* Muestra el cuerpo una vez que todo carga */
-        }
+        /* Eliminada la clase body.page-loaded */
 
         /* Color del encabezado por defecto (TRANSPARENTE al inicio con desenfoque) */
         .header-blue {
@@ -190,17 +186,8 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        /* Scroll-reveal animation styles para elementos genéricos */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            will-change: opacity, transform;
-        }
-        .scroll-reveal.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Eliminadas todas las animaciones scroll-reveal para elementos genéricos */
+        /* La clase .scroll-reveal se elimina de los elementos HTML que no deben animarse */
         
         /* Custom styles for About Section with background image and overlay */
         #about-section {
@@ -211,6 +198,7 @@
             position: relative; /* Needed for the pseudo-element overlay */
             overflow: hidden; /* To ensure the overlay doesn't spill out */
             color: white; /* Default text color for the section */
+            /* Eliminadas todas las transiciones y transformaciones específicas para #about-section */
         }
 
         /* Overlay for the background image to improve text readability */
@@ -236,23 +224,13 @@
             color: white; /* Ensure headings are white for readability */
         }
 
-        /* Animación para el texto en About Section */
+        /* Eliminadas las animaciones para imagen y texto en About Section */
         #about-section .about-image-wrapper {
-            /* No animar la imagen, solo el contenedor padre scroll-reveal */
-            opacity: 1; /* Asegurar que la imagen es visible por defecto dentro de su wrapper */
-            transform: none; /* Sin transformación individual de escala */
-            transition: none; /* Sin transición individual para la imagen */
+            /* Sin animaciones */
         }
 
         #about-section .about-text-content {
-            opacity: 0;
-            transform: translateX(100px); /* Inicia desde la derecha */
-            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
-            transition-delay: 0.3s; /* Pequeño retraso para que el texto aparezca después de la imagen */
-        }
-        #about-section.is-visible .about-text-content {
-            opacity: 1;
-            transform: translateX(0); /* Se desliza a su posición original */
+            /* Sin animaciones */
         }
         
         /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
@@ -444,20 +422,21 @@
         </section>
 
         <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
-        <section id="about-section" class="scroll-reveal py-16 lg:py-24">
+        <!-- Eliminada la clase scroll-reveal de esta sección -->
+        <section id="about-section" class="py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2>
                 </div>
                 
                 <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
-                    <!-- Mitad Izquierda: Imagen del Instituto (estática, sin animación individual) -->
-                    <div class="md:w-1/2 w-full p-8 flex justify-center items-center about-image-wrapper">
+                    <!-- Mitad Izquierda: Imagen del Instituto (estática, sin animaciones) -->
+                    <div class="md:w-1/2 w-full p-8 flex justify-center items-center">
                         <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" class="rounded-lg shadow-lg w-full h-full object-cover">
                     </div>
 
-                    <!-- Mitad Derecha: Breve historia de IGT con animación -->
-                    <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content">
+                    <!-- Mitad Derecha: Breve historia de IGT (sin animaciones) -->
+                    <div class="md:w-1/2 w-full p-8 text-center md:text-left">
                         <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3>
                         <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p>
                         <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p>
@@ -521,7 +500,6 @@
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold text-dark-blue">Aspectos Fundamentales de Nuestra Capacitación</h2>
-                    <p class="text-lg text-gray-500 mt-2">Nuestra formación se basa en pilares que aseguran tu éxito profesional y personal.</p>
                 </div>
                 <!-- Contenedor de la cuadrícula con 3 columnas en pantallas grandes -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto justify-center">
@@ -609,10 +587,8 @@
         <section class="scroll-reveal section-light-blue py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <!-- Título actualizado según la solicitud del usuario -->
                     <h2 class="text-4xl font-bold text-dark-blue">Empresas que reconocen nuestro trabajo</h2>
                 </div>
-                <!-- Contenido con layout de cuadrícula responsiva -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     <!-- Empresa 1: Banco Mercantil C.A Banco Universal -->
                     <div class="text-center p-4">
@@ -741,15 +717,7 @@
     
     <!-- JavaScript para el botón "Back to Top", menú móvil, barra de búsqueda y efectos de scroll -->
     <script>
-        // Transición de aparición de la página completa
-        window.addEventListener('load', () => {
-            document.body.classList.add('page-loaded');
-            // Asegura que el scroll se resetee después de cargar completamente
-            window.scrollTo(0, 0); 
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-            }, 50); // Pequeño retraso adicional por si acaso
-        });
+        // Eliminada la Transición de aparición de la página completa y la precarga en JS
 
         // Lógica del menú móvil
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -783,42 +751,21 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Intersection Observer for scroll-reveal effect on generic elements
-        document.addEventListener("DOMContentLoaded", function() {
-            const revealElements = document.querySelectorAll('.scroll-reveal');
+        // Eliminado el Intersection Observer para scroll-reveal effect en generic elements.
+        // La clase .scroll-reveal se eliminará de los elementos HTML que no deben animarse.
 
-            const observerOptions = {
-                root: null, // use the viewport as the root
-                rootMargin: '0px',
-                threshold: 0.1 // trigger when 10% of the element is visible
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                    } else {
-                        // Opcional: Para que la animación se reinicie cada vez que entra/sale de vista
-                        // entry.target.classList.remove('is-visible');
-                    }
-                });
-            }, observerOptions);
-
-            revealElements.forEach(element => {
-                observer.observe(element);
-            });
-        });
-
-        // Solución para forzar el scroll al inicio de la página (redundante con window.load, pero útil para evitar FOUC antes de JS)
+        // Solución para forzar el scroll al inicio de la página
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // No hacer window.scrollTo aquí, ya que window.load lo hará después de que body.page-loaded se active.
-            // Si la página se carga ya con scroll, el body.page-loaded manejará la aparición.
+            window.scrollTo(0, 0); // Forzar scroll al inicio
         });
 
+        window.addEventListener('load', () => {
+            window.scrollTo(0, 0); // Forzar scroll al inicio de nuevo por si acaso
+        });
 
         // Lógica del modal de imágenes
         const modal = document.getElementById('image-modal');
@@ -846,7 +793,7 @@
         const heroRegisterButton = document.getElementById('hero-register-button');
         const navRegisterButton = document.getElementById('nav-register-button');
         const scrollThreshold = 100; // Píxeles a desplazar antes de que cambie la transparencia del nav
-        const aboutSection = document.getElementById('about-section'); // Referencia a la sección About
+        // Eliminada la referencia a aboutSection para animaciones específicas
 
         // Observer para el fondo del menú de navegación
         window.addEventListener('scroll', () => {
@@ -857,14 +804,14 @@
             }
         });
 
-        // Observer para la visibilidad del botón de registro y las animaciones de la sección About
-        const sectionObserverOptions = {
+        // Observer para la visibilidad del botón de registro (manteniendo la animación de aparición/desaparición)
+        const heroObserverOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.1 // Activa cuando el 10% de la hero-section o about-section es visible o invisible
+            threshold: 0.1 // Activa cuando el 10% de la hero-section es visible o invisible
         };
 
-        const sectionIntersectionObserver = new IntersectionObserver((entries) => {
+        const heroIntersectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.target.id === 'hero-section') {
                     if (entry.isIntersecting) {
@@ -882,23 +829,17 @@
                         navRegisterButton.classList.remove('btn-hidden-state');
                         navRegisterButton.classList.add('btn-visible-state');
                     }
-                } else if (entry.target.id === 'about-section') {
-                    if (entry.isIntersecting) {
-                        // about-section está visible, activa sus animaciones
-                        entry.target.classList.add('is-visible'); 
-                    } else {
-                        // Opcional: Reiniciar animaciones al salir de la vista
-                        // entry.target.classList.remove('is-visible'); 
-                    }
-                }
+                } 
+                // Eliminada la lógica para about-section aquí
             });
-        }, sectionObserverOptions);
+        }, heroObserverOptions);
 
-        // Comienza a observar la hero-section y la about-section
-        sectionIntersectionObserver.observe(heroSection);
-        sectionIntersectionObserver.observe(aboutSection); // Ahora el observer también observa la sección About
+        // Comienza a observar la hero-section
+        heroIntersectionObserver.observe(heroSection);
+        // Eliminada la observación de about-section ya que no tiene animaciones específicas
 
-        // Establecer el estado inicial de los botones al cargar la página (se ejecuta después del body.page-loaded)
+        // Establecer el estado inicial de los botones al cargar la página
+        // (Esto es importante para manejar recargas con scroll, etc.)
         const initialSetButtonState = () => {
             const initialHeroRect = heroSection.getBoundingClientRect();
             if (initialHeroRect.top >= 0 && initialHeroRect.bottom > 0) { // Si la hero-section es visible al cargar
@@ -914,8 +855,8 @@
             }
         };
 
-        // Ejecuta la configuración inicial después de que la página haya cargado
-        window.addEventListener('load', initialSetButtonState);
+        // Ejecuta la configuración inicial al cargar el DOM (sin esperar todas las imágenes)
+        document.addEventListener('DOMContentLoaded', initialSetButtonState);
 
     </script>
 </body>
