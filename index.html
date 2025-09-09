@@ -167,6 +167,47 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Estilos para las piezas del rompecabezas */
+        #about-section {
+            overflow: hidden; /* Asegura que las piezas estén ocultas antes de la animación */
+        }
+        .puzzle-wrapper {
+            position: relative; /* Para el contexto de apilamiento y sombra */
+            z-index: 0; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Sombra sutil para profundidad */
+            border-radius: 10px; /* Bordes suaves */
+        }
+        .puzzle-piece {
+            opacity: 0;
+            transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 1s ease-out; /* Animación de rebote */
+            min-height: 250px; /* Altura mínima para visibilidad */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .puzzle-left {
+            transform: translateX(-100%); /* Inicia completamente a la izquierda */
+            border-right: 2px solid rgba(0, 0, 0, 0.05); /* Separador sutil */
+        }
+        .puzzle-right {
+            transform: translateX(100%); /* Inicia completamente a la derecha */
+            border-left: 2px solid rgba(0, 0, 0, 0.05); /* Separador sutil */
+        }
+        /* Estado final cuando la sección principal es visible */
+        #about-section.is-visible .puzzle-piece {
+            opacity: 1;
+            transform: translateX(0); /* Se mueven a su posición original */
+        }
+        /* Ajuste opcional para un pequeño solapamiento visual en el centro */
+        #about-section.is-visible .puzzle-left {
+            margin-right: -1px; 
+        }
+        #about-section.is-visible .puzzle-right {
+            margin-left: -1px; 
+        }
         
         /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
         ::-webkit-scrollbar {
@@ -358,14 +399,25 @@
             </div>
         </section>
 
-        <!-- Section 2: About (con scroll-reveal) -->
-        <section class="scroll-reveal py-16 lg:py-24 bg-white">
+        <!-- Section 2: Conoce el Instituto Gerencial de Talentos (con animación de rompecabezas) -->
+        <section id="about-section" class="scroll-reveal py-16 lg:py-24 bg-white overflow-hidden">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <!-- Título actualizado según la solicitud -->
                     <h2 class="text-4xl font-bold text-dark-blue">Conoce el Instituto Gerencial de Talentos</h2>
                 </div>
-                <!-- La sección "Acerca de" ha sido vaciada según tu petición. Puedes añadir contenido aquí más tarde. -->
+                
+                <div class="flex flex-col md:flex-row justify-center items-stretch max-w-5xl mx-auto puzzle-wrapper">
+                    <!-- Pieza Izquierda del Rompecabezas -->
+                    <div class="puzzle-piece puzzle-left bg-gray-100 p-8 md:w-1/2 w-full flex flex-col justify-center items-center text-center">
+                        <h3 class="text-2xl font-bold text-dark-blue mb-4">Nuestra Misión</h3>
+                        <p class="text-gray-700">Formamos líderes y profesionales altamente cualificados, impulsando el desarrollo socio-productivo del país con innovación y compromiso social.</p>
+                    </div>
+                    <!-- Pieza Derecha del Rompecabezas -->
+                    <div class="puzzle-piece puzzle-right bg-gray-200 p-8 md:w-1/2 w-full flex flex-col justify-center items-center text-center">
+                        <h3 class="text-2xl font-bold text-dark-blue mb-4">Nuestra Visión</h3>
+                        <p class="text-gray-700">Ser el referente nacional en formación gerencial y tecnológica, generando soluciones sostenibles para los desafíos del futuro.</p>
+                    </div>
+                </div>
             </div>
         </section>
         
@@ -676,7 +728,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Intersection Observer for scroll-reveal effect
+        // Intersection Observer for scroll-reveal effect on generic elements
         document.addEventListener("DOMContentLoaded", function() {
             const revealElements = document.querySelectorAll('.scroll-reveal');
 
@@ -740,7 +792,7 @@
             }
         }
 
-        // JavaScript para la transparencia del header al hacer scroll y la visibilidad del botón
+        // JavaScript para la transparencia del nav al hacer scroll y la visibilidad del botón de registro
         const fixedNav = document.getElementById('fixed-nav-container'); 
         const heroSection = document.getElementById('hero-section');
         const heroRegisterButton = document.getElementById('hero-register-button');
@@ -756,35 +808,42 @@
             }
         });
 
-        // Observer para la visibilidad del botón de registro
-        const heroObserverOptions = {
+        // Observer para la visibilidad del botón de registro y la animación de la sección About
+        const sectionObserverOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.1 // Activa cuando el 10% de la hero-section es visible o invisible
+            threshold: 0.1 // Activa cuando el 10% de la hero-section o about-section es visible o invisible
         };
 
-        const heroIntersectionObserver = new IntersectionObserver((entries) => {
+        const sectionIntersectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // hero-section está visible, muestra el botón del hero, oculta y anima el del nav
-                    heroRegisterButton.classList.remove('hidden');
-                    navRegisterButton.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
-                    navRegisterButton.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
-                } else {
-                    // hero-section no está visible, oculta el botón del hero, muestra y anima el del nav
-                    heroRegisterButton.classList.add('hidden');
-                    navRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
-                    navRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                if (entry.target.id === 'hero-section') {
+                    if (entry.isIntersecting) {
+                        // hero-section está visible, muestra el botón del hero, oculta y anima el del nav
+                        heroRegisterButton.classList.remove('hidden');
+                        navRegisterButton.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+                        navRegisterButton.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                    } else {
+                        // hero-section no está visible, oculta el botón del hero, muestra y anima el del nav
+                        heroRegisterButton.classList.add('hidden');
+                        navRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
+                        navRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                    }
+                } else if (entry.target.id === 'about-section') {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible'); // Activa la animación del rompecabezas
+                        // Una vez que se anima, deja de observar para que no se dispare repetidamente
+                        sectionIntersectionObserver.unobserve(entry.target); 
+                    }
                 }
             });
-        }, heroObserverOptions);
+        }, sectionObserverOptions);
 
-        // Comienza a observar la hero-section
-        heroIntersectionObserver.observe(heroSection);
+        // Comienza a observar la hero-section y la about-section
+        sectionIntersectionObserver.observe(heroSection);
+        sectionIntersectionObserver.observe(document.getElementById('about-section')); // Observa la sección de rompecabezas
 
         // Establecer el estado inicial del botón al cargar la página
-        // Asegura que el botón del nav esté oculto al principio si la página carga en la parte superior.
-        // Y el botón del hero visible.
         if (window.scrollY > 0) { 
             heroRegisterButton.classList.add('hidden');
             navRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
