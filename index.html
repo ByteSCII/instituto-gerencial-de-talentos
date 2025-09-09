@@ -236,15 +236,12 @@
             color: white; /* Ensure headings are white for readability */
         }
 
-        /* Animations for image and text in About Section */
+        /* Animación para el texto en About Section */
         #about-section .about-image-wrapper {
-            opacity: 0;
-            transform: scale(0.8);
-            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
-        }
-        #about-section.is-visible .about-image-wrapper {
-            opacity: 1;
-            transform: scale(1);
+            /* No animar la imagen, solo el contenedor padre scroll-reveal */
+            opacity: 1; /* Asegurar que la imagen es visible por defecto dentro de su wrapper */
+            transform: none; /* Sin transformación individual de escala */
+            transition: none; /* Sin transición individual para la imagen */
         }
 
         #about-section .about-text-content {
@@ -454,7 +451,7 @@
                 </div>
                 
                 <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
-                    <!-- Mitad Izquierda: Imagen de marcador de posición con animación -->
+                    <!-- Mitad Izquierda: Imagen del Instituto (estática, sin animación individual) -->
                     <div class="md:w-1/2 w-full p-8 flex justify-center items-center about-image-wrapper">
                         <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" class="rounded-lg shadow-lg w-full h-full object-cover">
                     </div>
