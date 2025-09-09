@@ -110,6 +110,12 @@
             padding-bottom: 0.25rem;
             transition: color 0.3s ease, transform 0.3s ease;
             color: white; /* Ensure text is visible on the dark background */
+            z-index: 1; /* Valor por defecto */
+        }
+        /* Cuando el grupo (que contiene el nav-link y el dropdown) se hace hover,
+           aseguramos que el nav-link tenga un z-index más alto que el dropdown. */
+        .group:hover .nav-link {
+            z-index: 11; /* Mayor que el z-index del dropdown-menu (10) */
         }
         /* Elimina el cambio de color del texto en hover */
         .nav-link::after {
@@ -136,7 +142,7 @@
             /* Use a negative top margin to close the gap between the nav link and the dropdown */
             margin-top: -2px; 
             /* FIX: Add a z-index to ensure the dropdown is on top of other elements */
-            z-index: 10;
+            z-index: 10; /* Se mantiene en 10, pero el nav-link en hover estará en 11 */
         }
         .group:hover .dropdown-menu {
             transform: scaleY(1);
