@@ -27,16 +27,17 @@
             font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
             background-color: #f8f9fa;
         }
-        /* Color del encabezado por defecto (gris sólido como la imagen) */
+        /* Color del encabezado por defecto (TRANSPARENTE al inicio) */
         .header-blue {
-            background-color: #4A4A4A; /* Gris sólido como en la imagen proporcionada */
+            background-color: transparent; /* Fondo completamente transparente al inicio */
+            backdrop-filter: blur(5px); /* Desenfoque activo desde el inicio */
+            -webkit-backdrop-filter: blur(5px); /* Para Safari */
             transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Transición suave para el cambio al hacer scroll */
         }
         /* Estilo del encabezado al hacer scroll (transparente oscuro con desenfoque) */
         .header-blue.header-scrolled {
             background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente (70% opacidad, casi negro) */
-            backdrop-filter: blur(5px); /* Añade un efecto de desenfoque detrás del texto */
-            -webkit-backdrop-filter: blur(5px); /* Para Safari */
+            /* backdrop-filter se mantiene igual, no es necesario redefinirlo */
         }
         
         /* Azul del footer */
@@ -137,7 +138,9 @@
             margin-top: -2px; 
             /* FIX: Add a z-index to ensure the dropdown is on top of other elements */
             z-index: 10; /* Menor que el z-index del nav-link */
-            background-color: #4A4A4A; /* Fondo del dropdown coincide con el header por defecto */
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo del dropdown ahora es transparente oscuro */
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
         .group:hover .dropdown-menu {
             transform: scaleY(1);
@@ -246,7 +249,6 @@
 <body class="text-gray-800">
 
     <!-- ===== Header ===== -->
-    <!-- FIX: Add z-index to ensure the header and its dropdowns are on top of other content -->
     <header id="main-header" class="header-blue text-white fixed top-0 w-full z-20">
         <!-- Main Navigation -->
         <nav>
@@ -271,7 +273,7 @@
                             <!-- "Acerca de" Dropdown -->
                             <div class="relative group h-full flex items-center">
                                 <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Acerca de</a>
-                                <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[#4A4A4A] ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[rgba(0,0,0,0.8)] ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <div class="py-1">
                                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">¿Quiénes somos?</a>
                                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Autoridades</a>
@@ -283,7 +285,7 @@
                             <!-- "Programas" Dropdown -->
                             <div class="relative group h-full flex items-center">
                                 <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Programas</a>
-                                <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[#4A4A4A] ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[rgba(0,0,0,0.8)] ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <div class="py-1">
                                         <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Ocupaciones Cualificadas</a>
                                     </div>
@@ -302,7 +304,7 @@
                 </div>
             </div>
             <!-- Mobile Menu (hidden by default) -->
-            <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-2 bg-[#4A4A4A]"> <!-- Color del menú móvil coincide con el header por defecto -->
+            <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-2 bg-[rgba(0,0,0,0.8)]"> <!-- Color del menú móvil ahora es transparente oscuro -->
                 <a href="#" class="block hover:text-blue-300 py-2">Inicio</a>
                 
                 <!-- "Acerca de" Mobile Dropdown -->
