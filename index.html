@@ -52,11 +52,22 @@
         .btn-primary {
             background-color: #007BFF; /* Azul más vibrante */
             color: white;
+            /* Definir las variables de transform de Tailwind para que se combinen */
+            --tw-translate-x: 0;
+            --tw-translate-y: 0;
+            --tw-rotate: 0;
+            --tw-skew-x: 0;
+            --tw-skew-y: 0;
+            --tw-scale-x: 1;
+            --tw-scale-y: 1;
+            /* Aplicar la propiedad transform con las variables */
+            transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
             transition: all 0.3s ease-out; /* Transición unificada para todas las propiedades */
         }
         .btn-primary:hover { 
             background-color: #0062CC; 
-            transform: scale(1.05); /* Se agranda un 5% */
+            --tw-scale-x: 1.05; /* Solo modificar las variables de escala en hover */
+            --tw-scale-y: 1.05;
         } 
         /* Botón secundario - el amarillo se mantiene */
         .btn-secondary {
@@ -358,7 +369,6 @@
                             <div class="hidden md:flex items-center space-x-4">
                                 <a id="nav-register-button" href="#" 
                                    class="btn-primary font-bold py-2 px-5 rounded-full text-md
-                                          transition-all duration-300 ease-out 
                                           opacity-0 -translate-y-2 pointer-events-none"> <!-- Estilo y animación del botón de navegación -->
                                     Inscríbete ahora
                                 </a>
@@ -411,7 +421,7 @@
                     <p class="text-lg md:text-xl mb-8">Únete a nuestros programas y convierte tu talento en un motor de transformación para la nueva era productiva de Venezuela.</p>
                     <a id="hero-register-button" href="#" 
                        class="btn-primary font-bold py-3 px-8 rounded-full text-lg
-                              transition-all duration-300 ease-out opacity-100 pointer-events-auto">
+                              opacity-100 translate-y-0 pointer-events-auto"> <!-- Estilo y animación del botón de la sección principal -->
                         Inscríbete ahora
                     </a>
                 </div>
