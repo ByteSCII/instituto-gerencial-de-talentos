@@ -10,6 +10,9 @@
     <!-- Favicon (ahora usa el logo de la página) -->
     <link rel="icon" type="image/webp" href="./images/logo.webp">
     
+    <!-- Precarga de la imagen de fondo crítica para la sección "About" -->
+    <link rel="preload" href="./images/fondoseccion2.webp" as="image">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -26,7 +29,13 @@
         body {
             font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
             background-color: #f8f9fa;
+            opacity: 0; /* Oculta el cuerpo inicialmente */
+            transition: opacity 0.5s ease-in; /* Transición para la aparición del cuerpo */
         }
+        body.page-loaded {
+            opacity: 1; /* Muestra el cuerpo una vez que todo carga */
+        }
+
         /* Color del encabezado por defecto (TRANSPARENTE al inicio con desenfoque) */
         .header-blue {
             background-color: transparent; /* Fondo completamente transparente al inicio */
@@ -735,6 +744,16 @@
     
     <!-- JavaScript para el botón "Back to Top", menú móvil, barra de búsqueda y efectos de scroll -->
     <script>
+        // Transición de aparición de la página completa
+        window.addEventListener('load', () => {
+            document.body.classList.add('page-loaded');
+            // Asegura que el scroll se resetee después de cargar completamente
+            window.scrollTo(0, 0); 
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+            }, 50); // Pequeño retraso adicional por si acaso
+        });
+
         // Lógica del menú móvil
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -780,40 +799,29 @@
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // The element is now visible, add the 'is-visible' class
                         entry.target.classList.add('is-visible');
-                        // Stop observing the element once it's visible to save resources
-                        // observer.unobserve(entry.target); // Desactivado para permitir que la animación se dispare de nuevo si se oculta y se vuelve a mostrar
                     } else {
-                        // Para secciones que queremos que se re-animen cada vez que entran en vista,
-                        // o para elementos que deben ocultarse al salir de vista, podemos hacer:
+                        // Opcional: Para que la animación se reinicie cada vez que entra/sale de vista
                         // entry.target.classList.remove('is-visible');
                     }
                 });
             }, observerOptions);
 
-            // Observe each element with the 'scroll-reveal' class
             revealElements.forEach(element => {
                 observer.observe(element);
             });
         });
 
-        // Solución para forzar el scroll al inicio de la página
-        // Desactiva la restauración de desplazamiento del navegador para evitar que recuerde la posición anterior
+        // Solución para forzar el scroll al inicio de la página (redundante con window.load, pero útil para evitar FOUC antes de JS)
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            window.scrollTo(0, 0);
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-            }, 50);
+            // No hacer window.scrollTo aquí, ya que window.load lo hará después de que body.page-loaded se active.
+            // Si la página se carga ya con scroll, el body.page-loaded manejará la aparición.
         });
 
-        window.addEventListener('load', () => {
-            window.scrollTo(0, 0);
-        });
 
         // Lógica del modal de imágenes
         const modal = document.getElementById('image-modal');
@@ -863,14 +871,14 @@
             entries.forEach(entry => {
                 if (entry.target.id === 'hero-section') {
                     if (entry.isIntersecting) {
-                        // hero-section está visible, muestra el botón del hero, oculta y anima el del nav
+                        // hero-section está visible, muestra el botón del hero, oculta el del nav
                         heroRegisterButton.classList.remove('btn-hidden-state');
                         heroRegisterButton.classList.add('btn-visible-state');
 
                         navRegisterButton.classList.remove('btn-visible-state');
                         navRegisterButton.classList.add('btn-hidden-state');
                     } else {
-                        // hero-section no está visible, oculta el botón del hero, muestra y anima el del nav
+                        // hero-section no está visible, oculta el botón del hero, muestra el del nav
                         heroRegisterButton.classList.remove('btn-visible-state');
                         heroRegisterButton.classList.add('btn-hidden-state');
 
@@ -893,20 +901,24 @@
         sectionIntersectionObserver.observe(heroSection);
         sectionIntersectionObserver.observe(aboutSection); // Ahora el observer también observa la sección About
 
-        // Establecer el estado inicial de los botones al cargar la página
-        // (Esto es importante para manejar recargas con scroll, etc.)
-        const initialHeroRect = heroSection.getBoundingClientRect();
-        if (initialHeroRect.top >= 0 && initialHeroRect.bottom > 0) { // Si la hero-section es visible al cargar
-            heroRegisterButton.classList.add('btn-visible-state');
-            heroRegisterButton.classList.remove('btn-hidden-state');
-            navRegisterButton.classList.add('btn-hidden-state');
-            navRegisterButton.classList.remove('btn-visible-state');
-        } else { // Si la hero-section no es visible al cargar (ya se hizo scroll)
-            heroRegisterButton.classList.add('btn-hidden-state');
-            heroRegisterButton.classList.remove('btn-visible-state');
-            navRegisterButton.classList.add('btn-visible-state');
-            navRegisterButton.classList.remove('btn-hidden-state');
-        }
+        // Establecer el estado inicial de los botones al cargar la página (se ejecuta después del body.page-loaded)
+        const initialSetButtonState = () => {
+            const initialHeroRect = heroSection.getBoundingClientRect();
+            if (initialHeroRect.top >= 0 && initialHeroRect.bottom > 0) { // Si la hero-section es visible al cargar
+                heroRegisterButton.classList.add('btn-visible-state');
+                heroRegisterButton.classList.remove('btn-hidden-state');
+                navRegisterButton.classList.add('btn-hidden-state');
+                navRegisterButton.classList.remove('btn-visible-state');
+            } else { // Si la hero-section no es visible al cargar (ya se hizo scroll)
+                heroRegisterButton.classList.add('btn-hidden-state');
+                heroRegisterButton.classList.remove('btn-visible-state');
+                navRegisterButton.classList.add('btn-visible-state');
+                navRegisterButton.classList.remove('btn-hidden-state');
+            }
+        };
+
+        // Ejecuta la configuración inicial después de que la página haya cargado
+        window.addEventListener('load', initialSetButtonState);
 
     </script>
 </body>
