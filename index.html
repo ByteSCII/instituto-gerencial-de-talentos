@@ -48,27 +48,38 @@
         .text-dark-blue { color: #004080; } /* Coincide con el nuevo header-blue */
         /* Azul claro de acento (mantener vibrante si se desea) */
         .text-light-blue { color: #3b82f6; } /* Mantenido o ajustado ligeramente si es necesario */
-        /* Botón primario con animación de agrandamiento al pasar el cursor */
+        
+        /* Botón primario con animación de agrandamiento al pasar el cursor y control de visibilidad */
         .btn-primary {
             background-color: #007BFF; /* Azul más vibrante */
             color: white;
-            /* Definir las variables de transform de Tailwind para que se combinen */
-            --tw-translate-x: 0;
-            --tw-translate-y: 0;
-            --tw-rotate: 0;
-            --tw-skew-x: 0;
-            --tw-skew-y: 0;
-            --tw-scale-x: 1;
-            --tw-scale-y: 1;
-            /* Aplicar la propiedad transform con las variables */
-            transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-            transition: all 0.3s ease-out; /* Transición unificada para todas las propiedades */
+            /* Variables CSS para controlar translate y scale */
+            --btn-translate-y: 0px;
+            --btn-scale: 1;
+            /* Aplicar transform con las variables, permitiendo que se combinen */
+            transform: translateY(var(--btn-translate-y)) scale(var(--btn-scale));
+            transition-property: background-color, transform, opacity; /* Transición explícita */
+            transition-duration: 0.3s;
+            transition-timing-function: ease-out;
+            pointer-events: auto; /* Por defecto activo, se cambia con clases de visibilidad */
         }
         .btn-primary:hover { 
             background-color: #0062CC; 
-            --tw-scale-x: 1.05; /* Solo modificar las variables de escala en hover */
-            --tw-scale-y: 1.05;
+            --btn-scale: 1.05; /* Solo modifica la variable de escala en hover */
         } 
+        /* Clases para el control de visibilidad de los botones de registro */
+        .btn-hidden-state {
+            --btn-translate-y: -8px; /* Desplazamiento inicial para ocultar */
+            opacity: 0;
+            pointer-events: none; /* Desactiva interacción cuando está oculto */
+        }
+        .btn-visible-state {
+            --btn-translate-y: 0px; /* Posición visible */
+            opacity: 1;
+            pointer-events: auto; /* Activa interacción cuando está visible */
+        }
+
+
         /* Botón secundario - el amarillo se mantiene */
         .btn-secondary {
             background-color: #ffc107;
@@ -368,8 +379,7 @@
                             <!-- Columna Derecha: Botón de registro de navegación y Email -->
                             <div class="hidden md:flex items-center space-x-4">
                                 <a id="nav-register-button" href="#" 
-                                   class="btn-primary font-bold py-2 px-5 rounded-full text-md
-                                          opacity-0 -translate-y-2 pointer-events-none"> <!-- Estilo y animación del botón de navegación -->
+                                   class="btn-primary font-bold py-2 px-5 rounded-full text-md btn-hidden-state"> <!-- Clase de visibilidad inicial -->
                                     Inscríbete ahora
                                 </a>
                                 <a href="#" class="hover:text-blue-300 social-icon-animation"><i class="fa fa-envelope text-xl"></i></a>
@@ -420,8 +430,7 @@
                     <p class="text-lg md:text-xl mb-6">En el IGT del INCES, unimos la experiencia productiva con la capacitación innovadora para fortalecer el liderazgo y la gestión socialista en el país.</p>
                     <p class="text-lg md:text-xl mb-8">Únete a nuestros programas y convierte tu talento en un motor de transformación para la nueva era productiva de Venezuela.</p>
                     <a id="hero-register-button" href="#" 
-                       class="btn-primary font-bold py-3 px-8 rounded-full text-lg
-                              opacity-100 translate-y-0 pointer-events-auto"> <!-- Estilo y animación del botón de la sección principal -->
+                       class="btn-primary font-bold py-3 px-8 rounded-full text-lg btn-visible-state"> <!-- Clase de visibilidad inicial -->
                         Inscríbete ahora
                     </a>
                 </div>
@@ -855,18 +864,18 @@
                 if (entry.target.id === 'hero-section') {
                     if (entry.isIntersecting) {
                         // hero-section está visible, muestra el botón del hero, oculta y anima el del nav
-                        heroRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
-                        heroRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                        heroRegisterButton.classList.remove('btn-hidden-state');
+                        heroRegisterButton.classList.add('btn-visible-state');
 
-                        navRegisterButton.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
-                        navRegisterButton.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                        navRegisterButton.classList.remove('btn-visible-state');
+                        navRegisterButton.classList.add('btn-hidden-state');
                     } else {
                         // hero-section no está visible, oculta el botón del hero, muestra y anima el del nav
-                        heroRegisterButton.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
-                        heroRegisterButton.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                        heroRegisterButton.classList.remove('btn-visible-state');
+                        heroRegisterButton.classList.add('btn-hidden-state');
 
-                        navRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
-                        navRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                        navRegisterButton.classList.remove('btn-hidden-state');
+                        navRegisterButton.classList.add('btn-visible-state');
                     }
                 } else if (entry.target.id === 'about-section') {
                     if (entry.isIntersecting) {
@@ -888,15 +897,15 @@
         // (Esto es importante para manejar recargas con scroll, etc.)
         const initialHeroRect = heroSection.getBoundingClientRect();
         if (initialHeroRect.top >= 0 && initialHeroRect.bottom > 0) { // Si la hero-section es visible al cargar
-            heroRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
-            heroRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
-            navRegisterButton.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
-            navRegisterButton.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+            heroRegisterButton.classList.add('btn-visible-state');
+            heroRegisterButton.classList.remove('btn-hidden-state');
+            navRegisterButton.classList.add('btn-hidden-state');
+            navRegisterButton.classList.remove('btn-visible-state');
         } else { // Si la hero-section no es visible al cargar (ya se hizo scroll)
-            heroRegisterButton.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
-            heroRegisterButton.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
-            navRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
-            navRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+            heroRegisterButton.classList.add('btn-hidden-state');
+            heroRegisterButton.classList.remove('btn-visible-state');
+            navRegisterButton.classList.add('btn-visible-state');
+            navRegisterButton.classList.remove('btn-hidden-state');
         }
 
     </script>
