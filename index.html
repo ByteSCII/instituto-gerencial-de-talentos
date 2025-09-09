@@ -244,8 +244,6 @@
     </style>
 </head>
 <body>
-    <!-- Eliminadas las definiciones de SVG Clip Paths para el rompecabezas -->
-
     <!-- ===== Main Content ===== -->
     <main>
         <!-- Section 1: Hero (Ahora contiene la navegación) -->
@@ -359,14 +357,26 @@
             </div>
         </section>
 
-        <!-- Section 2: About (restaurada a su estado original, vacía de contenido específico de rompecabezas) -->
-        <section id="about-section" class="scroll-reveal py-16 lg:py-24 bg-white">
+        <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
+        <section id="about-section" class="scroll-reveal py-16 lg:py-24 bg-[#004080] text-white">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <!-- Título actualizado según la solicitud -->
-                    <h2 class="text-4xl font-bold text-dark-blue">Conoce el Instituto Gerencial de Talentos</h2>
+                    <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2>
                 </div>
-                <!-- La sección "Acerca de" ha sido vaciada según tu petición. Puedes añadir contenido aquí más tarde. -->
+                
+                <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto">
+                    <!-- Mitad Izquierda: Imagen de marcador de posición -->
+                    <div class="md:w-1/2 w-full p-8 flex justify-center items-center">
+                        <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" class="rounded-lg shadow-lg max-w-full h-auto object-cover">
+                    </div>
+
+                    <!-- Mitad Derecha: Breve historia de IGT -->
+                    <div class="md:w-1/2 w-full p-8 text-center md:text-left">
+                        <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3>
+                        <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p>
+                        <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p>
+                    </div>
+                </div>
             </div>
         </section>
         
@@ -783,13 +793,13 @@
                         navRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
                     }
                 } 
-                // Se eliminó la lógica específica para about-section aquí.
+                // La lógica para about-section no es necesaria aquí ya que no hay animación específica de rompecabezas
             });
         }, heroObserverOptions);
 
         // Comienza a observar la hero-section
         heroIntersectionObserver.observe(heroSection);
-        // Eliminada la observación de about-section para el efecto de rompecabezas.
+        // Ya no es necesario observar #about-section para animaciones de rompecabezas
 
         // Establecer el estado inicial del botón al cargar la página
         if (window.scrollY > 0) { 
