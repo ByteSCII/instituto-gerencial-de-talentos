@@ -7,8 +7,8 @@
     <meta name="description" content="Instituto Gerencial de Talentos formando el mundo laboral del mañana">
     <title>IGT - El Futuro de la Ciencia y Tecnología</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <!-- Favicon (ahora usa el logo de la página) -->
+    <link rel="icon" type="image/webp" href="./images/logo.webp">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -48,13 +48,16 @@
         .text-dark-blue { color: #004080; } /* Coincide con el nuevo header-blue */
         /* Azul claro de acento (mantener vibrante si se desea) */
         .text-light-blue { color: #3b82f6; } /* Mantenido o ajustado ligeramente si es necesario */
-        /* Botón primario */
+        /* Botón primario con animación de agrandamiento al pasar el cursor */
         .btn-primary {
             background-color: #007BFF; /* Azul más vibrante */
             color: white;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Añadida transición para transform */
         }
-        .btn-primary:hover { background-color: #0062CC; } /* Hover del botón primario */
+        .btn-primary:hover { 
+            background-color: #0062CC; 
+            transform: scale(1.05); /* Se agranda un 5% */
+        } 
         /* Botón secundario - el amarillo se mantiene */
         .btn-secondary {
             background-color: #ffc107;
@@ -168,6 +171,62 @@
             transform: translateY(0);
         }
         
+        /* Custom styles for About Section with background image and overlay */
+        #about-section {
+            background-image: url('./images/fondoseccion2.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative; /* Needed for the pseudo-element overlay */
+            overflow: hidden; /* To ensure the overlay doesn't spill out */
+            color: white; /* Default text color for the section */
+        }
+
+        /* Overlay for the background image to improve text readability */
+        #about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            z-index: 1;
+        }
+
+        /* Ensure content is above the overlay */
+        #about-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Specific text colors within the about section (headings) */
+        #about-section h2, #about-section h3 {
+            color: white; /* Ensure headings are white for readability */
+        }
+
+        /* Animations for image and text in About Section */
+        #about-section .about-image-wrapper {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
+        }
+        #about-section.is-visible .about-image-wrapper {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #about-section .about-text-content {
+            opacity: 0;
+            transform: translateX(100px); /* Inicia desde la derecha */
+            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
+            transition-delay: 0.3s; /* Pequeño retraso para que el texto aparezca después de la imagen */
+        }
+        #about-section.is-visible .about-text-content {
+            opacity: 1;
+            transform: translateX(0); /* Se desliza a su posición original */
+        }
+        
         /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
         ::-webkit-scrollbar {
             width: 12px;
@@ -240,40 +299,6 @@
         }
         .company-logo:hover {
             transform: scale(1.1); /* Efecto de agrandamiento al pasar el cursor */
-        }
-
-        /* Custom styles for About Section with background image and overlay */
-        #about-section {
-            background-image: url('./images/fondoseccion2.webp');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative; /* Needed for the pseudo-element overlay */
-            overflow: hidden; /* To ensure the overlay doesn't spill out */
-            color: white; /* Default text color for the section */
-        }
-
-        /* Overlay for the background image to improve text readability */
-        #about-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
-            z-index: 1;
-        }
-
-        /* Ensure content is above the overlay */
-        #about-section .container {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Specific text colors within the about section (headings) */
-        #about-section h2, #about-section h3 {
-            color: white; /* Ensure headings are white for readability */
         }
     </style>
 </head>
@@ -398,14 +423,14 @@
                     <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2>
                 </div>
                 
-                <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto">
-                    <!-- Mitad Izquierda: Imagen de marcador de posición -->
-                    <div class="md:w-1/2 w-full p-8 flex justify-center items-center">
-                        <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" class="rounded-lg shadow-lg max-w-full h-auto object-cover">
+                <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
+                    <!-- Mitad Izquierda: Imagen de marcador de posición con animación -->
+                    <div class="md:w-1/2 w-full p-8 flex justify-center items-center about-image-wrapper">
+                        <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" class="rounded-lg shadow-lg w-full h-full object-cover">
                     </div>
 
-                    <!-- Mitad Derecha: Breve historia de IGT -->
-                    <div class="md:w-1/2 w-full p-8 text-center md:text-left">
+                    <!-- Mitad Derecha: Breve historia de IGT con animación -->
+                    <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content">
                         <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3>
                         <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p>
                         <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p>
@@ -795,6 +820,7 @@
         const heroRegisterButton = document.getElementById('hero-register-button');
         const navRegisterButton = document.getElementById('nav-register-button');
         const scrollThreshold = 100; // Píxeles a desplazar antes de que cambie la transparencia del nav
+        const aboutSection = document.getElementById('about-section'); // Referencia a la sección About
 
         // Observer para el fondo del menú de navegación
         window.addEventListener('scroll', () => {
@@ -805,14 +831,14 @@
             }
         });
 
-        // Observer para la visibilidad del botón de registro
-        const heroObserverOptions = {
+        // Observer para la visibilidad del botón de registro y las animaciones de la sección About
+        const sectionObserverOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.1 // Activa cuando el 10% de la hero-section es visible o invisible
+            threshold: 0.1 // Activa cuando el 10% de la hero-section o about-section es visible o invisible
         };
 
-        const heroIntersectionObserver = new IntersectionObserver((entries) => {
+        const sectionIntersectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.target.id === 'hero-section') {
                     if (entry.isIntersecting) {
@@ -826,14 +852,23 @@
                         navRegisterButton.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
                         navRegisterButton.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
                     }
-                } 
-                // La lógica para about-section no es necesaria aquí ya que no hay animación específica de rompecabezas
+                } else if (entry.target.id === 'about-section') {
+                    if (entry.isIntersecting) {
+                        // about-section está visible, activa sus animaciones
+                        entry.target.classList.add('is-visible'); 
+                    } else {
+                        // Puedes decidir si quieres que la animación se reinicie al salir de la vista
+                        // o simplemente que se quede en su estado final.
+                        // Para que se reinicie al salir de vista, descomenta la siguiente línea:
+                        // entry.target.classList.remove('is-visible'); 
+                    }
+                }
             });
-        }, heroObserverOptions);
+        }, sectionObserverOptions);
 
-        // Comienza a observar la hero-section
-        heroIntersectionObserver.observe(heroSection);
-        // Ya no es necesario observar #about-section para animaciones de rompecabezas
+        // Comienza a observar la hero-section y la about-section
+        sectionIntersectionObserver.observe(heroSection);
+        sectionIntersectionObserver.observe(aboutSection); // Ahora el observer también observa la sección About
 
         // Establecer el estado inicial del botón al cargar la página
         if (window.scrollY > 0) { 
