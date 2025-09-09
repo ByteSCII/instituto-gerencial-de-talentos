@@ -1,3 +1,5 @@
+--- START OF FILE index.html ---
+
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -269,8 +271,8 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Se usa justify-between para crear el layout de 3 columnas -->
                 <div class="flex items-center justify-between h-20">
-                    <!-- Columna Izquierda: Logo -->
-                    <div class="flex items-center">
+                    <!-- Columna Izquierda: Logo y Menú de Navegación (modificado) -->
+                    <div class="flex items-center space-x-8">
                         <!-- Logo Desktop -->
                         <a href="#" class="hidden md:block">
                             <img src="./images/logo.webp" alt="Logo IGT" class="h-10">
@@ -279,39 +281,36 @@
                         <button id="mobile-menu-button" class="text-white focus:outline-none md:hidden">
                             <i class="fa fa-bars text-2xl"></i>
                         </button>
-                    </div>
 
-                    <!-- Columna Central: Menú de Navegación -->
-                    <!-- Se usa flex-grow y justify-center para que ocupe el espacio y centre los enlaces -->
-                    <div class="hidden md:flex items-center h-full flex-grow justify-center">
-                        <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Inicio</a>
+                        <!-- Menú de Navegación (ahora parte de la columna izquierda) -->
+                        <div class="hidden md:flex items-center h-full">
+                            <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Inicio</a>
 
-                        <!-- "Acerca de" Dropdown -->
-                        <div class="relative group h-full flex items-center">
-                            <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Acerca de</a>
-                            <!-- The dropdown-menu now has a negative top margin to close the gap -->
-                            <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[#003366] ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <div class="py-1">
-                                    <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">¿Quiénes somos?</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Autoridades</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Nuestro epónimo</a>
+                            <!-- "Acerca de" Dropdown -->
+                            <div class="relative group h-full flex items-center">
+                                <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Acerca de</a>
+                                <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[#003366] ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div class="py-1">
+                                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">¿Quiénes somos?</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Autoridades</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Nuestro epónimo</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- "Programas" Dropdown -->
-                        <div class="relative group h-full flex items-center">
-                            <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Programas</a>
-                             <!-- The dropdown-menu now has a negative top margin to close the gap -->
-                            <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[#003366] ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <div class="py-1">
-                                    <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Ocupaciones Cualificadas</a>
+                            <!-- "Programas" Dropdown -->
+                            <div class="relative group h-full flex items-center">
+                                <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Programas</a>
+                                <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[#003366] ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div class="py-1">
+                                        <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Ocupaciones Cualificadas</a>
+                                    </div>
                                 </div>
                             </div>
+                            
+                            <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Noticias</a>
+                            <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Contacto</a>
                         </div>
-                        
-                        <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Noticias</a>
-                        <a href="#" class="nav-link font-semibold px-4 py-2 rounded-md">Contacto</a>
                     </div>
 
                     <!-- Columna Derecha: Búsqueda y Redes Sociales -->
@@ -386,7 +385,7 @@
             </div>
         </section>
 
-        <!-- Section 2: About (with scroll-reveal) -->
+        <!-- Section 2: About (con scroll-reveal) -->
         <section class="scroll-reveal py-16 lg:py-24 bg-white">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
@@ -397,7 +396,7 @@
             </div>
         </section>
         
-        <!-- Section 3: Qualified Occupations (replaces old banner section) -->
+        <!-- Section 3: Qualified Occupations (reemplaza la antigua sección de banner) -->
         <section class="scroll-reveal section-light-blue py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
@@ -447,7 +446,7 @@
             </div>
         </section>
 
-        <!-- Section 4: Fundamental Aspects of Training (New section based on user request) -->
+        <!-- Section 4: Fundamental Aspects of Training (Nueva sección según la solicitud del usuario) -->
         <section class="scroll-reveal bg-white py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
@@ -503,7 +502,7 @@
             </div>
         </section>
 
-        <!-- Section 5: Gallery of Moments (New section for "Reflexión fotos") -->
+        <!-- Section 5: Gallery of Moments (Nueva sección para "Reflexión fotos") -->
         <section class="scroll-reveal section-light-blue py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
@@ -536,7 +535,7 @@
             </div>
         </section>
 
-        <!-- Section 6: Companies (with scroll-reveal) -->
+        <!-- Section 6: Companies (con scroll-reveal) -->
         <section class="scroll-reveal section-light-blue py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="text-center mb-12">
@@ -603,7 +602,7 @@
             </div>
         </section>
 
-        <!-- Section 7: Magazine (with scroll-reveal) -->
+        <!-- Section 7: Magazine (con scroll-reveal) -->
         <section class="scroll-reveal magazine-section text-white py-16 lg:py-24">
             <div class="container mx-auto px-6 lg:px-8 text-center">
                 <h2 class="text-4xl font-bold mb-4">¡Descubre nuestra revista!</h2>
