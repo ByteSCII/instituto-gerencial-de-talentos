@@ -109,6 +109,15 @@
             pointer-events: auto; /* Activa interacción en hover */
             transform: scaleY(1);
         }
+        /* Estilos para los enlaces dentro del dropdown menu (subcategorías) */
+        .dropdown-menu a {
+            color: white; /* Asegura el texto blanco */
+            transition: transform 0.2s ease-out, background-color 0.2s ease-out; /* Animación de escala y fondo */
+        }
+        .dropdown-menu a:hover {
+            transform: scale(1.02); /* Agrandamiento sutil */
+            background-color: rgba(0, 0, 0, 0.6); /* Fondo ligeramente más claro en hover */
+        }
 
 
         /* Azul claro de las secciones - este color ya no se usa como fondo directo de secciones */
@@ -226,7 +235,7 @@
         }
         /* Ajuste específico para el color del icono en las tarjetas si es necesario */
         #fundamental-aspects-section .section-content-wrapper .card-icon {
-            color: #007BFF; /* Asegurar que el icono tenga el color primario */
+            color: white; /* Icono en blanco */
         }
 
 
@@ -265,7 +274,7 @@
         #companies-section h2, #companies-section h3, #companies-section p {
             color: white; 
         }
-        /* El section-content-wrapper NO se usa para estas dos secciones, ya que el fondo está en la sección. */
+        /* El section-content-wrapper no se usa directamente aquí, el fondo está en la sección. */
         
         /* Animaciones para la imagen y el texto en About Section */
         /* Animación de la IMAGEN (zoom y desvanecimiento) */
@@ -401,9 +410,9 @@
                                         <a href="#" class="nav-link font-semibold py-2 rounded-md">Acerca de</a>
                                         <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             <div class="py-1">
-                                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">¿Quiénes somos?</a>
-                                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Autoridades</a>
-                                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Nuestro epónimo</a>
+                                                <a href="#" class="block px-4 py-2 text-sm text-white">¿Quiénes somos?</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
+                                                <a href="#" class="block px-4 py-2 text-sm text-white">Autoridades</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
+                                                <a href="#" class="block px-4 py-2 text-sm text-white">Nuestro epónimo</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
                                             </div>
                                         </div>
                                     </div>
@@ -413,7 +422,7 @@
                                         <a href="#" class="nav-link font-semibold py-2 rounded-md">Programas</a>
                                         <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             <div class="py-1">
-                                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Ocupaciones Cualificadas</a>
+                                                <a href="#" class="block px-4 py-2 text-sm text-white">Ocupaciones Cualificadas</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
                                             </div>
                                         </div>
                                     </div>
@@ -443,9 +452,9 @@
                                 <span>Acerca de</span>
                             </button>
                             <div class="hidden space-y-2 pl-4 mobile-dropdown-menu">
-                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">¿Quiénes somos?</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Autoridades</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Nuestro epónimo</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white">¿Quiénes somos?</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
+                                <a href="#" class="block px-4 py-2 text-sm text-white">Autoridades</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
+                                <a href="#" class="block px-4 py-2 text-sm text-white">Nuestro epónimo</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
                             </div>
                         </div>
 
@@ -455,7 +464,7 @@
                                 <span>Programas</span>
                             </button>
                             <div class="hidden space-y-2 pl-4 mobile-dropdown-menu">
-                                <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Ocupaciones Cualificadas</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white">Ocupaciones Cualificadas</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
                             </div>
                         </div>
                         
@@ -596,7 +605,7 @@
                             <h3 class="text-2xl font-bold text-white text-center mb-2">Proyectos finales</h3> <!-- Texto blanco -->
                             <p class="text-white text-center">Demuestra tus conocimientos y talentos a través de proyectos que reflejan las demandas del mundo real y te preparan para el éxito.</p> <!-- Texto blanco -->
                         </div>
-                        <div class="bg-gray-50 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
+                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
                             <div class="card-icon mb-4 text-center text-white"> <!-- Icono en blanco -->
                                 <i class="fas fa-award"></i>
                             </div>
