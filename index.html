@@ -89,16 +89,15 @@
         }
 
         /* Ajuste de z-index para los grupos de navegación y dropdowns */
-        .fixed-nav-container { z-index: 50; } /* Navbar principal, muy alto */
+        #fixed-nav-container { z-index: 50; } /* Navbar principal, muy alto */
         .relative.group { z-index: 40; } /* Contenedor de cada enlace con dropdown */
-        .nav-link { z-index: 30; } /* El enlace en sí, debajo del dropdown cuando se abre */
+        .nav-link { z-index: 30; } /* El enlace en sí, debajo del dropdown cuando se abre (para el subrayado) */
         .dropdown-menu { 
-            z-index: 35; /* El dropdown desplegado, sobre el nav-link pero bajo el contenedor del grupo si es necesario */
-            visibility: hidden; /* Ocultar por defecto */
+            z-index: 35; /* El dropdown desplegado, sobre el nav-link */
+            opacity: 0;
+            pointer-events: none; /* Desactiva interacción cuando está oculto */
             transform-origin: top;
             transform: scaleY(0);
-            opacity: 0;
-            pointer-events: none;
             transition: all 0.3s ease-in-out;
             margin-top: -2px;
             background-color: rgba(0, 0, 0, 0.8);
@@ -106,10 +105,9 @@
             -webkit-backdrop-filter: blur(5px);
         }
         .group:hover .dropdown-menu {
-            visibility: visible; /* Mostrar en hover */
-            transform: scaleY(1);
             opacity: 1;
-            pointer-events: auto;
+            pointer-events: auto; /* Activa interacción en hover */
+            transform: scaleY(1);
         }
 
 
@@ -232,7 +230,7 @@
         }
 
 
-        /* NUEVOS ESTILOS PARA "GALERÍA DE MOMENTOS" Y "EMPRESAS" CON FONDO ESPECÍFICO */
+        /* ESTILOS PARA "GALERÍA DE MOMENTOS" Y "EMPRESAS" CON FONDO ESPECÍFICO CONTINUO */
         #gallery-moments-section, #companies-section {
             background-image: url('./images/fondo2.webp'); /* Fondo específico para estas secciones */
             background-size: cover;
@@ -267,7 +265,7 @@
         #companies-section h2, #companies-section h3, #companies-section p {
             color: white; 
         }
-        /* El section-content-wrapper no se usa directamente aquí, el fondo está en la sección. */
+        /* El section-content-wrapper NO se usa para estas dos secciones, ya que el fondo está en la sección. */
         
         /* Animaciones para la imagen y el texto en About Section */
         /* Animación de la IMAGEN (zoom y desvanecimiento) */
@@ -693,7 +691,7 @@
 
     <!-- ===== Footer ===== -->
     <footer>
-        <div class="container mx-auto px-6 lg:px-8 py-12"> <!-- Contenido sobre el overlay del footer -->
+        <div class="container mx-auto px-6 lg:px-8 py-12 footer-blue"> <!-- Contenido sobre el overlay del footer -->
             
             <!-- Columna 1: Logo y Misión -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -704,7 +702,7 @@
                 
                 <!-- Columna 2: Enlaces Rápidos -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4 text-white">Enlaces Rápidos</h4>
+                    <h4 class="font-bold text-lg mb-4">Enlaces Rápidos</h4>
                     <ul>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Inicio</a></li>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Programas</a></li>
@@ -715,7 +713,7 @@
 
                 <!-- Columna 3: Contacto -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4 text-white">Contacto</h4>
+                    <h4 class="font-bold text-lg mb-4">Contacto</h4>
                     <p class="text-gray-300 text-sm">
                         <i class="fa fa-map-marker-alt mr-2"></i> Calle 7, La Urbina, Caracas, Venezuela
                     </p>
@@ -729,7 +727,7 @@
                 
                 <!-- Columna 4: Redes Sociales -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4 text-white">Síguenos</h4>
+                    <h4 class="font-bold text-lg mb-4">Síguenos</h4>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
                         <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-twitter text-xl"></i></a>
