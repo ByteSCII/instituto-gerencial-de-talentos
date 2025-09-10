@@ -17,8 +17,8 @@
 
     <link rel="preload" href="./images/logo.webp" as="image">
     <link rel="preload" href="./images/fondo.webp" as="image">
-    <link rel="preload" href="./images/fondoseccion2.webp" as="image">
-    <link rel="preload" href="./images/cursos.webp" as="image">
+    <link rel="preload" href="./images/fondoseccion2.webp" as="image"> <!-- Ahora es el fondo global, sigue siendo crítico -->
+    <link rel="preload" href="./images/cursos.webp" as="image"> 
 
     <!-- Tailwind CSS (se mantiene en head por ser CSS crítico) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,10 +33,15 @@
         /* Custom styles to match the design */
         body {
             font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
-            background-color: #f8f9fa;
+            background-color: #f8f9fa; /* Color de fallback si la imagen no carga */
+            background-image: url('./images/fondoseccion2.webp'); /* Fondo para todas las secciones debajo del Hero */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Esto es CLAVE para la continuidad visual */
         }
 
-        /* Color del encabezado por defecto (100% INVISIBLE al inicio) */
+        /* Color del encabezado por defecto (TRANSPARENTE al inicio con desenfoque) */
         .header-blue {
             background-color: transparent; /* Fondo completamente transparente al inicio */
             backdrop-filter: none; /* ELIMINADO el desenfoque al inicio */
@@ -51,9 +56,9 @@
         }
         
         /* Azul del footer */
-        .footer-blue { background-color: #1A3D6B; } /* Azul de footer más claro */
-        /* Azul claro de las secciones */
-        .section-light-blue { background-color: #DCEEF5; } /* Azul más claro */
+        .footer-blue { background-color: #1A3D6B; } /* Se mantiene el color sólido para el pie de página */
+        /* Azul claro de las secciones - este color ya no se usa como fondo directo de secciones */
+        .section-light-blue { color: initial; } /* Resetear para que el fondo del body se vea */
         /* Texto azul oscuro */
         .text-dark-blue { color: #004080; } /* Coincide con el nuevo header-blue */
         /* Azul claro de acento (mantener vibrante si se desea) */
@@ -191,27 +196,51 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         
-        /* Custom styles for About Section with background image */
-        #about-section {
-            background-image: url('./images/fondoseccion2.webp');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative; /* Needed for positioning internal elements */
-            overflow: hidden; /* To ensure content doesn't spill out */
+        /* Estilos base para las secciones que usan la imagen de fondo del body */
+        section {
+            position: relative; /* Necesario para los overlays internos si se usan */
+            /* Quitar cualquier background-image directo o background-color sólido aquí */
+            /* Quitar padding vertical directamente de la sección */
         }
 
-        /* Eliminado el overlay ::before para #about-section, ahora la imagen tiene su brillo original */
-
-        /* Ensure content is above other elements - z-index 2 still useful for stacking contexts */
-        #about-section .container {
-            position: relative;
-            z-index: 2;
+        /* Contenedores de contenido con fondos semi-transparentes para legibilidad */
+        /* Sección "Conoce el Instituto Gerencial de Talentos" */
+        #about-section .container-content-overlay {
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+            color: white; /* Texto blanco para esta sección */
+        }
+        #about-section .container-content-overlay h2, #about-section .container-content-overlay h3, #about-section .container-content-overlay p {
+            color: white;
         }
 
-        /* Specific text colors within the about section (headings y párrafos) - Ahora en blanco */
-        #about-section h2, #about-section h3, #about-section p {
-            color: white; /* Cambiado a blanco para mejor contraste sobre la imagen sin overlay */
+        /* Sección "Nuestras Ocupaciones Cualificadas" */
+        #qualified-occupations-section .container-content-overlay {
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+            color: white; /* Texto blanco para esta sección */
+        }
+        #qualified-occupations-section .container-content-overlay h2, #qualified-occupations-section .container-content-overlay h3, #qualified-occupations-section .container-content-overlay p {
+            color: white;
+        }
+
+        /* Secciones con fondos blancos semi-transparentes */
+        #fundamental-aspects-section .container-content-overlay,
+        #gallery-moments-section .container-content-overlay,
+        #companies-section .container-content-overlay {
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+            color: #004080; /* Texto oscuro para estas secciones */
+        }
+        #fundamental-aspects-section .container-content-overlay h2, #fundamental-aspects-section .container-content-overlay h3, #fundamental-aspects-section .container-content-overlay p {
+            color: #004080; /* Mantener texto oscuro para legibilidad */
+        }
+        #gallery-moments-section .container-content-overlay h2, #gallery-moments-section .container-content-overlay h3, #gallery-moments-section .container-content-overlay p {
+            color: #004080; /* Mantener texto oscuro para legibilidad */
+        }
+        #companies-section .container-content-overlay h2, #companies-section .container-content-overlay h3, #companies-section .container-content-overlay p {
+            color: #004080; /* Mantener texto oscuro para legibilidad */
+        }
+        /* Ajuste específico para el color del icono en las tarjetas si es necesario */
+        #fundamental-aspects-section .container-content-overlay .card-icon {
+            color: #007BFF; /* Asegurar que el icono tenga el color primario */
         }
 
 
@@ -239,40 +268,14 @@
             transform: translateX(0); /* Se desliza a su posición original */
         }
 
-        /* Custom styles for Qualified Occupations Section with background image and overlay */
+        /* Custom styles for Qualified Occupations Section (similar a about, con overlay oscuro) */
         #qualified-occupations-section {
-            background-image: url('./images/cursos.webp');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative; /* Needed for the pseudo-element overlay */
-            overflow: hidden; /* To ensure the overlay doesn't spill out */
-            color: white; /* Default text color for the section */
+            position: relative; 
+            overflow: hidden;
         }
+        /* El overlay se manejará dentro del .container-content-overlay */
 
-        /* Overlay for the background image to improve text readability */
-        #qualified-occupations-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
-            z-index: 1;
-        }
 
-        /* Ensure content is above the overlay */
-        #qualified-occupations-section .container {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Specific text colors within the qualified occupations section (headings and paragraphs) */
-        #qualified-occupations-section h2, #qualified-occupations-section h3, #qualified-occupations-section p {
-            color: white; /* Ensure text is white for readability */
-        }
-        
         /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
         ::-webkit-scrollbar {
             width: 12px;
@@ -470,9 +473,9 @@
 
         <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
         <section id="about-section">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
+            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20 container-content-overlay"> <!-- Nuevo div para el overlay interno -->
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-white">Conoce el Instituto Gerencial de Talentos</h2> <!-- Texto blanco -->
+                    <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2>
                 </div>
                 
                 <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
@@ -486,9 +489,9 @@
 
                     <!-- Mitad Derecha: Breve historia de IGT con animación -->
                     <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content about-text-animation">
-                        <h3 class="text-3xl font-bold mb-4 text-white">Nuestra Trayectoria</h3> <!-- Texto blanco -->
-                        <p class="text-lg mb-4 text-white">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p> <!-- Texto blanco -->
-                        <p class="text-lg text-white">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p> <!-- Texto blanco -->
+                        <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3>
+                        <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p>
+                        <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p>
                     </div>
                 </div>
             </div>
@@ -496,7 +499,7 @@
         
         <!-- Section 3: Nuestras Ocupaciones Cualificadas -->
         <section id="qualified-occupations-section">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
+            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20 container-content-overlay"> <!-- Nuevo div para el overlay interno -->
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold">Nuestras Ocupaciones Cualificadas</h2>
                     <p class="text-lg mt-2">Programas diseñados para impulsar tu futuro profesional.</p>
@@ -537,8 +540,8 @@
         </section>
 
         <!-- Section 4: Fundamental Aspects of Training -->
-        <section class="scroll-reveal bg-white">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24">
+        <section id="fundamental-aspects-section" class="scroll-reveal">
+            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 bg-[rgba(255,255,255,0.8)] container-content-overlay"> <!-- Fondo blanco semi-transparente -->
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold text-dark-blue">Aspectos Fundamentales de Nuestra Capacitación</h2>
                 </div>
@@ -585,8 +588,8 @@
         </section>
 
         <!-- Section 5: Gallery of Moments -->
-        <section class="scroll-reveal section-light-blue">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24">
+        <section id="gallery-moments-section" class="scroll-reveal">
+            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 bg-[rgba(255,255,255,0.8)] container-content-overlay"> <!-- Fondo blanco semi-transparente -->
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold text-dark-blue">Conoce un poco del Instituto Gerencial de Talentos</h2>
                     <p class="text-lg text-gray-500 mt-2">Una mirada a la vida en nuestras aulas, laboratorios y centros de investigación.</p>
@@ -609,8 +612,8 @@
         </section>
 
         <!-- Section 6: Companies -->
-        <section class="scroll-reveal section-light-blue">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24">
+        <section id="companies-section" class="scroll-reveal">
+            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 bg-[rgba(255,255,255,0.8)] container-content-overlay"> <!-- Fondo blanco semi-transparente -->
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold text-dark-blue">Empresas que reconocen nuestro trabajo</h2>
                 </div>
@@ -666,8 +669,8 @@
     </main>
 
     <!-- ===== Footer ===== -->
-    <footer class="footer-blue">
-        <div class="container mx-auto px-6 lg:px-8 py-12">
+    <footer>
+        <div class="container mx-auto px-6 lg:px-8 py-12 footer-blue">
             
             <!-- Columna 1: Logo y Misión -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
