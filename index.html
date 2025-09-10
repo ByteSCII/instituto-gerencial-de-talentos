@@ -36,17 +36,18 @@
             background-color: #f8f9fa;
         }
 
-        /* Color del encabezado por defecto (TRANSPARENTE al inicio con desenfoque) */
+        /* Color del encabezado por defecto (100% INVISIBLE al inicio) */
         .header-blue {
             background-color: transparent; /* Fondo completamente transparente al inicio */
-            backdrop-filter: blur(5px); /* Desenfoque activo desde el inicio */
-            -webkit-backdrop-filter: blur(5px); /* Para Safari */
+            backdrop-filter: none; /* ELIMINADO el desenfoque al inicio */
+            -webkit-backdrop-filter: none; /* Para Safari */
             transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Transición suave para el cambio al hacer scroll */
         }
         /* Estilo del encabezado al hacer scroll (transparente oscuro con desenfoque) */
         .header-blue.header-scrolled {
             background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente (70% opacidad, casi negro) */
-            /* backdrop-filter se mantiene igual, no es necesario redefinirlo */
+            backdrop-filter: blur(5px); /* Desenfoque ACTIVO al hacer scroll */
+            -webkit-backdrop-filter: blur(5px); /* Para Safari */
         }
         
         /* Azul del footer */
@@ -190,30 +191,27 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         
-        /* Custom styles for About Section with background image and NO overlay */
+        /* Custom styles for About Section with background image */
         #about-section {
             background-image: url('./images/fondoseccion2.webp');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             position: relative; /* Needed for positioning internal elements */
-            overflow: hidden; /* To ensure the overlay doesn't spill out */
+            overflow: hidden; /* To ensure content doesn't spill out */
         }
 
-        /* Eliminado el overlay ::before para #about-section */
+        /* Eliminado el overlay ::before para #about-section, ahora la imagen tiene su brillo original */
 
-        /* Ensure content is above the (now non-existent) overlay - z-index 2 still useful for stacking contexts */
+        /* Ensure content is above other elements - z-index 2 still useful for stacking contexts */
         #about-section .container {
             position: relative;
             z-index: 2;
         }
 
-        /* Specific text colors within the about section (headings) - Ahora en blanco */
-        #about-section h2, #about-section h3 {
-            color: white; /* Cambiado a blanco para mejor contraste */
-        }
-        #about-section .container p { /* También para los párrafos */
-            color: white; /* Cambiado a blanco para mejor contraste */
+        /* Specific text colors within the about section (headings y párrafos) - Ahora en blanco */
+        #about-section h2, #about-section h3, #about-section p {
+            color: white; /* Cambiado a blanco para mejor contraste sobre la imagen sin overlay */
         }
 
 
