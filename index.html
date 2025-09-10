@@ -190,39 +190,33 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         
-        /* Custom styles for About Section with background image and overlay */
+        /* Custom styles for About Section with background image and NO overlay */
         #about-section {
             background-image: url('./images/fondoseccion2.webp');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            position: relative; /* Needed for the pseudo-element overlay */
-            overflow: hidden; /* To ensure the overlay doesn't spill out */
-            color: white; /* Default text color for the section */
+            position: relative; /* Needed for positioning internal elements */
+            overflow: hidden; /* To ensure content doesn't spill out */
+            /* Se eliminó el 'color: white;' por defecto de la sección */
         }
 
-        /* Overlay for the background image to improve text readability */
-        #about-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.1); /* Semi-transparente oscuro con MUCHA menos opacidad para más brillo */
-            z-index: 1;
-        }
+        /* Eliminado el overlay ::before para #about-section */
 
-        /* Ensure content is above the overlay */
+        /* Ensure content is above the (now non-existent) overlay - z-index 2 still useful for stacking contexts */
         #about-section .container {
             position: relative;
             z-index: 2;
         }
 
-        /* Specific text colors within the about section (headings) */
+        /* Specific text colors within the about section (headings) - Cambiado a text-dark-blue */
         #about-section h2, #about-section h3 {
-            color: white; /* Ensure headings are white for readability */
+            color: #004080; /* Nuevo color para los títulos */
         }
+        #about-section .container p { /* También para los párrafos */
+            color: #4A5568; /* Un gris oscuro para los párrafos */
+        }
+
 
         /* Animaciones para la imagen y el texto en About Section */
         /* Animación de la IMAGEN (zoom y desvanecimiento) */
@@ -461,8 +455,6 @@
             <!-- Superposición semi-transparente para legibilidad -->
             <div class="absolute inset-0 bg-black bg-opacity-50"></div>
             
-            <!-- Eliminada la imagen "docentes.webp" -->
-
             <div class="container mx-auto px-6 lg:px-8 relative z-10 flex items-center h-full">
                 <!-- Contenido de la sección Hero, con padding para no quedar debajo de la navegación -->
                 <div class="max-w-3xl pt-20"> 
@@ -483,7 +475,7 @@
         <section id="about-section">
             <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2>
+                    <h2 class="text-4xl font-bold text-dark-blue">Conoce el Instituto Gerencial de Talentos</h2> <!-- Texto oscuro -->
                 </div>
                 
                 <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
@@ -494,9 +486,9 @@
 
                     <!-- Mitad Derecha: Breve historia de IGT con animación -->
                     <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content about-text-animation">
-                        <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3>
-                        <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p>
-                        <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p>
+                        <h3 class="text-3xl font-bold mb-4 text-dark-blue">Nuestra Trayectoria</h3> <!-- Texto oscuro -->
+                        <p class="text-lg mb-4 text-gray-700">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p> <!-- Texto oscuro -->
+                        <p class="text-lg text-gray-700">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p> <!-- Texto oscuro -->
                     </div>
                 </div>
             </div>
