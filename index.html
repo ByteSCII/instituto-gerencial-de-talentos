@@ -19,6 +19,7 @@
     <link rel="preload" href="./images/fondo.webp" as="image">
     <link rel="preload" href="./images/fondoseccion2.webp" as="image"> <!-- Fondo global del body -->
     <link rel="preload" href="./images/cursos.webp" as="image"> 
+    <link rel="preload" href="./images/fondo2.webp" as="image"> <!-- Nueva precarga para el fondo de Galería y Empresas -->
 
     <!-- Tailwind CSS (se mantiene en head por ser CSS crítico) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -57,10 +58,9 @@
         
         /* Azul del footer */
         /* La clase footer-blue ahora solo define el color del texto y enlaces */
-        /* El fondo del footer se aplicará en el .section-content-wrapper interno */
         .footer-blue { 
-            /* Mantener solo propiedades de texto si es necesario, el fondo lo maneja el wrapper */
-            /* color: white; por ejemplo, si no está ya en el HTML */
+            background-color: #1A3D6B; /* Fondo sólido para el footer */
+            color: white; /* Texto blanco por defecto en el footer */
         }
         /* Azul claro de las secciones - este color ya no se usa como fondo directo de secciones */
         .section-light-blue { color: initial; } /* Resetear para que el fondo del body se vea */
@@ -131,76 +131,6 @@
             opacity: 1; 
         }
         
-        .careers-section {
-            background-image: url('https://placehold.co/1920x400/d9b382/ffffff?text=Imagen+Carreras');
-            background-size: cover;
-            background-position: center;
-        }
-        .cta-section {
-            background-image: url('https://placehold.co/1920x400/c0392b/ffffff?text=Imagen+Postulacion');
-            background-size: cover;
-            background-position: center;
-        }
-        /* Eliminada la sección magazine-section */
-        .card-icon {
-            font-size: 3rem;
-            color: #007BFF; /* Coincide con el nuevo btn-primary */
-        }
-        
-        /* Navigation link animation */
-        .nav-link {
-            position: relative; /* Esencial para que z-index funcione */
-            padding-bottom: 0.25rem;
-            transition: color 0.3s ease, transform 0.3s ease;
-            color: white; /* Ensure text is visible on the dark background */
-            z-index: 15; /* Asegura que el nav-link y su ::after estén por encima del dropdown-menu */
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #ffc107;
-            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation curve */
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        /* Fixed: Dropdown menu animation */
-        .dropdown-menu {
-            transform-origin: top;
-            transform: scaleY(0);
-            opacity: 0;
-            pointer-events: none; /* Prevents interaction when hidden */
-            transition: all 0.3s ease-in-out;
-            /* Use a negative top margin to close the gap between the nav link and the dropdown */
-            margin-top: -2px; 
-            /* FIX: Add a z-index to ensure the dropdown is on top of other elements */
-            z-index: 10; /* Menor que el z-index del nav-link */
-            background-color: rgba(0, 0, 0, 0.8); /* Fondo del dropdown ahora es transparente oscuro */
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-        .group:hover .dropdown-menu {
-            transform: scaleY(1);
-            opacity: 1;
-            pointer-events: auto; /* Allows interaction when visible */
-        }
-
-        /* Eliminadas las reglas CSS relacionadas con el buscador (search-container, search-input, search-button) */
-
-        /* Social icon animation */
-        .social-icon-animation {
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-        }
-        .social-icon-animation:hover {
-            transform: scale(1.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        
         /* Contenedor principal para el contenido de las secciones con su propio fondo semi-transparente */
         /* Cada sección debe contener un div con esta clase para su contenido */
         .section-content-wrapper {
@@ -251,22 +181,42 @@
         }
 
 
-        /* Secciones con fondos blancos semi-transparentes sobre el fondo del body */
-        #gallery-moments-section .section-content-wrapper,
-        #companies-section .section-content-wrapper {
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
-        }
-        #gallery-moments-section .section-content-wrapper h2, #gallery-moments-section .section-content-wrapper h3, #gallery-moments-section .section-content-wrapper p {
-            color: #004080; /* Texto oscuro para legibilidad */
-        }
-        #companies-section .section-content-wrapper h2, #companies-section .section-content-wrapper h3, #companies-section .section-content-wrapper p {
-            color: #004080; /* Texto oscuro para legibilidad */
-        }
-        /* Ajuste para el color del icono en las tarjetas de estas secciones */
-        #companies-section .section-content-wrapper .card-icon {
-            color: #007BFF; /* Asegurar que el icono tenga el color primario */
+        /* NUEVOS ESTILOS PARA "GALERÍA DE MOMENTOS" Y "EMPRESAS" CON FONDO ESPECÍFICO */
+        #gallery-moments-section, #companies-section {
+            background-image: url('./images/fondo2.webp'); /* Fondo específico para estas secciones */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* CLAVE: Fijo para continuidad entre ellas */
+            position: relative; /* Necesario para el overlay ::before */
+            overflow: hidden;
         }
 
+        /* Overlay para la imagen de fondo de Galería y Empresas */
+        #gallery-moments-section::before, #companies-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            z-index: 1;
+        }
+
+        /* Asegurar que el contenido de Galería y Empresas esté sobre el overlay */
+        #gallery-moments-section .container, #companies-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Colores de texto para Galería y Empresas (blanco sobre overlay oscuro) */
+        #gallery-moments-section h2, #gallery-moments-section h3, #gallery-moments-section p,
+        #companies-section h2, #companies-section h3, #companies-section p {
+            color: white; 
+        }
+        #gallery-moments-section .section-content-wrapper { background-color: transparent; } /* Remover wrapper si no es necesario */
+        #companies-section .section-content-wrapper { background-color: transparent; } /* Remover wrapper si no es necesario */
 
         /* Animaciones para la imagen y el texto en About Section */
         /* Animación de la IMAGEN (zoom y desvanecimiento) */
@@ -611,25 +561,23 @@
 
         <!-- Section 5: Gallery of Moments -->
         <section id="gallery-moments-section" class="scroll-reveal">
-            <div class="section-content-wrapper py-16 lg:py-24 bg-[rgba(255,255,255,0.8)]"> <!-- Fondo blanco semi-transparente -->
-                <div class="container mx-auto px-6 lg:px-8">
-                    <div class="text-center mb-12">
-                        <h2 class="text-4xl font-bold text-dark-blue">Conoce un poco del Instituto Gerencial de Talentos</h2>
-                        <p class="text-lg text-gray-500 mt-2">Una mirada a la vida en nuestras aulas, laboratorios y centros de investigación.</p>
+            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20"> <!-- Contenido sobre el overlay de la sección -->
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold">Conoce un poco del Instituto Gerencial de Talentos</h2>
+                    <p class="text-lg mt-2">Una mirada a la vida en nuestras aulas, laboratorios y centros de investigación.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
+                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia')">
+                        <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia" alt="Laboratorio" class="w-full h-auto object-cover" loading="lazy">
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
-                        <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia')">
-                            <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia" alt="Laboratorio" class="w-full h-auto object-cover" loading="lazy">
-                        </div>
-                        <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica')">
-                            <img src="https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica" alt="Clase práctica" class="w-full h-auto object-cover" loading="lazy">
-                        </div>
-                        <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo')">
-                            <img src="https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo" alt="Trabajo en equipo" class="w-full h-auto object-cover" loading="lazy">
-                        </div>
-                        <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final')">
-                            <img src="https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final" alt="Proyecto final" class="w-full h-auto object-cover" loading="lazy">
-                        </div>
+                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica')">
+                        <img src="https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica" alt="Clase práctica" class="w-full h-auto object-cover" loading="lazy">
+                    </div>
+                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo')">
+                        <img src="https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo" alt="Trabajo en equipo" class="w-full h-auto object-cover" loading="lazy">
+                    </div>
+                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final')">
+                        <img src="https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final" alt="Proyecto final" class="w-full h-auto object-cover" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -637,57 +585,55 @@
 
         <!-- Section 6: Companies -->
         <section id="companies-section" class="scroll-reveal">
-            <div class="section-content-wrapper py-16 lg:py-24 bg-[rgba(255,255,255,0.8)]"> <!-- Fondo blanco semi-transparente -->
-                <div class="container mx-auto px-6 lg:px-8">
-                    <div class="text-center mb-12">
-                        <h2 class="text-4xl font-bold text-dark-blue">Empresas que reconocen nuestro trabajo</h2>
+            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20"> <!-- Contenido sobre el overlay de la sección -->
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold">Empresas que reconocen nuestro trabajo</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                    <div class="text-center p-4">
+                        <img src="./empresas/mercantil.webp" alt="Logo de Banco Mercantil" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">Banco Mercantil C.A Banco Universal</h3>
+                        <p class="text-gray-600">Líder en servicios financieros, ha contratado a nuestros egresados para proyectos de transformación digital y análisis de datos.</p>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                        <div class="text-center p-4">
-                            <img src="./empresas/mercantil.webp" alt="Logo de Banco Mercantil" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Banco Mercantil C.A Banco Universal</h3>
-                            <p class="text-gray-600">Líder en servicios financieros, ha contratado a nuestros egresados para proyectos de transformación digital y análisis de datos.</p>
-                        </div>
-                        <div class="text-center p-4">
-                            <img src="./empresas/restoven.webp" alt="Logo de Restoven" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Restoven de Venezuela</h3>
-                            <p class="text-gray-600">Empresa líder en el sector de servicios alimentarios, ha integrado a nuestros talentos en la gestión de operaciones y logística.</p>
-                        </div>
-                        <div class="text-center p-4">
-                            <img src="./empresas/fospuca.webp" alt="Logo de Fospuca" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Fospuca</h3>
-                            <p class="text-gray-600">Empresa especializada en servicios ambientales, valora la formación de nuestros profesionales en gestión de recursos y sostenibilidad.</p>
-                        </div>
-                        <div class="text-center p-4">
-                            <img src="./empresas/cocacola.webp" alt="Logo de Coca-Cola FEMSA" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Coca-Cola FEMSA</h3>
-                            <p class="text-gray-600">Gigante de la industria de bebidas, ha incorporado a nuestros talentos en su cadena de suministro y procesos de producción.</p>
-                        </div>
-                        <div class="text-center p-4">
-                            <img src="./empresas/iglesia universal.webp" alt="Logo de Iglesia Universal del Reino de Dios" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Iglesia Universal del Reino de Dios</h3>
-                            <p class="text-gray-600">Organización con enfoque en labor social, confía en nuestros egresados para roles de gestión administrativa y coordinación de proyectos comunitarios.</p>
-                        </div>
-                        <div class="text-center p-4">
-                            <img src="./empresas/unicasa.webp" alt="Logo de Unicasa" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Unicasa</h3>
-                            <p class="text-gray-600">Reconocida cadena de supermercados, aprecia las habilidades de nuestros egresados en gestión de inventario y optimización de la cadena de valor.</p>
-                        </div>
-                        <div class="text-center p-4">
-                            <img src="./empresas/banesco.webp" alt="Logo de Banesco" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Banesco Banco Universal C.A</h3>
-                            <p class="text-gray-600">Uno de los principales bancos del país, ha establecido una colaboración para la capacitación de su personal en nuevas tecnologías.</p>
-                        </div>
-                        <div class="text-center p-4">
-                            <img src="./empresas/venevision.webp" alt="Logo de Venevisión" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Venevisión</h3>
-                            <p class="text-gray-600">Canal de televisión de gran trayectoria, integra a nuestros egresados en sus equipos de producción y desarrollo de contenido.</p>
-                        </div>
-                        <div class="text-center p-4">
-                            <img src="./empresas/kfc.webp" alt="Logo de KFC" class="mx-auto mb-4 company-logo" loading="lazy">
-                            <h3 class="text-2xl font-bold text-dark-blue mb-2">KFC</h3>
-                            <p class="text-gray-600">Cadena global de comida rápida, ha contratado a nuestros talentos para roles de liderazgo en operaciones y servicio al cliente.</p>
-                        </div>
+                    <div class="text-center p-4">
+                        <img src="./empresas/restoven.webp" alt="Logo de Restoven" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">Restoven de Venezuela</h3>
+                        <p class="text-gray-600">Empresa líder en el sector de servicios alimentarios, ha integrado a nuestros talentos en la gestión de operaciones y logística.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <img src="./empresas/fospuca.webp" alt="Logo de Fospuca" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">Fospuca</h3>
+                        <p class="text-gray-600">Empresa especializada en servicios ambientales, valora la formación de nuestros profesionales en gestión de recursos y sostenibilidad.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <img src="./empresas/cocacola.webp" alt="Logo de Coca-Cola FEMSA" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">Coca-Cola FEMSA</h3>
+                        <p class="text-gray-600">Gigante de la industria de bebidas, ha incorporado a nuestros talentos en su cadena de suministro y procesos de producción.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <img src="./empresas/iglesia universal.webp" alt="Logo de Iglesia Universal del Reino de Dios" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">Iglesia Universal del Reino de Dios</h3>
+                        <p class="text-gray-600">Organización con enfoque en labor social, confía en nuestros egresados para roles de gestión administrativa y coordinación de proyectos comunitarios.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <img src="./empresas/unicasa.webp" alt="Logo de Unicasa" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">Unicasa</h3>
+                        <p class="text-gray-600">Reconocida cadena de supermercados, aprecia las habilidades de nuestros egresados en gestión de inventario y optimización de la cadena de valor.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <img src="./empresas/banesco.webp" alt="Logo de Banesco" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">Banesco Banco Universal C.A</h3>
+                        <p class="text-gray-600">Uno de los principales bancos del país, ha establecido una colaboración para la capacitación de su personal en nuevas tecnologías.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <img src="./empresas/venevision.webp" alt="Logo de Venevisión" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">Venevisión</h3>
+                        <p class="text-gray-600">Canal de televisión de gran trayectoria, integra a nuestros egresados en sus equipos de producción y desarrollo de contenido.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <img src="./empresas/kfc.webp" alt="Logo de KFC" class="mx-auto mb-4 company-logo" loading="lazy">
+                        <h3 class="text-2xl font-bold mb-2">KFC</h3>
+                        <p class="text-gray-600">Cadena global de comida rápida, ha contratado a nuestros talentos para roles de liderazgo en operaciones y servicio al cliente.</p>
                     </div>
                 </div>
             </div>
@@ -696,57 +642,55 @@
 
     <!-- ===== Footer ===== -->
     <footer>
-        <div class="section-content-wrapper py-12 footer-blue"> <!-- Mover el footer-blue al contenedor interno -->
-             <div class="container mx-auto px-6 lg:px-8">
+        <div class="container mx-auto px-6 lg:px-8 py-12 footer-blue"> <!-- Mover el footer-blue al contenedor interno -->
             
-                <!-- Columna 1: Logo y Misión -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div>
-                        <img src="./images/logo.webp" alt="Logo IGT" class="mb-4" loading="lazy">
-                        <p class="text-gray-300 text-sm">Nuestra misión es capacitar a la fuerza laboral del mañana, formando profesionales con visión de futuro y un compromiso con el desarrollo del país.</p>
-                    </div>
-                    
-                    <!-- Columna 2: Enlaces Rápidos -->
-                    <div>
-                        <h4 class="font-bold text-lg mb-4 text-white">Enlaces Rápidos</h4>
-                        <ul>
-                            <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Inicio</a></li>
-                            <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Programas</a></li>
-                            <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Noticias</a></li>
-                            <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Contacto</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Columna 3: Contacto -->
-                    <div>
-                        <h4 class="font-bold text-lg mb-4 text-white">Contacto</h4>
-                        <p class="text-gray-300 text-sm">
-                            <i class="fa fa-map-marker-alt mr-2"></i> Calle 7, La Urbina, Caracas, Venezuela
-                        </p>
-                        <p class="text-gray-300 text-sm mt-2">
-                            <i class="fa fa-phone-alt mr-2"></i> +58 212 555 1234
-                        </p>
-                        <p class="text-gray-300 text-sm mt-2">
-                            <i class="fa fa-envelope mr-2"></i> info@igt.edu.ve
-                        </p>
-                    </div>
-                    
-                    <!-- Columna 4: Redes Sociales -->
-                    <div>
-                        <h4 class="font-bold text-lg mb-4 text-white">Síguenos</h4>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
-                            <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-twitter text-xl"></i></a>
-                            <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-instagram text-xl"></i></a>
-                            <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-linkedin-in text-xl"></i></a>
-                        </div>
-                    </div>
+            <!-- Columna 1: Logo y Misión -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <img src="./images/logo.webp" alt="Logo IGT" class="mb-4" loading="lazy">
+                    <p class="text-gray-300 text-sm">Nuestra misión es capacitar a la fuerza laboral del mañana, formando profesionales con visión de futuro y un compromiso con el desarrollo del país.</p>
                 </div>
                 
-                <!-- Copyright -->
-                <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
-                    © 2024 IGT. Todos los derechos reservados.
+                <!-- Columna 2: Enlaces Rápidos -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">Enlaces Rápidos</h4>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Inicio</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Programas</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Noticias</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Contacto</a></li>
+                    </ul>
                 </div>
+
+                <!-- Columna 3: Contacto -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">Contacto</h4>
+                    <p class="text-gray-300 text-sm">
+                        <i class="fa fa-map-marker-alt mr-2"></i> Calle 7, La Urbina, Caracas, Venezuela
+                    </p>
+                    <p class="text-gray-300 text-sm mt-2">
+                        <i class="fa fa-phone-alt mr-2"></i> +58 212 555 1234
+                    </p>
+                    <p class="text-gray-300 text-sm mt-2">
+                        <i class="fa fa-envelope mr-2"></i> info@igt.edu.ve
+                    </p>
+                </div>
+                
+                <!-- Columna 4: Redes Sociales -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">Síguenos</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-twitter text-xl"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-linkedin-in text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
+                © 2024 IGT. Todos los derechos reservados.
             </div>
         </div>
     </footer>
