@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Nueva descripción de la página -->
     <meta name="description" content="Instituto Gerencial de Talentos formando el mundo laboral del mañana">
-    <title>IGT - El Futuro de la Ciencia y Tecnología</title>
+    <title>          IGT     </title>
     
     <!-- Favicon (ahora usa el logo de la página) -->
     <link rel="icon" type="image/webp" href="./images/logo.webp">
@@ -196,7 +196,10 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         
-        /* Contenedor de overlay para el contenido dentro de las secciones */
+        /* Estilos base para las secciones y el overlay de contenido */
+        section {
+            position: relative; /* Necesario para posicionar el overlay de contenido */
+        }
         .section-content-overlay {
             width: 100%;
             height: 100%;
@@ -204,9 +207,98 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Padding ahora está aquí */
             box-sizing: border-box; /* Asegura que el padding no desborde el ancho/alto */
         }
+
+        /* Sección "Conoce el Instituto Gerencial de Talentos" */
+        #about-section .section-content-overlay {
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+        }
+        #about-section .section-content-overlay h2, 
+        #about-section .section-content-overlay h3, 
+        #about-section .section-content-overlay p {
+            color: white; /* Texto blanco para esta sección */
+        }
+
+        /* Sección "Nuestras Ocupaciones Cualificadas" (ahora con background-image y overlay oscuro) */
+        #qualified-occupations-section {
+            background-image: url('./images/cursos.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+        #qualified-occupations-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            z-index: 1;
+        }
+        #qualified-occupations-section .container {
+            position: relative;
+            z-index: 2;
+        }
+        #qualified-occupations-section .section-content-overlay h2, 
+        #qualified-occupations-section .section-content-overlay h3, 
+        #qualified-occupations-section .section-content-overlay p {
+            color: white; /* Texto blanco para esta sección */
+        }
+
+        /* Sección "Aspectos Fundamentales de Nuestra Capacitación" (ahora con background-image y overlay oscuro) */
+        #fundamental-aspects-section {
+            background-image: url('./images/cursos.webp'); /* MISMA IMAGEN QUE LA ANTERIOR */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+        #fundamental-aspects-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            z-index: 1;
+        }
+        #fundamental-aspects-section .container {
+            position: relative;
+            z-index: 2;
+        }
+        #fundamental-aspects-section .section-content-overlay h2, 
+        #fundamental-aspects-section .section-content-overlay h3, 
+        #fundamental-aspects-section .section-content-overlay p {
+            color: white; /* Texto blanco para esta sección */
+        }
+        /* Asegurar que el icono de la tarjeta sea visible */
+        #fundamental-aspects-section .section-content-overlay .card-icon {
+            color: #007BFF; /* Color del icono primario */
+        }
+
+
+        /* Secciones con fondos blancos semi-transparentes sobre el fondo del body */
+        #gallery-moments-section .section-content-overlay,
+        #companies-section .section-content-overlay {
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+        }
+        #gallery-moments-section .section-content-overlay h2, #gallery-moments-section .section-content-overlay h3, #gallery-moments-section .section-content-overlay p {
+            color: #004080; /* Texto oscuro para legibilidad */
+        }
+        #companies-section .section-content-overlay h2, #companies-section .section-content-overlay h3, #companies-section .section-content-overlay p {
+            color: #004080; /* Texto oscuro para legibilidad */
+        }
+        /* Ajuste para el color del icono en las tarjetas de estas secciones */
+        #companies-section .section-content-overlay .card-icon {
+            color: #007BFF; /* Asegurar que el icono tenga el color primario */
+        }
+
 
         /* Animaciones para la imagen y el texto en About Section */
         /* Animación de la IMAGEN (zoom y desvanecimiento) */
@@ -318,7 +410,7 @@
         <!-- Section 1: Hero (Ahora contiene la navegación) -->
         <section id="hero-section" class="hero-section relative text-white flex items-center">
             <!-- Contenedor fijo para la navegación -->
-            <div id="fixed-nav-container" class="header-blue fixed top-0 w-full z-20">
+            <div id="fixed-nav-container" class="header-blue fixed top-0 w-full z-50"> <!-- Z-INDEX ALTO -->
                 <nav>
                     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex items-center justify-between h-20">
@@ -429,7 +521,7 @@
 
         <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
         <section id="about-section">
-            <div class="section-content-overlay py-16 lg:py-24"> <!-- Nuevo div con fondo semi-transparente y padding -->
+            <div class="section-content-overlay py-16 lg:py-24 bg-[rgba(0,0,0,0.7)]"> <!-- Nuevo div con fondo semi-transparente y padding -->
                 <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                     <div class="text-center mb-12">
                         <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2> <!-- Texto blanco -->
@@ -457,7 +549,7 @@
         
         <!-- Section 3: Nuestras Ocupaciones Cualificadas -->
         <section id="qualified-occupations-section">
-            <div class="section-content-overlay py-16 lg:py-24"> <!-- Nuevo div con fondo semi-transparente y padding -->
+            <div class="section-content-overlay py-16 lg:py-24 bg-[rgba(0,0,0,0.7)]"> <!-- Nuevo div con fondo semi-transparente y padding -->
                 <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                     <div class="text-center mb-12">
                         <h2 class="text-4xl font-bold">Nuestras Ocupaciones Cualificadas</h2>
@@ -501,32 +593,32 @@
 
         <!-- Section 4: Fundamental Aspects of Training -->
         <section id="fundamental-aspects-section" class="scroll-reveal">
-            <div class="section-content-overlay py-16 lg:py-24 bg-[rgba(255,255,255,0.8)]"> <!-- Fondo blanco semi-transparente -->
+            <div class="section-content-overlay py-16 lg:py-24 bg-[rgba(0,0,0,0.7)]"> <!-- Fondo oscuro semi-transparente -->
                 <div class="container mx-auto px-6 lg:px-8">
                     <div class="text-center mb-12">
-                        <h2 class="text-4xl font-bold text-dark-blue">Aspectos Fundamentales de Nuestra Capacitación</h2>
+                        <h2 class="text-4xl font-bold text-white">Aspectos Fundamentales de Nuestra Capacitación</h2> <!-- Texto blanco -->
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto justify-center">
                         <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
                             <div class="card-icon mb-4 text-center">
                                 <i class="fas fa-hammer"></i>
                             </div>
-                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Clases prácticas</h3>
-                            <p class="text-gray-600 text-center">Aprende haciendo. Nuestros talleres y laboratorios te permiten aplicar la teoría de inmediato para dominar tus habilidades.</p>
+                            <h3 class="text-2xl font-bold text-white text-center mb-2">Clases prácticas</h3> <!-- Texto blanco -->
+                            <p class="text-white text-center">Aprende haciendo. Nuestros talleres y laboratorios te permiten aplicar la teoría de inmediato para dominar tus habilidades.</p> <!-- Texto blanco -->
                         </div>
                         <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
                             <div class="card-icon mb-4 text-center">
                                 <i class="fas fa-lightbulb"></i>
                             </div>
-                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Reflexión</h3>
-                            <p class="text-gray-600 text-center">Un espacio de reflexión y crecimiento donde las ideas se transforman en proyectos innovadores.</p>
+                            <h3 class="text-2xl font-bold text-white text-center mb-2">Reflexión</h3> <!-- Texto blanco -->
+                            <p class="text-white text-center">Un espacio de reflexión y crecimiento donde las ideas se transforman en proyectos innovadores.</p> <!-- Texto blanco -->
                         </div>
                         <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
                             <div class="card-icon mb-4 text-center">
                                 <i class="fas fa-chalkboard-teacher"></i>
                             </div>
-                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Profesores orientadores</h3>
-                            <p class="text-gray-600 text-center">Más que instructores, nuestros profesores son guías y mentores que te acompañan en cada paso de tu desarrollo profesional y personal.</p>
+                            <h3 class="text-2xl font-bold text-white text-center mb-2">Profesores orientadores</h3> <!-- Texto blanco -->
+                            <p class="text-white text-center">Más que instructores, nuestros profesores son guías y mentores que te acompañan en cada paso de tu desarrollo profesional y personal.</p> <!-- Texto blanco -->
                         </div>
                     </div>
                     <div class="flex flex-wrap justify-center mt-8 gap-8">
@@ -534,15 +626,15 @@
                             <div class="card-icon mb-4 text-center">
                                 <i class="fas fa-rocket"></i>
                             </div>
-                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Proyectos finales</h3>
-                            <p class="text-gray-600 text-center">Demuestra tus conocimientos y talentos a través de proyectos que reflejan las demandas del mundo real y te preparan para el éxito.</p>
+                            <h3 class="text-2xl font-bold text-white text-center mb-2">Proyectos finales</h3> <!-- Texto blanco -->
+                            <p class="text-white text-center">Demuestra tus conocimientos y talentos a través de proyectos que reflejan las demandas del mundo real y te preparan para el éxito.</p> <!-- Texto blanco -->
                         </div>
                         <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
                             <div class="card-icon mb-4 text-center">
                                 <i class="fas fa-award"></i>
                             </div>
-                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Valores agregados</h3>
-                            <p class="text-gray-600 text-center">Obtén certificaciones, únete a nuestra red de egresados y participa en eventos de innovación que potencian tu carrera.</p>
+                            <h3 class="text-2xl font-bold text-white text-center mb-2">Valores agregados</h3> <!-- Texto blanco -->
+                            <p class="text-white text-center">Obtén certificaciones, únete a nuestra red de egresados y participa en eventos de innovación que potencian tu carrera.</p> <!-- Texto blanco -->
                         </div>
                     </div>
                 </div>
