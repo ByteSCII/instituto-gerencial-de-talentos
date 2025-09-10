@@ -17,7 +17,7 @@
 
     <link rel="preload" href="./images/logo.webp" as="image">
     <link rel="preload" href="./images/fondo.webp" as="image">
-    <link rel="preload" href="./images/fondoseccion2.webp" as="image"> <!-- Fondo global del body -->
+    <link rel="preload" href="./images/fondoseccion2.webp" as="image"> <!-- Fondo global del body y algunas secciones -->
     <link rel="preload" href="./images/cursos.webp" as="image"> 
     <link rel="preload" href="./images/fondo2.webp" as="image"> <!-- Fondo específico de Galería y Empresas -->
 
@@ -86,6 +86,30 @@
         }
         footer .border-t {
             border-color: rgba(255,255,255,0.2); /* Borde más sutil para el copyright */
+        }
+
+        /* Ajuste de z-index para los grupos de navegación y dropdowns */
+        .fixed-nav-container { z-index: 50; } /* Navbar principal, muy alto */
+        .relative.group { z-index: 40; } /* Contenedor de cada enlace con dropdown */
+        .nav-link { z-index: 30; } /* El enlace en sí, debajo del dropdown cuando se abre */
+        .dropdown-menu { 
+            z-index: 35; /* El dropdown desplegado, sobre el nav-link pero bajo el contenedor del grupo si es necesario */
+            visibility: hidden; /* Ocultar por defecto */
+            transform-origin: top;
+            transform: scaleY(0);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease-in-out;
+            margin-top: -2px;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .group:hover .dropdown-menu {
+            visibility: visible; /* Mostrar en hover */
+            transform: scaleY(1);
+            opacity: 1;
+            pointer-events: auto;
         }
 
 
@@ -377,7 +401,7 @@
                                     <!-- "Acerca de" Dropdown -->
                                     <div class="relative group h-full flex items-center">
                                         <a href="#" class="nav-link font-semibold py-2 rounded-md">Acerca de</a>
-                                        <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[rgba(0,0,0,0.8)] ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             <div class="py-1">
                                                 <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">¿Quiénes somos?</a>
                                                 <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Autoridades</a>
@@ -389,7 +413,7 @@
                                     <!-- "Programas" Dropdown -->
                                     <div class="relative group h-full flex items-center">
                                         <a href="#" class="nav-link font-semibold py-2 rounded-md">Programas</a>
-                                        <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg bg-[rgba(0,0,0,0.8)] ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             <div class="py-1">
                                                 <a href="#" class="block px-4 py-2 text-sm text-white hover:bg-blue-800 hover:text-blue-300">Ocupaciones Cualificadas</a>
                                             </div>
@@ -567,14 +591,14 @@
                         </div>
                     </div>
                     <div class="flex flex-wrap justify-center mt-8 gap-8">
-                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
+                        <div class="bg-gray-50 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
                             <div class="card-icon mb-4 text-center text-white"> <!-- Icono en blanco -->
                                 <i class="fas fa-rocket"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-white text-center mb-2">Proyectos finales</h3> <!-- Texto blanco -->
                             <p class="text-white text-center">Demuestra tus conocimientos y talentos a través de proyectos que reflejan las demandas del mundo real y te preparan para el éxito.</p> <!-- Texto blanco -->
                         </div>
-                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
+                        <div class="bg-gray-50 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
                             <div class="card-icon mb-4 text-center text-white"> <!-- Icono en blanco -->
                                 <i class="fas fa-award"></i>
                             </div>
@@ -669,7 +693,7 @@
 
     <!-- ===== Footer ===== -->
     <footer>
-        <div class="container mx-auto px-6 lg:px-8 py-12 footer-blue"> <!-- Contenido sobre el overlay del footer -->
+        <div class="container mx-auto px-6 lg:px-8 py-12"> <!-- Contenido sobre el overlay del footer -->
             
             <!-- Columna 1: Logo y Misión -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -680,7 +704,7 @@
                 
                 <!-- Columna 2: Enlaces Rápidos -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4">Enlaces Rápidos</h4>
+                    <h4 class="font-bold text-lg mb-4 text-white">Enlaces Rápidos</h4>
                     <ul>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Inicio</a></li>
                         <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Programas</a></li>
@@ -691,7 +715,7 @@
 
                 <!-- Columna 3: Contacto -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4">Contacto</h4>
+                    <h4 class="font-bold text-lg mb-4 text-white">Contacto</h4>
                     <p class="text-gray-300 text-sm">
                         <i class="fa fa-map-marker-alt mr-2"></i> Calle 7, La Urbina, Caracas, Venezuela
                     </p>
@@ -705,7 +729,7 @@
                 
                 <!-- Columna 4: Redes Sociales -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4">Síguenos</h4>
+                    <h4 class="font-bold text-lg mb-4 text-white">Síguenos</h4>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
                         <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-twitter text-xl"></i></a>
