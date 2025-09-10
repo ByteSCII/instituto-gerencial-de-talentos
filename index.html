@@ -41,7 +41,7 @@
             background-attachment: fixed; /* Esto es CLAVE para la continuidad visual */
         }
 
-        /* Color del encabezado por defecto (TRANSPARENTE al inicio con desenfoque) */
+        /* Color del encabezado por defecto (100% INVISIBLE al inicio) */
         .header-blue {
             background-color: transparent; /* Fondo completamente transparente al inicio */
             backdrop-filter: none; /* ELIMINADO el desenfoque al inicio */
@@ -196,53 +196,17 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         
-        /* Estilos base para las secciones que usan la imagen de fondo del body */
-        section {
-            position: relative; /* Necesario para los overlays internos si se usan */
-            /* Quitar cualquier background-image directo o background-color sólido aquí */
-            /* Quitar padding vertical directamente de la sección */
+        /* Contenedor de overlay para el contenido dentro de las secciones */
+        .section-content-overlay {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Padding ahora está aquí */
+            box-sizing: border-box; /* Asegura que el padding no desborde el ancho/alto */
         }
-
-        /* Contenedores de contenido con fondos semi-transparentes para legibilidad */
-        /* Sección "Conoce el Instituto Gerencial de Talentos" */
-        #about-section .container-content-overlay {
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
-            color: white; /* Texto blanco para esta sección */
-        }
-        #about-section .container-content-overlay h2, #about-section .container-content-overlay h3, #about-section .container-content-overlay p {
-            color: white;
-        }
-
-        /* Sección "Nuestras Ocupaciones Cualificadas" */
-        #qualified-occupations-section .container-content-overlay {
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
-            color: white; /* Texto blanco para esta sección */
-        }
-        #qualified-occupations-section .container-content-overlay h2, #qualified-occupations-section .container-content-overlay h3, #qualified-occupations-section .container-content-overlay p {
-            color: white;
-        }
-
-        /* Secciones con fondos blancos semi-transparentes */
-        #fundamental-aspects-section .container-content-overlay,
-        #gallery-moments-section .container-content-overlay,
-        #companies-section .container-content-overlay {
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
-            color: #004080; /* Texto oscuro para estas secciones */
-        }
-        #fundamental-aspects-section .container-content-overlay h2, #fundamental-aspects-section .container-content-overlay h3, #fundamental-aspects-section .container-content-overlay p {
-            color: #004080; /* Mantener texto oscuro para legibilidad */
-        }
-        #gallery-moments-section .container-content-overlay h2, #gallery-moments-section .container-content-overlay h3, #gallery-moments-section .container-content-overlay p {
-            color: #004080; /* Mantener texto oscuro para legibilidad */
-        }
-        #companies-section .container-content-overlay h2, #companies-section .container-content-overlay h3, #companies-section .container-content-overlay p {
-            color: #004080; /* Mantener texto oscuro para legibilidad */
-        }
-        /* Ajuste específico para el color del icono en las tarjetas si es necesario */
-        #fundamental-aspects-section .container-content-overlay .card-icon {
-            color: #007BFF; /* Asegurar que el icono tenga el color primario */
-        }
-
 
         /* Animaciones para la imagen y el texto en About Section */
         /* Animación de la IMAGEN (zoom y desvanecimiento) */
@@ -267,15 +231,7 @@
             opacity: 1;
             transform: translateX(0); /* Se desliza a su posición original */
         }
-
-        /* Custom styles for Qualified Occupations Section (similar a about, con overlay oscuro) */
-        #qualified-occupations-section {
-            position: relative; 
-            overflow: hidden;
-        }
-        /* El overlay se manejará dentro del .container-content-overlay */
-
-
+        
         /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
         ::-webkit-scrollbar {
             width: 12px;
@@ -473,25 +429,27 @@
 
         <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
         <section id="about-section">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20 container-content-overlay"> <!-- Nuevo div para el overlay interno -->
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2>
-                </div>
-                
-                <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
-                    <!-- Mitad Izquierda: Imagen del Instituto con animación de aparición Y hover -->
-                    <div class="md:w-1/2 w-full p-8 flex justify-center items-center about-image-wrapper about-image-animation">
-                        <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" 
-                             class="rounded-lg shadow-lg w-full h-full object-cover 
-                                    transform transition-transform duration-300 ease-out hover:scale-105" 
-                             loading="lazy">
+            <div class="section-content-overlay py-16 lg:py-24"> <!-- Nuevo div con fondo semi-transparente y padding -->
+                <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2> <!-- Texto blanco -->
                     </div>
+                    
+                    <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
+                        <!-- Mitad Izquierda: Imagen del Instituto con animación de aparición Y hover -->
+                        <div class="md:w-1/2 w-full p-8 flex justify-center items-center about-image-wrapper about-image-animation">
+                            <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" 
+                                 class="rounded-lg shadow-lg w-full h-full object-cover 
+                                        transform transition-transform duration-300 ease-out hover:scale-105" 
+                                 loading="lazy">
+                        </div>
 
-                    <!-- Mitad Derecha: Breve historia de IGT con animación -->
-                    <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content about-text-animation">
-                        <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3>
-                        <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p>
-                        <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p>
+                        <!-- Mitad Derecha: Breve historia de IGT con animación -->
+                        <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content about-text-animation">
+                            <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3> <!-- Texto blanco -->
+                            <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p> <!-- Texto blanco -->
+                            <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p> <!-- Texto blanco -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -499,40 +457,42 @@
         
         <!-- Section 3: Nuestras Ocupaciones Cualificadas -->
         <section id="qualified-occupations-section">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20 container-content-overlay"> <!-- Nuevo div para el overlay interno -->
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold">Nuestras Ocupaciones Cualificadas</h2>
-                    <p class="text-lg mt-2">Programas diseñados para impulsar tu futuro profesional.</p>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                    <!-- Card 1: Secretario(a) Administrativo -->
-                    <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
-                        <div class="w-full h-48">
-                            <img src="./cursos/adminsitrativo.webp" alt="Imagen de Secretario Administrativo" class="w-full h-full object-cover" loading="lazy">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-bold mb-2">Secretario (a) Administrativo</h3>
-                            <p class="text-gray-600">Domina la gestión de oficinas, la organización de documentos y la comunicación profesional para ser un pilar en cualquier empresa.</p>
-                        </div>
+            <div class="section-content-overlay py-16 lg:py-24"> <!-- Nuevo div con fondo semi-transparente y padding -->
+                <div class="container mx-auto px-6 lg:px-8 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold">Nuestras Ocupaciones Cualificadas</h2>
+                        <p class="text-lg mt-2">Programas diseñados para impulsar tu futuro profesional.</p>
                     </div>
-                    <!-- Card 2: Técnico en Mecánica de Refrigeración -->
-                    <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
-                        <div class="w-full h-48">
-                           <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Refrigeración+y+Aires+Acondicionados" alt="Imagen de Refrigeración y Aires Acondicionados" class="w-full h-full object-cover" loading="lazy">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                        <!-- Card 1: Secretario(a) Administrativo -->
+                        <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
+                            <div class="w-full h-48">
+                                <img src="./cursos/adminsitrativo.webp" alt="Imagen de Secretario Administrativo" class="w-full h-full object-cover" loading="lazy">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="text-2xl font-bold mb-2">Secretario (a) Administrativo</h3>
+                                <p class="text-gray-600">Domina la gestión de oficinas, la organización de documentos y la comunicación profesional para ser un pilar en cualquier empresa.</p>
+                            </div>
                         </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-bold mb-2">Técnico Mecánico de Refrigeración y Aires Acondicionados</h3>
-                            <p class="text-gray-600">Capacítate en la instalación, mantenimiento y reparación de sistemas de refrigeración y climatización, una profesión con alta demanda.</p>
+                        <!-- Card 2: Técnico en Mecánica de Refrigeración -->
+                        <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
+                            <div class="w-full h-48">
+                               <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Refrigeración+y+Aires+Acondicionados" alt="Imagen de Refrigeración y Aires Acondicionados" class="w-full h-full object-cover" loading="lazy">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="text-2xl font-bold mb-2">Técnico Mecánico de Refrigeración y Aires Acondicionados</h3>
+                                <p class="text-gray-600">Capacítate en la instalación, mantenimiento y reparación de sistemas de refrigeración y climatización, una profesión con alta demanda.</p>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Card 3: Chef -->
-                    <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
-                        <div class="w-full h-48">
-                            <img src="https://placehold.co/600x400/FFD18C/003366?text=Chef" alt="Imagen de Chef" class="w-full h-full object-cover" loading="lazy">
-                        </div>
-                        <div class="p-6 text-center">
-                            <h3 class="text-2xl font-bold mb-2">Chef</h3>
-                            <p class="text-gray-600 text-center">Desarrolla habilidades culinarias y de gestión en la cocina. Aprende a crear menús, liderar equipos y deleitar a los comensales.</p>
+                        <!-- Card 3: Chef -->
+                        <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
+                            <div class="w-full h-48">
+                                <img src="https://placehold.co/600x400/FFD18C/003366?text=Chef" alt="Imagen de Chef" class="w-full h-full object-cover" loading="lazy">
+                            </div>
+                            <div class="p-6 text-center">
+                                <h3 class="text-2xl font-bold mb-2">Chef</h3>
+                                <p class="text-gray-600 text-center">Desarrolla habilidades culinarias y de gestión en la cocina. Aprende a crear menús, liderar equipos y deleitar a los comensales.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -541,47 +501,49 @@
 
         <!-- Section 4: Fundamental Aspects of Training -->
         <section id="fundamental-aspects-section" class="scroll-reveal">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 bg-[rgba(255,255,255,0.8)] container-content-overlay"> <!-- Fondo blanco semi-transparente -->
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-dark-blue">Aspectos Fundamentales de Nuestra Capacitación</h2>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto justify-center">
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
-                        <div class="card-icon mb-4 text-center">
-                            <i class="fas fa-hammer"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Clases prácticas</h3>
-                        <p class="text-gray-600 text-center">Aprende haciendo. Nuestros talleres y laboratorios te permiten aplicar la teoría de inmediato para dominar tus habilidades.</p>
+            <div class="section-content-overlay py-16 lg:py-24 bg-[rgba(255,255,255,0.8)]"> <!-- Fondo blanco semi-transparente -->
+                <div class="container mx-auto px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-dark-blue">Aspectos Fundamentales de Nuestra Capacitación</h2>
                     </div>
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
-                        <div class="card-icon mb-4 text-center">
-                            <i class="fas fa-lightbulb"></i>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto justify-center">
+                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
+                            <div class="card-icon mb-4 text-center">
+                                <i class="fas fa-hammer"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Clases prácticas</h3>
+                            <p class="text-gray-600 text-center">Aprende haciendo. Nuestros talleres y laboratorios te permiten aplicar la teoría de inmediato para dominar tus habilidades.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Reflexión</h3>
-                        <p class="text-gray-600 text-center">Un espacio de reflexión y crecimiento donde las ideas se transforman en proyectos innovadores.</p>
+                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
+                            <div class="card-icon mb-4 text-center">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Reflexión</h3>
+                            <p class="text-gray-600 text-center">Un espacio de reflexión y crecimiento donde las ideas se transforman en proyectos innovadores.</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
+                            <div class="card-icon mb-4 text-center">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Profesores orientadores</h3>
+                            <p class="text-gray-600 text-center">Más que instructores, nuestros profesores son guías y mentores que te acompañan en cada paso de tu desarrollo profesional y personal.</p>
+                        </div>
                     </div>
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300">
-                        <div class="card-icon mb-4 text-center">
-                            <i class="fas fa-chalkboard-teacher"></i>
+                    <div class="flex flex-wrap justify-center mt-8 gap-8">
+                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
+                            <div class="card-icon mb-4 text-center">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Proyectos finales</h3>
+                            <p class="text-gray-600 text-center">Demuestra tus conocimientos y talentos a través de proyectos que reflejan las demandas del mundo real y te preparan para el éxito.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Profesores orientadores</h3>
-                        <p class="text-gray-600 text-center">Más que instructores, nuestros profesores son guías y mentores que te acompañan en cada paso de tu desarrollo profesional y personal.</p>
-                    </div>
-                </div>
-                <div class="flex flex-wrap justify-center mt-8 gap-8">
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
-                        <div class="card-icon mb-4 text-center">
-                            <i class="fas fa-rocket"></i>
+                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
+                            <div class="card-icon mb-4 text-center">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Valores agregados</h3>
+                            <p class="text-gray-600 text-center">Obtén certificaciones, únete a nuestra red de egresados y participa en eventos de innovación que potencian tu carrera.</p>
                         </div>
-                        <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Proyectos finales</h3>
-                        <p class="text-gray-600 text-center">Demuestra tus conocimientos y talentos a través de proyectos que reflejan las demandas del mundo real y te preparan para el éxito.</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
-                        <div class="card-icon mb-4 text-center">
-                            <i class="fas fa-award"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-dark-blue text-center mb-2">Valores agregados</h3>
-                        <p class="text-gray-600 text-center">Obtén certificaciones, únete a nuestra red de egresados y participa en eventos de innovación que potencian tu carrera.</p>
                     </div>
                 </div>
             </div>
@@ -589,23 +551,25 @@
 
         <!-- Section 5: Gallery of Moments -->
         <section id="gallery-moments-section" class="scroll-reveal">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 bg-[rgba(255,255,255,0.8)] container-content-overlay"> <!-- Fondo blanco semi-transparente -->
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-dark-blue">Conoce un poco del Instituto Gerencial de Talentos</h2>
-                    <p class="text-lg text-gray-500 mt-2">Una mirada a la vida en nuestras aulas, laboratorios y centros de investigación.</p>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
-                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia')">
-                        <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia" alt="Laboratorio" class="w-full h-auto object-cover" loading="lazy">
+            <div class="section-content-overlay py-16 lg:py-24 bg-[rgba(255,255,255,0.8)]"> <!-- Fondo blanco semi-transparente -->
+                <div class="container mx-auto px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-dark-blue">Conoce un poco del Instituto Gerencial de Talentos</h2>
+                        <p class="text-lg text-gray-500 mt-2">Una mirada a la vida en nuestras aulas, laboratorios y centros de investigación.</p>
                     </div>
-                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica')">
-                        <img src="https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica" alt="Clase práctica" class="w-full h-auto object-cover" loading="lazy">
-                    </div>
-                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo')">
-                        <img src="https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo" alt="Trabajo en equipo" class="w-full h-auto object-cover" loading="lazy">
-                    </div>
-                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final')">
-                        <img src="https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final" alt="Proyecto final" class="w-full h-auto object-cover" loading="lazy">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
+                        <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia')">
+                            <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia" alt="Laboratorio" class="w-full h-auto object-cover" loading="lazy">
+                        </div>
+                        <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica')">
+                            <img src="https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica" alt="Clase práctica" class="w-full h-auto object-cover" loading="lazy">
+                        </div>
+                        <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo')">
+                            <img src="https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo" alt="Trabajo en equipo" class="w-full h-auto object-cover" loading="lazy">
+                        </div>
+                        <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final')">
+                            <img src="https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final" alt="Proyecto final" class="w-full h-auto object-cover" loading="lazy">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -613,55 +577,57 @@
 
         <!-- Section 6: Companies -->
         <section id="companies-section" class="scroll-reveal">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 bg-[rgba(255,255,255,0.8)] container-content-overlay"> <!-- Fondo blanco semi-transparente -->
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-dark-blue">Empresas que reconocen nuestro trabajo</h2>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                    <div class="text-center p-4">
-                        <img src="./empresas/mercantil.webp" alt="Logo de Banco Mercantil" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">Banco Mercantil C.A Banco Universal</h3>
-                        <p class="text-gray-600">Líder en servicios financieros, ha contratado a nuestros egresados para proyectos de transformación digital y análisis de datos.</p>
+            <div class="section-content-overlay py-16 lg:py-24 bg-[rgba(255,255,255,0.8)]"> <!-- Fondo blanco semi-transparente -->
+                <div class="container mx-auto px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-dark-blue">Empresas que reconocen nuestro trabajo</h2>
                     </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/restoven.webp" alt="Logo de Restoven" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">Restoven de Venezuela</h3>
-                        <p class="text-gray-600">Empresa líder en el sector de servicios alimentarios, ha integrado a nuestros talentos en la gestión de operaciones y logística.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/fospuca.webp" alt="Logo de Fospuca" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">Fospuca</h3>
-                        <p class="text-gray-600">Empresa especializada en servicios ambientales, valora la formación de nuestros profesionales en gestión de recursos y sostenibilidad.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/cocacola.webp" alt="Logo de Coca-Cola FEMSA" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">Coca-Cola FEMSA</h3>
-                        <p class="text-gray-600">Gigante de la industria de bebidas, ha incorporado a nuestros talentos en su cadena de suministro y procesos de producción.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/iglesia universal.webp" alt="Logo de Iglesia Universal del Reino de Dios" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">Iglesia Universal del Reino de Dios</h3>
-                        <p class="text-gray-600">Organización con enfoque en labor social, confía en nuestros egresados para roles de gestión administrativa y coordinación de proyectos comunitarios.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/unicasa.webp" alt="Logo de Unicasa" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">Unicasa</h3>
-                        <p class="text-gray-600">Reconocida cadena de supermercados, aprecia las habilidades de nuestros egresados en gestión de inventario y optimización de la cadena de valor.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/banesco.webp" alt="Logo de Banesco" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">Banesco Banco Universal C.A</h3>
-                        <p class="text-gray-600">Uno de los principales bancos del país, ha establecido una colaboración para la capacitación de su personal en nuevas tecnologías.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/venevision.webp" alt="Logo de Venevisión" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">Venevisión</h3>
-                        <p class="text-gray-600">Canal de televisión de gran trayectoria, integra a nuestros egresados en sus equipos de producción y desarrollo de contenido.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/kfc.webp" alt="Logo de KFC" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold text-dark-blue mb-2">KFC</h3>
-                        <p class="text-gray-600">Cadena global de comida rápida, ha contratado a nuestros talentos para roles de liderazgo en operaciones y servicio al cliente.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                        <div class="text-center p-4">
+                            <img src="./empresas/mercantil.webp" alt="Logo de Banco Mercantil" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Banco Mercantil C.A Banco Universal</h3>
+                            <p class="text-gray-600">Líder en servicios financieros, ha contratado a nuestros egresados para proyectos de transformación digital y análisis de datos.</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <img src="./empresas/restoven.webp" alt="Logo de Restoven" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Restoven de Venezuela</h3>
+                            <p class="text-gray-600">Empresa líder en el sector de servicios alimentarios, ha integrado a nuestros talentos en la gestión de operaciones y logística.</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <img src="./empresas/fospuca.webp" alt="Logo de Fospuca" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Fospuca</h3>
+                            <p class="text-gray-600">Empresa especializada en servicios ambientales, valora la formación de nuestros profesionales en gestión de recursos y sostenibilidad.</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <img src="./empresas/cocacola.webp" alt="Logo de Coca-Cola FEMSA" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Coca-Cola FEMSA</h3>
+                            <p class="text-gray-600">Gigante de la industria de bebidas, ha incorporado a nuestros talentos en su cadena de suministro y procesos de producción.</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <img src="./empresas/iglesia universal.webp" alt="Logo de Iglesia Universal del Reino de Dios" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Iglesia Universal del Reino de Dios</h3>
+                            <p class="text-gray-600">Organización con enfoque en labor social, confía en nuestros egresados para roles de gestión administrativa y coordinación de proyectos comunitarios.</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <img src="./empresas/unicasa.webp" alt="Logo de Unicasa" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Unicasa</h3>
+                            <p class="text-gray-600">Reconocida cadena de supermercados, aprecia las habilidades de nuestros egresados en gestión de inventario y optimización de la cadena de valor.</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <img src="./empresas/banesco.webp" alt="Logo de Banesco" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Banesco Banco Universal C.A</h3>
+                            <p class="text-gray-600">Uno de los principales bancos del país, ha establecido una colaboración para la capacitación de su personal en nuevas tecnologías.</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <img src="./empresas/venevision.webp" alt="Logo de Venevisión" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">Venevisión</h3>
+                            <p class="text-gray-600">Canal de televisión de gran trayectoria, integra a nuestros egresados en sus equipos de producción y desarrollo de contenido.</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <img src="./empresas/kfc.webp" alt="Logo de KFC" class="mx-auto mb-4 company-logo" loading="lazy">
+                            <h3 class="text-2xl font-bold text-dark-blue mb-2">KFC</h3>
+                            <p class="text-gray-600">Cadena global de comida rápida, ha contratado a nuestros talentos para roles de liderazgo en operaciones y servicio al cliente.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -670,55 +636,57 @@
 
     <!-- ===== Footer ===== -->
     <footer>
-        <div class="container mx-auto px-6 lg:px-8 py-12 footer-blue">
+        <div class="section-content-overlay py-12 bg-transparent"> <!-- Footer no necesita un overlay oscuro ya que tiene un color sólido -->
+             <div class="container mx-auto px-6 lg:px-8 footer-blue"> <!-- Mover el footer-blue al contenedor interno -->
             
-            <!-- Columna 1: Logo y Misión -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <img src="./images/logo.webp" alt="Logo IGT" class="mb-4" loading="lazy">
-                    <p class="text-gray-300 text-sm">Nuestra misión es capacitar a la fuerza laboral del mañana, formando profesionales con visión de futuro y un compromiso con el desarrollo del país.</p>
-                </div>
-                
-                <!-- Columna 2: Enlaces Rápidos -->
-                <div>
-                    <h4 class="font-bold text-lg mb-4 text-white">Enlaces Rápidos</h4>
-                    <ul>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Inicio</a></li>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Programas</a></li>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Noticias</a></li>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Contacto</a></li>
-                    </ul>
-                </div>
+                <!-- Columna 1: Logo y Misión -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <img src="./images/logo.webp" alt="Logo IGT" class="mb-4" loading="lazy">
+                        <p class="text-gray-300 text-sm">Nuestra misión es capacitar a la fuerza laboral del mañana, formando profesionales con visión de futuro y un compromiso con el desarrollo del país.</p>
+                    </div>
+                    
+                    <!-- Columna 2: Enlaces Rápidos -->
+                    <div>
+                        <h4 class="font-bold text-lg mb-4 text-white">Enlaces Rápidos</h4>
+                        <ul>
+                            <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Inicio</a></li>
+                            <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Programas</a></li>
+                            <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Noticias</a></li>
+                            <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Contacto</a></li>
+                        </ul>
+                    </div>
 
-                <!-- Columna 3: Contacto -->
-                <div>
-                    <h4 class="font-bold text-lg mb-4 text-white">Contacto</h4>
-                    <p class="text-gray-300 text-sm">
-                        <i class="fa fa-map-marker-alt mr-2"></i> Calle 7, La Urbina, Caracas, Venezuela
-                    </p>
-                    <p class="text-gray-300 text-sm mt-2">
-                        <i class="fa fa-phone-alt mr-2"></i> +58 212 555 1234
-                    </p>
-                    <p class="text-gray-300 text-sm mt-2">
-                        <i class="fa fa-envelope mr-2"></i> info@igt.edu.ve
-                    </p>
-                </div>
-                
-                <!-- Columna 4: Redes Sociales -->
-                <div>
-                    <h4 class="font-bold text-lg mb-4 text-white">Síguenos</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-twitter text-xl"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-instagram text-xl"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-linkedin-in text-xl"></i></a>
+                    <!-- Columna 3: Contacto -->
+                    <div>
+                        <h4 class="font-bold text-lg mb-4 text-white">Contacto</h4>
+                        <p class="text-gray-300 text-sm">
+                            <i class="fa fa-map-marker-alt mr-2"></i> Calle 7, La Urbina, Caracas, Venezuela
+                        </p>
+                        <p class="text-gray-300 text-sm mt-2">
+                            <i class="fa fa-phone-alt mr-2"></i> +58 212 555 1234
+                        </p>
+                        <p class="text-gray-300 text-sm mt-2">
+                            <i class="fa fa-envelope mr-2"></i> info@igt.edu.ve
+                        </p>
+                    </div>
+                    
+                    <!-- Columna 4: Redes Sociales -->
+                    <div>
+                        <h4 class="font-bold text-lg mb-4 text-white">Síguenos</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
+                            <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-twitter text-xl"></i></a>
+                            <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-instagram text-xl"></i></a>
+                            <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-linkedin-in text-xl"></i></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Copyright -->
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
-                © 2024 IGT. Todos los derechos reservados.
+                
+                <!-- Copyright -->
+                <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
+                    © 2024 IGT. Todos los derechos reservados.
+                </div>
             </div>
         </div>
     </footer>
