@@ -197,8 +197,7 @@
             background-position: center;
             background-repeat: no-repeat;
             position: relative; /* Needed for positioning internal elements */
-            overflow: hidden; /* To ensure content doesn't spill out */
-            /* Se eliminó el 'color: white;' por defecto de la sección */
+            overflow: hidden; /* To ensure the overlay doesn't spill out */
         }
 
         /* Eliminado el overlay ::before para #about-section */
@@ -209,12 +208,12 @@
             z-index: 2;
         }
 
-        /* Specific text colors within the about section (headings) - Cambiado a text-dark-blue */
+        /* Specific text colors within the about section (headings) - Ahora en blanco */
         #about-section h2, #about-section h3 {
-            color: #004080; /* Nuevo color para los títulos */
+            color: white; /* Cambiado a blanco para mejor contraste */
         }
         #about-section .container p { /* También para los párrafos */
-            color: #4A5568; /* Un gris oscuro para los párrafos */
+            color: white; /* Cambiado a blanco para mejor contraste */
         }
 
 
@@ -475,7 +474,7 @@
         <section id="about-section">
             <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20"> <!-- z-20 para que el contenido esté sobre el overlay -->
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-dark-blue">Conoce el Instituto Gerencial de Talentos</h2> <!-- Texto oscuro -->
+                    <h2 class="text-4xl font-bold text-white">Conoce el Instituto Gerencial de Talentos</h2> <!-- Texto blanco -->
                 </div>
                 
                 <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
@@ -486,9 +485,9 @@
 
                     <!-- Mitad Derecha: Breve historia de IGT con animación -->
                     <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content about-text-animation">
-                        <h3 class="text-3xl font-bold mb-4 text-dark-blue">Nuestra Trayectoria</h3> <!-- Texto oscuro -->
-                        <p class="text-lg mb-4 text-gray-700">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p> <!-- Texto oscuro -->
-                        <p class="text-lg text-gray-700">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p> <!-- Texto oscuro -->
+                        <h3 class="text-3xl font-bold mb-4 text-white">Nuestra Trayectoria</h3> <!-- Texto blanco -->
+                        <p class="text-lg mb-4 text-white">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p> <!-- Texto blanco -->
+                        <p class="text-lg text-white">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p> <!-- Texto blanco -->
                     </div>
                 </div>
             </div>
