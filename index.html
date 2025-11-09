@@ -3,944 +3,752 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Nueva descripción de la página -->
-    <meta name="description" content="Instituto Gerencial de Talentos formando el mundo laboral del mañana">
-    <title>IGT - El Futuro de la Ciencia y Tecnología</title>
-    
-    <!-- Favicon (ahora usa el logo de la página) -->
-    <link rel="icon" type="image/webp" href="./images/logo.webp">
-    
-    <!-- Precarga de recursos críticos para una carga rápida -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
-    <link rel="preload" href="./images/logo.webp" as="image">
-    <link rel="preload" href="./images/fondo.webp" as="image">
-    <link rel="preload" href="./images/fondoseccion2.webp" as="image"> <!-- Fondo global del body y algunas secciones -->
-    <link rel="preload" href="./images/cursos.webp" as="image"> 
-    <link rel="preload" href="./images/fondo2.webp" as="image"> <!-- Fondo específico de Galería y Empresas -->
-
-    <!-- Tailwind CSS (se mantiene en head por ser CSS crítico) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Roboto (cambiado de Inter a Roboto para un aspecto más profesional y limpio) -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome for Icons (se mantiene en head por ser CSS crítico) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <title>Cine Familiar</title>
     <style>
-        /* Custom styles to match the design */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: 'Roboto', sans-serif; /* Cambiado a Roboto */
-            background-color: #f8f9fa; /* Color de fallback si la imagen no carga */
-            background-image: url('./images/fondoseccion2.webp'); /* Fondo para TODAS las secciones debajo del Hero */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed; /* Esto es CLAVE para la continuidad visual */
-        }
-
-        /* Color del encabezado por defecto (100% INVISIBLE al inicio) */
-        .header-blue {
-            background-color: transparent; /* Fondo completamente transparente al inicio */
-            backdrop-filter: none; /* ELIMINADO el desenfoque al inicio */
-            -webkit-backdrop-filter: none; /* Para Safari */
-            transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Transición suave para el cambio al hacer scroll */
-        }
-        /* Estilo del encabezado al hacer scroll (transparente oscuro con desenfoque) */
-        .header-blue.header-scrolled {
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente (70% opacidad, casi negro) */
-            backdrop-filter: blur(5px); /* Desenfoque ACTIVO al hacer scroll */
-            -webkit-backdrop-filter: blur(5px); /* Para Safari */
-        }
-        
-        /* Footer base para aplicar el overlay */
-        footer {
-            position: relative;
-            background-image: url('./images/fondoseccion2.webp'); /* Reusar la imagen global para continuidad */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed; /* CLAVE: Fijo para continuidad con el body */
-            overflow: hidden;
-            color: white; /* Texto blanco por defecto */
-        }
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7); /* Overlay oscuro para legibilidad */
-            z-index: 1;
-        }
-        footer .container {
-            position: relative;
-            z-index: 2; /* Contenido sobre el overlay */
-        }
-        footer h4, footer p, footer a {
-            color: white; /* Asegurar que los textos y enlaces del footer sean blancos */
-        }
-        footer .border-t {
-            border-color: rgba(255,255,255,0.2); /* Borde más sutil para el copyright */
-        }
-
-        /* Ajuste de z-index para los grupos de navegación y dropdowns */
-        #fixed-nav-container { z-index: 50; } /* Navbar principal, muy alto */
-        .relative.group { z-index: 40; } /* Contenedor de cada enlace con dropdown */
-        .nav-link { z-index: 30; } /* El enlace en sí, debajo del dropdown cuando se abre (para el subrayado) */
-        .dropdown-menu { 
-            z-index: 35; /* El dropdown desplegado, sobre el nav-link */
-            opacity: 0;
-            pointer-events: none; /* Desactiva interacción cuando está oculto */
-            transform-origin: top;
-            transform: scaleY(0);
-            transition: all 0.3s ease-in-out;
-            margin-top: -2px;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-        .group:hover .dropdown-menu {
-            opacity: 1;
-            pointer-events: auto; /* Activa interacción en hover */
-            transform: scaleY(1);
-        }
-        /* Estilos para los enlaces dentro del dropdown menu (subcategorías) */
-        .dropdown-menu a {
-            color: white; /* Asegura el texto blanco */
-            transition: transform 0.2s ease-out, background-color 0.2s ease-out; /* Animación de escala y fondo */
-        }
-        .dropdown-menu a:hover {
-            transform: scale(1.02); /* Agrandamiento sutil */
-            background-color: rgba(0, 0, 0, 0.6); /* Fondo ligeramente más claro en hover */
-        }
-
-
-        /* Azul claro de las secciones - este color ya no se usa como fondo directo de secciones */
-        .section-light-blue { color: initial; } /* Resetear para que el fondo del body se vea */
-        /* Texto azul oscuro */
-        .text-dark-blue { color: #004080; } /* Coincide con el nuevo header-blue */
-        /* Azul claro de acento (mantener vibrante si se desea) */
-        .text-light-blue { color: #3b82f6; } /* Mantenido o ajustado ligeramente si es necesario */
-        
-        /* Botón primario con animación de agrandamiento al pasar el cursor y control de visibilidad */
-        .btn-primary {
-            background-color: #007BFF; /* Azul más vibrante */
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: white;
-            /* Variables CSS para controlar translate y scale */
-            --btn-translate-y: 0px;
-            --btn-scale: 1;
-            /* Aplicar transform con las variables, permitiendo que se combinen */
-            transform: translateY(var(--btn-translate-y)) scale(var(--btn-scale));
-            transition-property: background-color, transform, opacity; /* Transición explícita */
-            transition-duration: 0.3s;
-            transition-timing-function: ease-out;
-            pointer-events: auto; /* Por defecto activo, se cambia con clases de visibilidad */
-        }
-        .btn-primary:hover { 
-            background-color: #0062CC; 
-            --btn-scale: 1.05; /* Solo modifica la variable de escala en hover */
-        } 
-        /* Clases para el control de visibilidad de los botones de registro */
-        .btn-hidden-state {
-            --btn-translate-y: -8px; /* Desplazamiento inicial para ocultar */
-            opacity: 0;
-            pointer-events: none; /* Desactiva interacción cuando está oculto */
-        }
-        .btn-visible-state {
-            --btn-translate-y: 0px; /* Posición visible */
-            opacity: 1;
-            pointer-events: auto; /* Activa interacción cuando está visible */
+            min-height: 100vh;
+            padding: 20px;
         }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
 
-        /* Botón secundario - el amarillo se mantiene */
-        .btn-secondary {
-            background-color: #ffc107;
-            color: #004080; /* Texto con el nuevo azul oscuro */
-            font-weight: bold;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
         }
-        .btn-secondary:hover {
-            background-color: #e0a800;
-            transform: translateY(-3px);
-            box-shadow: 4px 15px rgba(255, 193, 7, 0.4);
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-        .hero-section {
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .video-section {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .video-container {
             position: relative;
-            height: 100vh;
-            overflow: hidden;
-        }
-        /* Style for the single background image */
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            /* Ensure it's fully opaque now that it's static */
-            opacity: 1; 
-        }
-        
-        /* Contenedor principal para el contenido de las secciones con su propio fondo semi-transparente */
-        /* Cada sección debe contener un div con esta clase para su contenido */
-        .section-content-wrapper {
-            width: 100%;
-            min-height: 100%; /* Asegura que el wrapper ocupa toda la altura disponible */
-            box-sizing: border-box; /* Incluye padding en el tamaño total */
-            position: relative; /* Para el z-index */
-            z-index: 2; /* Sobre el fondo del body */
-        }
-
-        /* Sección "Conoce el Instituto Gerencial de Talentos" */
-        #about-section .section-content-wrapper {
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
-        }
-        #about-section .section-content-wrapper h2, 
-        #about-section .section-content-wrapper h3, 
-        #about-section .section-content-wrapper p {
-            color: white; /* Texto blanco para esta sección */
-        }
-
-        /* Sección "Nuestras Ocupaciones Cualificadas" (ahora con overlay oscuro) */
-        #qualified-occupations-section .section-content-wrapper {
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
-        }
-        #qualified-occupations-section .section-content-wrapper h2, 
-        #qualified-occupations-section .section-content-wrapper h3, 
-        #qualified-occupations-section .section-content-wrapper p {
-            color: white; /* Texto blanco para esta sección */
-        }
-        /* Ajuste específico para el color del icono en las tarjetas si es necesario */
-        #qualified-occupations-section .section-content-wrapper .card-icon {
-            color: #007BFF; /* Asegurar que el icono tenga el color primario */
-        }
-
-
-        /* Sección "Aspectos Fundamentales de Nuestra Capacitación" (ahora con overlay oscuro) */
-        #fundamental-aspects-section .section-content-wrapper {
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
-        }
-        #fundamental-aspects-section .section-content-wrapper h2, 
-        #fundamental-aspects-section .section-content-wrapper h3, 
-        #fundamental-aspects-section .section-content-wrapper p {
-            color: white; /* Texto blanco para esta sección */
-        }
-        /* Ajuste específico para el color del icono en las tarjetas si es necesario */
-        #fundamental-aspects-section .section-content-wrapper .card-icon {
-            color: white; /* Icono en blanco */
-        }
-
-
-        /* ESTILOS PARA "GALERÍA DE MOMENTOS" Y "EMPRESAS" CON FONDO ESPECÍFICO CONTINUO */
-        #gallery-moments-section, #companies-section {
-            background-image: url('./images/fondo2.webp'); /* Fondo específico para estas secciones */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed; /* CLAVE: Fijo para continuidad entre ellas */
-            position: relative; /* Necesario para el overlay ::before */
-            overflow: hidden;
-            color: white; /* Texto blanco por defecto */
-        }
-
-        /* Overlay para la imagen de fondo de Galería y Empresas */
-        #gallery-moments-section::before, #companies-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
-            z-index: 1;
-        }
-
-        /* Asegurar que el contenido de Galería y Empresas esté sobre el overlay */
-        #gallery-moments-section .container, #companies-section .container {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Colores de texto para Galería y Empresas (blanco sobre overlay oscuro) */
-        #gallery-moments-section h2, #gallery-moments-section h3, #gallery-moments-section p,
-        #companies-section h2, #companies-section h3, #companies-section p {
-            color: white; 
-        }
-        /* El section-content-wrapper no se usa directamente aquí, el fondo está en la sección. */
-        
-        /* Animaciones para la imagen y el texto en About Section */
-        /* Animación de la IMAGEN (zoom y desvanecimiento) */
-        .about-image-animation {
-            opacity: 0;
-            transform: scale(0.8); /* Inicia ligeramente más pequeño */
-            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
-        }
-        #about-section.is-visible .about-image-animation {
-            opacity: 1;
-            transform: scale(1); /* Se agranda a su tamaño normal */
-        }
-
-        /* Animación del TEXTO (deslizamiento de derecha a izquierda y desvanecimiento) */
-        .about-text-animation {
-            opacity: 0;
-            transform: translateX(100px); /* Inicia 100px a la derecha */
-            transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1s ease-out;
-            transition-delay: 0.3s; /* Pequeño retraso para que el texto aparezca después de la imagen */
-        }
-        #about-section.is-visible .about-text-animation {
-            opacity: 1;
-            transform: translateX(0); /* Se desliza a su posición original */
-        }
-        
-        /* Custom scrollbar for Webkit browsers (Chrome, Safari) */
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f4f4e9; /* Light beige color */
+            background-color: #000;
             border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #007BFF; /* Coincide con el nuevo btn-primary */
-            border-radius: 10px;
-            border: 2px solid #f8f9fa;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #004080; /* Coincide con el nuevo header-blue */
-        }
-
-        /* Styles for the image modal */
-        .image-modal-container {
-            position: fixed;
-            top: 0;
-            left: 0;
+        #videoPlayer {
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: none; /* Initially hidden */
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-        .image-modal-content {
-            position: relative;
-            max-width: 90%;
-            max-height: 90%;
-        }
-        .image-modal-content img {
             display: block;
-            width: auto;
-            max-width: 100%;
-            height: auto;
-            max-height: 100vh;
+            max-height: 500px;
         }
-        .image-modal-close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
+
+        .custom-controls {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: #ff7e5f;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
+            transition: all 0.3s;
         }
-        .image-modal-close:hover, .image-modal-close:focus {
-            color: #bbb;
-            text-decoration: none;
+
+        .control-btn:hover {
+            background: #ff6b4a;
+            transform: translateY(-2px);
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            position: relative;
             cursor: pointer;
         }
 
-        /* Styles for the company logos animation */
-        /* Hacemos los logos más grandes y quitamos el filtro de grises */
-        .company-logo {
-            /* Aumenta el tamaño de los logos */
-            width: 300px; 
-            height: 300px;
-            object-fit: contain; /* Para que la imagen se ajuste sin deformarse */
-            transition: transform 0.3s ease-in-out;
-        }
-        .company-logo:hover {
-            transform: scale(1.1); /* Efecto de agrandamiento al pasar el cursor */
+        #progressBar {
+            height: 100%;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            border-radius: 5px;
+            width: 0%;
         }
 
-        /* Z-index para el botón "Back to Top" para que esté siempre por encima */
-        #to-top-button {
-            z-index: 50; 
+        .time-display {
+            font-size: 0.9rem;
+            color: #ddd;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+        .upload-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .library-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ff7e5f;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .movie-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .movie-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .movie-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .movie-item img {
+            width: 60px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+            background: #333;
+        }
+
+        .movie-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .movie-info p {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .status-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .connected-users {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .user {
+            background: rgba(255, 126, 95, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .instructions {
+            margin-top: 30px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            line-height: 1.6;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+
+        .upload-progress {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .cloudinary-status {
+            background: rgba(74, 144, 226, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- ===== Main Content ===== -->
-    <main>
-        <!-- Section 1: Hero (Ahora contiene la navegación) -->
-        <section id="hero-section" class="hero-section relative text-white flex items-center">
-            <!-- Contenedor fijo para la navegación -->
-            <div id="fixed-nav-container" class="header-blue fixed top-0 w-full z-50"> <!-- Z-INDEX ALTO -->
-                <nav>
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="flex items-center justify-between h-20">
-                            <!-- Columna Izquierda: Logo y Menú de Navegación -->
-                            <div class="flex items-center space-x-8"> <!-- Agrupación de logo y nav-links -->
-                                <!-- Logo Desktop (con animación de hover) -->
-                                <a href="#" class="hidden md:block transform transition-transform duration-300 ease-out hover:scale-110">
-                                    <img src="./images/logo.webp" alt="Logo IGT" class="h-16">
-                                </a>
-                                <!-- Mobile Menu Button -->
-                                <button id="mobile-menu-button" class="text-white focus:outline-none md:hidden">
-                                    <i class="fa fa-bars text-2xl"></i>
-                                </button>
+    <div class="container">
+        <header>
+            <h1>Cine Familiar</h1>
+            <p class="subtitle">Sincroniza películas en todos tus dispositivos en tiempo real</p>
+        </header>
 
-                                <!-- Menú de Navegación para Desktop (alineado a la izquierda, junto al logo) -->
-                                <div class="hidden md:flex items-center h-full space-x-4"> <!-- Espacio entre los enlaces -->
-                                    <a href="#" class="nav-link font-semibold py-2 rounded-md">Inicio</a>
-
-                                    <!-- "Acerca de" Dropdown -->
-                                    <div class="relative group h-full flex items-center">
-                                        <a href="#" class="nav-link font-semibold py-2 rounded-md">Acerca de</a>
-                                        <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                            <div class="py-1">
-                                                <a href="#" class="block px-4 py-2 text-sm text-white">¿Quiénes somos?</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
-                                                <a href="#" class="block px-4 py-2 text-sm text-white">Autoridades</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
-                                                <a href="#" class="block px-4 py-2 text-sm text-white">Nuestro epónimo</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- "Programas" Dropdown -->
-                                    <div class="relative group h-full flex items-center">
-                                        <a href="#" class="nav-link font-semibold py-2 rounded-md">Programas</a>
-                                        <div class="dropdown-menu absolute top-full left-0 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                            <div class="py-1">
-                                                <a href="#" class="block px-4 py-2 text-sm text-white">Ocupaciones Cualificadas</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <a href="#" class="nav-link font-semibold py-2 rounded-md">Noticias</a>
-                                    <a href="#" class="nav-link font-semibold py-2 rounded-md">Contacto</a>
-                                </div>
-                            </div>
-
-                            <!-- Columna Derecha: Botón de registro de navegación y Email -->
-                            <div class="hidden md:flex items-center space-x-4">
-                                <a id="nav-register-button" href="#" 
-                                   class="btn-primary font-bold py-2 px-5 rounded-full text-md btn-hidden-state"> <!-- Clase de visibilidad inicial -->
-                                    Inscríbete ahora
-                                </a>
-                                <a href="#" class="hover:text-blue-300 social-icon-animation"><i class="fa fa-envelope text-xl"></i></a>
-                            </div>
+        <div class="main-content">
+            <div class="video-section">
+                <div class="video-container">
+                    <video id="videoPlayer">
+                        Tu navegador no soporta la reproducción de videos.
+                    </video>
+                    <div class="custom-controls">
+                        <button id="playPauseBtn" class="control-btn">Reproducir</button>
+                        <div class="progress-container">
+                            <div id="progressBar"></div>
+                        </div>
+                        <div class="time-display">
+                            <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
                         </div>
                     </div>
-                    <!-- Mobile Menu (hidden by default) -->
-                    <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-2 bg-[rgba(0,0,0,0.8)]"> <!-- Color del menú móvil ahora es transparente oscuro -->
-                        <a href="#" class="block hover:text-blue-300 py-2">Inicio</a>
-                        
-                        <!-- "Acerca de" Mobile Dropdown -->
-                        <div class="relative">
-                            <button class="w-full text-left flex justify-between items-center py-2 hover:text-blue-300 mobile-dropdown-button">
-                                <span>Acerca de</span>
-                            </button>
-                            <div class="hidden space-y-2 pl-4 mobile-dropdown-menu">
-                                <a href="#" class="block px-4 py-2 text-sm text-white">¿Quiénes somos?</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
-                                <a href="#" class="block px-4 py-2 text-sm text-white">Autoridades</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
-                                <a href="#" class="block px-4 py-2 text-sm text-white">Nuestro epónimo</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
-                            </div>
-                        </div>
-
-                        <!-- "Programas" Mobile Dropdown -->
-                        <div class="relative">
-                            <button class="w-full text-left flex justify-between items-center py-2 hover:text-blue-300 mobile-dropdown-button">
-                                <span>Programas</span>
-                            </button>
-                            <div class="hidden space-y-2 pl-4 mobile-dropdown-menu">
-                                <a href="#" class="block px-4 py-2 text-sm text-white">Ocupaciones Cualificadas</a> <!-- Eliminado hover:bg-blue-800 hover:text-blue-300 -->
-                            </div>
-                        </div>
-                        
-                        <a href="#" class="block hover:text-blue-300 py-2">Noticias</a>
-                        <a href="#" class="block hover:text-blue-300 py-2">Contacto</a>
-                    </div>
-                </nav>
-            </div>
-            <!-- Fondo de la sección Hero -->
-            <div class="hero-bg" style="background-image: url('./images/fondo.webp');"></div>
-
-            <!-- Superposición semi-transparente para legibilidad -->
-            <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-            
-            <div class="container mx-auto px-6 lg:px-8 relative z-10 flex items-center h-full">
-                <!-- Contenido de la sección Hero, con padding para no quedar debajo de la navegación -->
-                <div class="max-w-3xl pt-20"> 
-                    <!-- Título principal -->
-                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">20 Años Formando y Proyectando Talentos</h1>
-                    <!-- Los párrafos de descripción y el botón siguen al título -->
-                    <p class="text-lg md:text-xl mb-6">En el IGT del INCES, unimos la experiencia productiva con la capacitación innovadora para fortalecer el liderazgo y la gestión socialista en el país.</p>
-                    <p class="text-lg md:text-xl mb-8">Únete a nuestros programas y convierte tu talento en un motor de transformación para la nueva era productiva de Venezuela.</p>
-                    <a id="hero-register-button" href="#" 
-                       class="btn-primary font-bold py-3 px-8 rounded-full text-lg btn-visible-state"> <!-- Clase de visibilidad inicial -->
-                        Inscríbete ahora
-                    </a>
                 </div>
-            </div>
-        </section>
 
-        <!-- Section 2: Conoce el Instituto Gerencial de Talentos (Dividida en dos con imagen e historia) -->
-        <section id="about-section">
-            <div class="section-content-wrapper py-16 lg:py-24 bg-[rgba(0,0,0,0.7)]"> <!-- Nuevo div con fondo semi-transparente y padding -->
-                <div class="container mx-auto px-6 lg:px-8 relative z-20"> 
-                    <div class="text-center mb-12">
-                        <h2 class="text-4xl font-bold">Conoce el Instituto Gerencial de Talentos</h2> <!-- Texto blanco -->
+                <div class="upload-section">
+                    <h2>Subir Película a Cloudinary</h2>
+                    <label for="fileInput" class="upload-btn">Seleccionar Video</label>
+                    <input type="file" id="fileInput" accept="video/*">
+                    <span id="fileName">No se ha seleccionado ningún archivo</span>
+                    
+                    <div class="cloudinary-status">
+                        ✅ Cloudinary configurado: dzanhamlf
                     </div>
                     
-                    <div class="flex flex-col md:flex-row items-center max-w-7xl mx-auto min-h-[400px]"> <!-- Added min-h for height control -->
-                        <!-- Mitad Izquierda: Imagen del Instituto con animación de aparición Y hover -->
-                        <div class="md:w-1/2 w-full p-8 flex justify-center items-center about-image-wrapper about-image-animation">
-                            <img src="https://placehold.co/600x400/007BFF/ffffff?text=Imagen+del+Instituto" alt="Imagen del Instituto" 
-                                 class="rounded-lg shadow-lg w-full h-full object-cover 
-                                        transform transition-transform duration-300 ease-out hover:scale-105" 
-                                 loading="lazy">
+                    <div class="upload-progress" id="uploadProgress">
+                        <p>Subiendo a Cloudinary...</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
                         </div>
-
-                        <!-- Mitad Derecha: Breve historia de IGT con animación -->
-                        <div class="md:w-1/2 w-full p-8 text-center md:text-left about-text-content about-text-animation">
-                            <h3 class="text-3xl font-bold mb-4">Nuestra Trayectoria</h3> <!-- Texto blanco -->
-                            <p class="text-lg mb-4">Desde nuestra fundación, el Instituto Gerencial de Talentos (IGT) se ha comprometido con la excelencia académica y el desarrollo profesional. Con dos décadas de experiencia, hemos evolucionado para ofrecer programas innovadores que responden a las demandas del mercado laboral.</p> <!-- Texto blanco -->
-                            <p class="text-lg">Creemos en el potencial de cada estudiante para transformar el futuro, y nuestra historia es un reflejo de miles de éxitos y contribuciones a la sociedad. Únete a una institución con legado y visión de futuro.</p> <!-- Texto blanco -->
-                        </div>
+                        <p id="progressText">0%</p>
                     </div>
                 </div>
             </div>
-        </section>
-        
-        <!-- Section 3: Nuestras Ocupaciones Cualificadas -->
-        <section id="qualified-occupations-section">
-            <div class="section-content-wrapper py-16 lg:py-24 bg-[rgba(0,0,0,0.7)]"> <!-- Nuevo div con fondo semi-transparente y padding -->
-                <div class="container mx-auto px-6 lg:px-8 relative z-20">
-                    <div class="text-center mb-12">
-                        <h2 class="text-4xl font-bold">Nuestras Ocupaciones Cualificadas</h2>
-                        <p class="text-lg mt-2">Programas diseñados para impulsar tu futuro profesional.</p>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                        <!-- Card 1: Secretario(a) Administrativo -->
-                        <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
-                            <div class="w-full h-48">
-                                <img src="./cursos/adminsitrativo.webp" alt="Imagen de Secretario Administrativo" class="w-full h-full object-cover" loading="lazy">
-                            </div>
-                            <div class="p-6 text-center">
-                                <h3 class="text-2xl font-bold mb-2">Secretario (a) Administrativo</h3>
-                                <p class="text-gray-600">Domina la gestión de oficinas, la organización de documentos y la comunicación profesional para ser un pilar en cualquier empresa.</p>
-                            </div>
-                        </div>
-                        <!-- Card 2: Técnico en Mecánica de Refrigeración -->
-                        <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
-                            <div class="w-full h-48">
-                               <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Refrigeración+y+Aires+Acondicionados" alt="Imagen de Refrigeración y Aires Acondicionados" class="w-full h-full object-cover" loading="lazy">
-                            </div>
-                            <div class="p-6 text-center">
-                                <h3 class="text-2xl font-bold mb-2">Técnico Mecánico de Refrigeración y Aires Acondicionados</h3>
-                                <p class="text-gray-600">Capacítate en la instalación, mantenimiento y reparación de sistemas de refrigeración y climatización, una profesión con alta demanda.</p>
-                            </div>
-                        </div>
-                        <!-- Card 3: Chef -->
-                        <div class="bg-blue-100 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 overflow-hidden">
-                            <div class="w-full h-48">
-                                <img src="https://placehold.co/600x400/FFD18C/003366?text=Chef" alt="Imagen de Chef" class="w-full h-full object-cover" loading="lazy">
-                            </div>
-                            <div class="p-6 text-center">
-                                <h3 class="text-2xl font-bold mb-2">Chef</h3>
-                                <p class="text-gray-600 text-center">Desarrolla habilidades culinarias y de gestión en la cocina. Aprende a crear menús, liderar equipos y deleitar a los comensales.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- Section 4: Fundamental Aspects of Training -->
-        <section id="fundamental-aspects-section" class="scroll-reveal">
-            <div class="section-content-wrapper py-16 lg:py-24 bg-[rgba(0,0,0,0.7)]"> <!-- Fondo oscuro semi-transparente -->
-                <div class="container mx-auto px-6 lg:px-8">
-                    <div class="text-center mb-12">
-                        <h2 class="text-4xl font-bold text-white">Aspectos Fundamentales de Nuestra Capacitación</h2> <!-- Texto blanco -->
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto justify-center">
-                        <div class="bg-gray-50 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
-                            <div class="card-icon mb-4 text-center text-white"> <!-- Icono en blanco -->
-                                <i class="fas fa-hammer"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white text-center mb-2">Clases prácticas</h3> <!-- Texto blanco -->
-                            <p class="text-white text-center">Aprende haciendo. Nuestros talleres y laboratorios te permiten aplicar la teoría de inmediato para dominar tus habilidades.</p> <!-- Texto blanco -->
-                        </div>
-                        <div class="bg-gray-50 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
-                            <div class="card-icon mb-4 text-center text-white"> <!-- Icono en blanco -->
-                                <i class="fas fa-lightbulb"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white text-center mb-2">Reflexión</h3> <!-- Texto blanco -->
-                            <p class="text-white text-center">Un espacio de reflexión y crecimiento donde las ideas se transforman en proyectos innovadores.</p> <!-- Texto blanco -->
-                        </div>
-                        <div class="bg-gray-50 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
-                            <div class="card-icon mb-4 text-center text-white"> <!-- Icono en blanco -->
-                                <i class="fas fa-chalkboard-teacher"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white text-center mb-2">Profesores orientadores</h3> <!-- Texto blanco -->
-                            <p class="text-white text-center">Más que instructores, nuestros profesores son guías y mentores que te acompañan en cada paso de tu desarrollo profesional y personal.</p> <!-- Texto blanco -->
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap justify-center mt-8 gap-8">
-                        <div class="bg-gray-50 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
-                            <div class="card-icon mb-4 text-center text-white"> <!-- Icono en blanco -->
-                                <i class="fas fa-rocket"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white text-center mb-2">Proyectos finales</h3> <!-- Texto blanco -->
-                            <p class="text-white text-center">Demuestra tus conocimientos y talentos a través de proyectos que reflejan las demandas del mundo real y te preparan para el éxito.</p> <!-- Texto blanco -->
-                        </div>
-                        <div class="bg-gray-50 rounded-lg shadow-md p-6 transform hover:-translate-y-2 transition-transform duration-300 w-full sm:w-1/2 lg:w-1/4">
-                            <div class="card-icon mb-4 text-center text-white"> <!-- Icono en blanco -->
-                                <i class="fas fa-award"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white text-center mb-2">Valores agregados</h3> <!-- Texto blanco -->
-                            <p class="text-white text-center">Obtén certificaciones, únete a nuestra red de egresados y participa en eventos de innovación que potencian tu carrera.</p> <!-- Texto blanco -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 5: Gallery of Moments (Ahora con su propio fondo continuo) -->
-        <section id="gallery-moments-section" class="scroll-reveal">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20"> <!-- Contenido sobre el overlay de la sección -->
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold">Conoce un poco del Instituto Gerencial de Talentos</h2>
-                    <p class="text-lg mt-2">Una mirada a la vida en nuestras aulas, laboratorios y centros de investigación.</p>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
-                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia')">
-                        <img src="https://placehold.co/600x400/87CEEB/ffffff?text=Laboratorio+de+ciencia" alt="Laboratorio" class="w-full h-auto object-cover" loading="lazy">
-                    </div>
-                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica')">
-                        <img src="https://placehold.co/600x400/90EE90/ffffff?text=Clase+práctica" alt="Clase práctica" class="w-full h-auto object-cover" loading="lazy">
-                    </div>
-                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo')">
-                        <img src="https://placehold.co/600x400/FFD700/000000?text=Trabajo+en+equipo" alt="Trabajo en equipo" class="w-full h-auto object-cover" loading="lazy">
-                    </div>
-                    <div class="rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openModal('https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final')">
-                        <img src="https://placehold.co/600x400/FFA07A/ffffff?text=Proyecto+final" alt="Proyecto final" class="w-full h-auto object-cover" loading="lazy">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 6: Companies (Ahora con su propio fondo continuo) -->
-        <section id="companies-section" class="scroll-reveal">
-            <div class="container mx-auto px-6 lg:px-8 py-16 lg:py-24 relative z-20"> <!-- Contenido sobre el overlay de la sección -->
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold">Empresas que reconocen nuestro trabajo</h2>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                    <div class="text-center p-4">
-                        <img src="./empresas/mercantil.webp" alt="Logo de Banco Mercantil" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">Banco Mercantil C.A Banco Universal</h3>
-                        <p class="text-gray-600">Líder en servicios financieros, ha contratado a nuestros egresados para proyectos de transformación digital y análisis de datos.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/restoven.webp" alt="Logo de Restoven" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">Restoven de Venezuela</h3>
-                        <p class="text-gray-600">Empresa líder en el sector de servicios alimentarios, ha integrado a nuestros talentos en la gestión de operaciones y logística.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/fospuca.webp" alt="Logo de Fospuca" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">Fospuca</h3>
-                        <p class="text-gray-600">Empresa especializada en servicios ambientales, valora la formación de nuestros profesionales en gestión de recursos y sostenibilidad.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/cocacola.webp" alt="Logo de Coca-Cola FEMSA" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">Coca-Cola FEMSA</h3>
-                        <p class="text-gray-600">Gigante de la industria de bebidas, ha incorporado a nuestros talentos en su cadena de suministro y procesos de producción.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/iglesia universal.webp" alt="Logo de Iglesia Universal del Reino de Dios" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">Iglesia Universal del Reino de Dios</h3>
-                        <p class="text-gray-600">Organización con enfoque en labor social, confía en nuestros egresados para roles de gestión administrativa y coordinación de proyectos comunitarios.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/unicasa.webp" alt="Logo de Unicasa" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">Unicasa</h3>
-                        <p class="text-gray-600">Reconocida cadena de supermercados, aprecia las habilidades de nuestros egresados en gestión de inventario y optimización de la cadena de valor.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/banesco.webp" alt="Logo de Banesco" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">Banesco Banco Universal C.A</h3>
-                        <p class="text-gray-600">Uno de los principales bancos del país, ha establecido una colaboración para la capacitación de su personal en nuevas tecnologías.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/venevision.webp" alt="Logo de Venevisión" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">Venevisión</h3>
-                        <p class="text-gray-600">Canal de televisión de gran trayectoria, integra a nuestros egresados en sus equipos de producción y desarrollo de contenido.</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <img src="./empresas/kfc.webp" alt="Logo de KFC" class="mx-auto mb-4 company-logo" loading="lazy">
-                        <h3 class="text-2xl font-bold mb-2">KFC</h3>
-                        <p class="text-gray-600">Cadena global de comida rápida, ha contratado a nuestros talentos para roles de liderazgo en operaciones y servicio al cliente.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- ===== Footer ===== -->
-    <footer>
-        <div class="container mx-auto px-6 lg:px-8 py-12 footer-blue"> <!-- Contenido sobre el overlay del footer -->
-            
-            <!-- Columna 1: Logo y Misión -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <img src="./images/logo.webp" alt="Logo IGT" class="mb-4" loading="lazy">
-                    <p class="text-gray-300 text-sm">Nuestra misión es capacitar a la fuerza laboral del mañana, formando profesionales con visión de futuro y un compromiso con el desarrollo del país.</p>
-                </div>
-                
-                <!-- Columna 2: Enlaces Rápidos -->
-                <div>
-                    <h4 class="font-bold text-lg mb-4">Enlaces Rápidos</h4>
-                    <ul>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Inicio</a></li>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Programas</a></li>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Noticias</a></li>
-                        <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white transition-colors duration-300">Contacto</a></li>
-                    </ul>
+            <div class="library-section">
+                <h2>Biblioteca de Películas</h2>
+                <div class="movie-list" id="movieList">
+                    <!-- Las películas se cargarán aquí dinámicamente -->
                 </div>
 
-                <!-- Columna 3: Contacto -->
-                <div>
-                    <h4 class="font-bold text-lg mb-4">Contacto</h4>
-                    <p class="text-gray-300 text-sm">
-                        <i class="fa fa-map-marker-alt mr-2"></i> Calle 7, La Urbina, Caracas, Venezuela
-                    </p>
-                    <p class="text-gray-300 text-sm mt-2">
-                        <i class="fa fa-phone-alt mr-2"></i> +58 212 555 1234
-                    </p>
-                    <p class="text-gray-300 text-sm mt-2">
-                        <i class="fa fa-envelope mr-2"></i> info@igt.edu.ve
-                    </p>
-                </div>
-                
-                <!-- Columna 4: Redes Sociales -->
-                <div>
-                    <h4 class="font-bold text-lg mb-4">Síguenos</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-twitter text-xl"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-instagram text-xl"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-blue-300 transition-colors duration-300"><i class="fab fa-linkedin-in text-xl"></i></a>
+                <div class="status-box">
+                    <h2>Estado de la Sala</h2>
+                    <div class="status-item">
+                        <span>Estado:</span>
+                        <span id="playbackStatus">Detenido</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Dispositivos conectados:</span>
+                        <span id="connectedCount">1</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Usuarios en sala:</span>
+                        <div class="connected-users" id="connectedUsers">
+                            <div class="user">Tú</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Copyright -->
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
-                © 2024 IGT. Todos los derechos reservados.
+
+                <div class="instructions">
+                    <h2>Cómo usar</h2>
+                    <ol>
+                        <li>Sube un video a Cloudinary usando el botón "Seleccionar Video"</li>
+                        <li>Selecciona una película de la biblioteca</li>
+                        <li>Comparte el enlace de esta página con tu familia</li>
+                        <li>Cuando alguien reproduzca, pause o busque, se sincronizará en todos los dispositivos</li>
+                    </ol>
+                </div>
             </div>
         </div>
-    </footer>
 
-    <!-- Botón "Back to Top" -->
-    <button id="to-top-button" class="hidden fixed bottom-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <!-- Modal para ver imágenes de la galería en grande -->
-    <div id="image-modal" class="image-modal-container">
-        <span id="modal-close-button" class="image-modal-close">&times;</span>
-        <div class="image-modal-content">
-            <img id="modal-image" src="" alt="Imagen ampliada" loading="lazy">
-        </div>
+        <footer>
+            <p>Cine Familiar - Creado con HTML, CSS, JavaScript, Firebase y Cloudinary</p>
+        </footer>
     </div>
-    
-    <!-- JavaScript para el botón "Back to Top", menú móvil, y efectos de scroll -->
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <script>
-        // Solución para forzar el scroll al inicio de la página
-        if ('scrollRestoration' in history) {
-            history.scrollRestoration = 'manual';
-        }
-        document.addEventListener('DOMContentLoaded', () => {
-            window.scrollTo(0, 0); // Forzar scroll al inicio
-        });
-        window.addEventListener('load', () => {
-            window.scrollTo(0, 0); // Forzar scroll al inicio de nuevo por si acaso, después de la carga completa
-        });
-
-
-        // Lógica del menú móvil
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileDropdownButtons = document.querySelectorAll('.mobile-dropdown-button');
-
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        mobileDropdownButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const dropdownMenu = button.nextElementSibling;
-                dropdownMenu.classList.toggle('hidden');
-            });
-        });
-
-        // Lógica del botón "Back to Top"
-        const toTopButton = document.getElementById('to-top-button');
-
-        window.onscroll = function () {
-            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-                toTopButton.classList.remove('hidden');
-            } else {
-                toTopButton.classList.add('hidden');
-            }
+        // Configuración de Firebase (TUS DATOS)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAWJ2MYgZsVIGDb9gKrq-_FZyDKZhMlzfg",
+            authDomain: "cinefamiliar-124c3.firebaseapp.com",
+            databaseURL: "https://cinefamiliar-124c3-default-rtdb.firebaseio.com",
+            projectId: "cinefamiliar-124c3",
+            storageBucket: "cinefamiliar-124c3.firebasestorage.app",
+            messagingSenderId: "980943917813",
+            appId: "1:980943917813:web:6d0cede426bc445b45ebbc"
         };
 
-        toTopButton.addEventListener('click', function (e) {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        // Configuración de Cloudinary (TUS DATOS)
+        const cloudinaryConfig = {
+            cloudName: 'dzanhamlf',
+            apiKey: '292861278382827',
+            uploadPreset: 'cine_familiar' // Necesitas crear este preset en Cloudinary
+        };
 
-        // Intersection Observer para animaciones de entrada (scroll-reveal, about-section animations)
-        document.addEventListener("DOMContentLoaded", function() {
-            // Observador para elementos con clase .scroll-reveal (para secciones que sí deben animarse)
-            const genericRevealElements = document.querySelectorAll('.scroll-reveal');
-            const genericObserverOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            };
-            const genericObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                    }
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Elementos del DOM
+        const video = document.getElementById('videoPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.querySelector('.progress-container');
+        const currentTimeElement = document.getElementById('currentTime');
+        const durationElement = document.getElementById('duration');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const playbackStatus = document.getElementById('playbackStatus');
+        const connectedCount = document.getElementById('connectedCount');
+        const connectedUsers = document.getElementById('connectedUsers');
+        const movieList = document.getElementById('movieList');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        // Variables de estado
+        let isSeeking = false;
+        let userId = generateUserId();
+        let lastUpdateTime = 0;
+
+        // Generar ID único para el usuario
+        function generateUserId() {
+            return 'user_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Formatear tiempo en minutos:segundos
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Actualizar barra de progreso y tiempo
+        function updateProgress() {
+            if (!isSeeking && video.duration) {
+                const progressPercent = (video.currentTime / video.duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                currentTimeElement.textContent = formatTime(video.currentTime);
+            }
+        }
+
+        // Establecer progreso al hacer clic en la barra
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = video.duration;
+            
+            if (duration) {
+                video.currentTime = (clickX / width) * duration;
+                // Enviar el cambio a Firebase
+                database.ref('videoState').update({
+                    currentTime: video.currentTime,
+                    lastUpdated: Date.now(),
+                    lastUpdatedBy: userId
                 });
-            }, genericObserverOptions);
-            genericRevealElements.forEach(element => {
-                genericObserver.observe(element);
-            });
+            }
+        }
 
-            // Observador específico para la sección #about-section (para sus animaciones internas de imagen/texto)
-            const aboutSection = document.getElementById('about-section');
-            const aboutObserverOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1 // Activa cuando el 10% de la sección es visible
-            };
-            const aboutObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.target.id === 'about-section') {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('is-visible'); 
-                        } else {
-                            // Puedes decidir si quieres que las animaciones se reinicien al salir de vista
-                            // entry.target.classList.remove('is-visible');
-                        }
-                    }
+        // Manejar cambios en la reproducción
+        function togglePlayPause() {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.textContent = 'Pausar';
+                playbackStatus.textContent = 'Reproduciendo';
+                
+                // Enviar estado a Firebase
+                database.ref('videoState').update({
+                    isPlaying: true,
+                    lastUpdated: Date.now(),
+                    lastUpdatedBy: userId
                 });
-            }, aboutObserverOptions);
-            aboutObserver.observe(aboutSection);
-        });
-
-        // Lógica del modal de imágenes
-        const modal = document.getElementById('image-modal');
-        const modalImage = document.getElementById('modal-image');
-        const closeButton = document.getElementById('modal-close-button');
-
-        function openModal(imageSrc) {
-            modal.style.display = 'flex';
-            modalImage.src = imageSrc;
-        }
-
-        closeButton.onclick = function() {
-            modal.style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // JavaScript para la transparencia del nav al hacer scroll y la visibilidad del botón de registro
-        const fixedNav = document.getElementById('fixed-nav-container'); 
-        const heroSection = document.getElementById('hero-section');
-        const heroRegisterButton = document.getElementById('hero-register-button');
-        const navRegisterButton = document.getElementById('nav-register-button');
-        const scrollThreshold = 100; // Píxeles a desplazar antes de que cambie la transparencia del nav
-
-        // Observer para el fondo del menú de navegación
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > scrollThreshold) {
-                fixedNav.classList.add('header-scrolled');
             } else {
-                fixedNav.classList.remove('header-scrolled');
+                video.pause();
+                playPauseBtn.textContent = 'Reproducir';
+                playbackStatus.textContent = 'Pausado';
+                
+                // Enviar estado a Firebase
+                database.ref('videoState').update({
+                    isPlaying: false,
+                    lastUpdated: Date.now(),
+                    lastUpdatedBy: userId
+                });
+            }
+        }
+
+        // Subir video a Cloudinary
+        async function uploadToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', cloudinaryConfig.uploadPreset);
+            formData.append('tags', 'cine_familiar');
+            formData.append('api_key', cloudinaryConfig.apiKey);
+            
+            try {
+                uploadProgress.style.display = 'block';
+                progressFill.style.width = '30%';
+                progressText.textContent = '30% - Preparando subida...';
+                
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/video/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                progressFill.style.width = '70%';
+                progressText.textContent = '70% - Procesando video...';
+                
+                const data = await response.json();
+                
+                progressFill.style.width = '100%';
+                progressText.textContent = '100% - ¡Completado!';
+                
+                if (data.secure_url) {
+                    // Guardar en Firebase
+                    const movieData = {
+                        id: data.public_id,
+                        name: file.name.replace(/\.[^/.]+$/, ""), // Remover extensión
+                        url: data.secure_url,
+                        duration: data.duration,
+                        size: data.bytes,
+                        format: data.format,
+                        createdAt: Date.now(),
+                        uploadedBy: userId
+                    };
+                    
+                    database.ref('movies/' + data.public_id).set(movieData);
+                    
+                    // Agregar a la biblioteca local
+                    addMovieToLibrary(movieData);
+                    
+                    setTimeout(() => {
+                        uploadProgress.style.display = 'none';
+                        alert('¡Video subido exitosamente a Cloudinary!');
+                    }, 1000);
+                    
+                } else {
+                    throw new Error('No se pudo obtener la URL del video');
+                }
+                
+            } catch (error) {
+                console.error('Error subiendo a Cloudinary:', error);
+                uploadProgress.style.display = 'none';
+                alert('Error al subir el video: ' + error.message + '\n\nAsegúrate de haber creado el upload preset en Cloudinary.');
+            }
+        }
+
+        // Agregar película a la biblioteca
+        function addMovieToLibrary(movie) {
+            const movieItem = document.createElement('div');
+            movieItem.className = 'movie-item';
+            movieItem.onclick = () => loadMovie(movie.id, movie.name, movie.url);
+            
+            // Crear thumbnail URL (Cloudinary genera thumbnails automáticamente)
+            const thumbnailUrl = `https://res.cloudinary.com/${cloudinaryConfig.cloudName}/video/upload/w_100,h_60,c_fill/${movie.id}.jpg`;
+            
+            movieItem.innerHTML = `
+                <img src="${thumbnailUrl}" alt="${movie.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA2MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMzMzIi8+CjxwYXRoIGQ9Ik0yNCAyOEwzMiAyMEw0MCAyOEgyNFoiIGZpbGw9IiM2NjYiLz4KPC9zdmc+'">
+                <div class="movie-info">
+                    <h3>${movie.name}</h3>
+                    <p>${formatTime(movie.duration || 0)} • ${movie.format || 'mp4'}</p>
+                </div>
+            `;
+            
+            movieList.appendChild(movieItem);
+        }
+
+        // Cargar película
+        function loadMovie(movieId, movieName, movieUrl) {
+            video.src = movieUrl;
+            fileName.textContent = movieName;
+            
+            // Notificar a otros dispositivos
+            database.ref('videoState').update({
+                videoSrc: movieUrl,
+                videoName: movieName,
+                currentTime: 0,
+                isPlaying: false,
+                lastUpdated: Date.now(),
+                lastUpdatedBy: userId
+            });
+            
+            video.play();
+            playPauseBtn.textContent = 'Pausar';
+            playbackStatus.textContent = 'Reproduciendo';
+        }
+
+        // Manejar carga de archivo
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                
+                // Validar tipo de archivo
+                if (!file.type.includes('video/')) {
+                    alert('Por favor, selecciona un archivo de video válido.');
+                    return;
+                }
+                
+                // Validar tamaño (límite de 100MB para Cloudinary free)
+                if (file.size > 100 * 1024 * 1024) {
+                    alert('El archivo es demasiado grande. El límite es 100MB.');
+                    return;
+                }
+                
+                fileName.textContent = `Subiendo: ${file.name}...`;
+                
+                // Subir a Cloudinary
+                uploadToCloudinary(file);
             }
         });
 
-        // Observer para la visibilidad del botón de registro (Hero vs Nav)
-        const heroButtonObserverOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1 // Activa cuando el 10% de la hero-section es visible o invisible
-        };
-
-        const heroButtonIntersectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.target.id === 'hero-section') {
-                    if (entry.isIntersecting) {
-                        // hero-section está visible, muestra el botón del hero, oculta el del nav
-                        heroRegisterButton.classList.remove('btn-hidden-state');
-                        heroRegisterButton.classList.add('btn-visible-state');
-
-                        navRegisterButton.classList.remove('btn-visible-state');
-                        navRegisterButton.classList.add('btn-hidden-state');
-                    } else {
-                        // hero-section no está visible, oculta el botón del hero, muestra el del nav
-                        heroRegisterButton.classList.remove('btn-visible-state');
-                        heroRegisterButton.classList.add('btn-hidden-state');
-
-                        navRegisterButton.classList.remove('btn-hidden-state');
-                        navRegisterButton.classList.add('btn-visible-state');
+        // Escuchar cambios en Firebase para sincronización
+        database.ref('videoState').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.lastUpdatedBy !== userId) {
+                lastUpdateTime = data.lastUpdated;
+                
+                // Sincronizar reproducción
+                if (data.isPlaying !== undefined && !video.paused !== data.isPlaying) {
+                    if (data.isPlaying && video.paused) {
+                        video.play();
+                        playPauseBtn.textContent = 'Pausar';
+                        playbackStatus.textContent = 'Reproduciendo';
+                    } else if (!data.isPlaying && !video.paused) {
+                        video.pause();
+                        playPauseBtn.textContent = 'Reproducir';
+                        playbackStatus.textContent = 'Pausado';
                     }
-                } 
-            });
-        }, heroButtonObserverOptions);
-
-        // Comienza a observar la hero-section para el cambio de botón
-        heroButtonIntersectionObserver.observe(heroSection);
-
-        // Establecer el estado inicial de los botones al cargar el DOM
-        const initialSetButtonState = () => {
-            const initialHeroRect = heroSection.getBoundingClientRect();
-            if (initialHeroRect.top >= 0 && initialHeroRect.bottom > 0) { // Si la hero-section es visible al cargar
-                heroRegisterButton.classList.add('btn-visible-state');
-                heroRegisterButton.classList.remove('btn-hidden-state');
-                navRegisterButton.classList.add('btn-hidden-state');
-                navRegisterButton.classList.remove('btn-visible-state');
-            } else { // Si la hero-section no es visible al cargar (ya se hizo scroll)
-                heroRegisterButton.classList.add('btn-hidden-state');
-                heroRegisterButton.classList.remove('btn-visible-state');
-                navRegisterButton.classList.add('btn-visible-state');
-                navRegisterButton.classList.remove('btn-hidden-state');
+                }
+                
+                // Sincronizar tiempo
+                if (data.currentTime !== undefined && 
+                    Math.abs(video.currentTime - data.currentTime) > 2) {
+                    video.currentTime = data.currentTime;
+                    updateProgress();
+                }
+                
+                // Cambiar video si es necesario
+                if (data.videoSrc && video.src !== data.videoSrc) {
+                    video.src = data.videoSrc;
+                    if (data.videoName) {
+                        fileName.textContent = data.videoName;
+                    }
+                }
             }
-        };
+        });
 
-        // Ejecuta la configuración inicial al cargar el DOM
-        document.addEventListener('DOMContentLoaded', initialSetButtonState);
+        // Cargar biblioteca de películas
+        database.ref('movies').on('value', (snapshot) => {
+            const movies = snapshot.val();
+            movieList.innerHTML = '';
+            
+            if (movies) {
+                Object.values(movies).forEach(movie => {
+                    addMovieToLibrary(movie);
+                });
+            }
+            
+            // Si no hay películas, mostrar mensaje
+            if (!movies || Object.keys(movies).length === 0) {
+                movieList.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #ccc;">
+                        <p>No hay películas en la biblioteca</p>
+                        <p>¡Sube la primera usando el botón de arriba!</p>
+                    </div>
+                `;
+            }
+        });
 
+        // Manejar usuarios conectados
+        const userRef = database.ref('users/' + userId);
+        userRef.set({
+            name: 'Usuario ' + Math.floor(Math.random() * 1000),
+            connected: true,
+            lastSeen: Date.now()
+        });
+        
+        userRef.onDisconnect().remove();
+        
+        // Contar usuarios conectados
+        database.ref('users').on('value', (snapshot) => {
+            const users = snapshot.val();
+            const count = users ? Object.keys(users).length : 0;
+            connectedCount.textContent = count;
+            
+            // Actualizar lista de usuarios
+            connectedUsers.innerHTML = '';
+            if (users) {
+                Object.values(users).forEach(user => {
+                    const userElement = document.createElement('div');
+                    userElement.className = 'user';
+                    userElement.textContent = user.name;
+                    connectedUsers.appendChild(userElement);
+                });
+            }
+        });
+
+        // Event listeners
+        video.addEventListener('timeupdate', updateProgress);
+        video.addEventListener('loadedmetadata', () => {
+            durationElement.textContent = formatTime(video.duration);
+        });
+        video.addEventListener('seeking', () => {
+            isSeeking = true;
+        });
+        video.addEventListener('seeked', () => {
+            isSeeking = false;
+            // Enviar cambio de tiempo a Firebase
+            if (Date.now() - lastUpdateTime > 500) {
+                database.ref('videoState').update({
+                    currentTime: video.currentTime,
+                    lastUpdated: Date.now(),
+                    lastUpdatedBy: userId
+                });
+            }
+        });
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        progressContainer.addEventListener('click', setProgress);
+
+        // Inicializar con un estado por defecto en Firebase si no existe
+        database.ref('videoState').once('value').then((snapshot) => {
+            if (!snapshot.exists()) {
+                database.ref('videoState').set({
+                    isPlaying: false,
+                    currentTime: 0,
+                    videoSrc: '',
+                    videoName: 'Selecciona una película de la biblioteca',
+                    lastUpdated: Date.now(),
+                    lastUpdatedBy: userId
+                });
+            }
+        });
+
+        // Cargar biblioteca inicial
+        database.ref('movies').once('value');
     </script>
 </body>
 </html>
