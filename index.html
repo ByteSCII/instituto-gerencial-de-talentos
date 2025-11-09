@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cine Familiar</title>
+    <title>Luxus Corporation - Sala de Reproducción</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #f59e0b;
-            --dark: #1e293b;
-            --darker: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-dark: rgba(0, 0, 0, 0.3);
-            --blur: blur(10px);
+            --gold: #FFD700;
+            --gold-dark: #D4AF37;
+            --gold-light: #FFF8DC;
+            --black: #000000;
+            --dark: #1a1a1a;
+            --darker: #0d0d0d;
+            --gray: #333333;
+            --light: #ffffff;
+            --glass: rgba(255, 215, 0, 0.1);
+            --glass-dark: rgba(0, 0, 0, 0.7);
+            --blur: blur(15px);
         }
 
         * {
@@ -29,7 +28,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--darker), var(--dark));
+            background: linear-gradient(135deg, var(--darker), var(--black));
             color: var(--light);
             min-height: 100vh;
             line-height: 1.6;
@@ -45,9 +44,9 @@
 
         /* Header Styles */
         header {
-            background: var(--glass);
+            background: var(--glass-dark);
             backdrop-filter: var(--blur);
-            border-bottom: 1px solid var(--glass);
+            border-bottom: 2px solid var(--gold);
             padding: 1rem 1.5rem;
             position: sticky;
             top: 0;
@@ -69,16 +68,38 @@
         }
 
         .logo-icon {
-            font-size: 1.75rem;
-            color: var(--secondary);
+            font-size: 2rem;
+            color: var(--gold);
         }
 
         .logo-text {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(to right, var(--gold), var(--gold-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .profile-btn:hover {
+            background: var(--gold);
+            color: var(--black);
         }
 
         .connection-status {
@@ -92,13 +113,15 @@
         }
 
         .status-online {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--success);
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--gold);
+            border: 1px solid var(--gold);
         }
 
         .status-offline {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff4444;
+            border: 1px solid #ff4444;
         }
 
         /* Main Content */
@@ -125,8 +148,9 @@
             background: #000;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
             aspect-ratio: 16/9;
+            border: 2px solid var(--gold);
         }
 
         #videoPlayer {
@@ -142,7 +166,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -156,6 +180,7 @@
 
         .play-overlay {
             background: var(--glass);
+            border: 2px solid var(--gold);
             border-radius: 50%;
             width: 80px;
             height: 80px;
@@ -163,16 +188,22 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
         }
 
         .play-overlay:hover {
             transform: scale(1.1);
+            background: var(--gold);
+        }
+
+        .play-overlay:hover i {
+            color: var(--black);
         }
 
         .play-overlay i {
             font-size: 2rem;
-            color: white;
+            color: var(--gold);
+            transition: all 0.3s;
         }
 
         .custom-controls {
@@ -183,24 +214,26 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            border: 1px solid var(--gold);
         }
 
         .control-btn {
-            background: var(--primary);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         .control-btn:hover {
-            background: var(--primary-dark);
+            background: var(--gold);
+            color: var(--black);
             transform: translateY(-2px);
         }
 
@@ -210,27 +243,29 @@
 
         .progress-container {
             flex-grow: 1;
-            height: 6px;
-            background: var(--glass);
-            border-radius: 3px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 4px;
             position: relative;
             cursor: pointer;
+            overflow: hidden;
         }
 
         #progressBar {
             height: 100%;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            border-radius: 3px;
+            background: linear-gradient(to right, var(--gold), var(--gold-light));
+            border-radius: 4px;
             width: 0%;
             transition: width 0.1s;
         }
 
         .time-display {
             font-size: 0.875rem;
-            color: var(--light);
+            color: var(--gold);
             min-width: 100px;
             text-align: center;
             font-variant-numeric: tabular-nums;
+            font-weight: 600;
         }
 
         /* Sidebar */
@@ -239,15 +274,16 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            min-width: 300px;
+            min-width: 320px;
         }
 
         .panel {
-            background: var(--glass);
+            background: var(--glass-dark);
             backdrop-filter: var(--blur);
             border-radius: 16px;
             padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--gold);
         }
 
         .panel-header {
@@ -255,56 +291,62 @@
             align-items: center;
             gap: 0.75rem;
             margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gold);
         }
 
         .panel-header i {
             font-size: 1.25rem;
-            color: var(--secondary);
+            color: var(--gold);
         }
 
         .panel-title {
             font-size: 1.25rem;
             font-weight: 600;
+            color: var(--gold);
         }
 
         /* Upload Section */
         .upload-area {
-            border: 2px dashed var(--glass);
+            border: 2px dashed var(--gold);
             border-radius: 12px;
             padding: 2rem;
             text-align: center;
             transition: all 0.3s;
             cursor: pointer;
+            background: rgba(255, 215, 0, 0.05);
         }
 
         .upload-area:hover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
         }
 
         .upload-icon {
             font-size: 2.5rem;
-            color: var(--gray);
+            color: var(--gold);
             margin-bottom: 1rem;
         }
 
         .upload-text {
             margin-bottom: 1rem;
+            color: var(--gold-light);
         }
 
         .upload-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
             padding: 0.75rem 1.5rem;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         .upload-btn:hover {
-            background: var(--primary-dark);
+            background: var(--gold);
+            color: var(--black);
             transform: translateY(-2px);
         }
 
@@ -320,7 +362,7 @@
         .progress-bar {
             width: 100%;
             height: 8px;
-            background: var(--glass);
+            background: var(--gray);
             border-radius: 4px;
             overflow: hidden;
             margin-bottom: 0.5rem;
@@ -328,14 +370,14 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(to right, var(--success), #34d399);
+            background: linear-gradient(to right, var(--gold), var(--gold-light));
             width: 0%;
             transition: width 0.3s;
         }
 
         /* Movie Library */
         .movie-list {
-            max-height: 300px;
+            max-height: 200px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -343,18 +385,20 @@
         }
 
         .movie-item {
-            background: var(--glass-dark);
+            background: rgba(255, 215, 0, 0.1);
             padding: 1rem;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 1rem;
+            border: 1px solid transparent;
         }
 
         .movie-item:hover {
-            background: rgba(99, 102, 241, 0.2);
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--gold);
             transform: translateX(5px);
         }
 
@@ -364,6 +408,7 @@
             object-fit: cover;
             border-radius: 6px;
             background: var(--dark);
+            border: 1px solid var(--gold);
         }
 
         .movie-info h3 {
@@ -373,11 +418,12 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 180px;
+            color: var(--gold-light);
         }
 
         .movie-info p {
             font-size: 0.75rem;
-            color: var(--gray);
+            color: var(--gold);
         }
 
         /* Users Section */
@@ -388,33 +434,38 @@
         }
 
         .user-card {
-            background: var(--glass-dark);
+            background: rgba(255, 215, 0, 0.1);
             padding: 1rem;
             border-radius: 12px;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
 
         .user-card:hover {
             transform: translateY(-5px);
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.2);
         }
 
         .user-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 0.75rem;
-            color: white;
+            color: var(--black);
             font-weight: bold;
+            border: 2px solid var(--gold);
         }
 
         .user-name {
             font-size: 0.875rem;
             font-weight: 500;
+            color: var(--gold-light);
         }
 
         /* Chat Section */
@@ -428,12 +479,13 @@
             flex: 1;
             overflow-y: auto;
             padding: 1rem;
-            background: var(--glass-dark);
+            background: rgba(255, 215, 0, 0.05);
             border-radius: 12px;
             margin-bottom: 1rem;
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            border: 1px solid var(--gold);
         }
 
         .message {
@@ -449,15 +501,17 @@
         }
 
         .message.own {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             align-self: flex-end;
             border-bottom-right-radius: 4px;
+            color: var(--black);
         }
 
         .message.other {
-            background: var(--glass);
+            background: rgba(255, 215, 0, 0.2);
             align-self: flex-start;
             border-bottom-left-radius: 4px;
+            color: var(--gold-light);
         }
 
         .message-sender {
@@ -477,22 +531,26 @@
 
         #chatInput {
             flex: 1;
-            background: var(--glass-dark);
-            border: 1px solid var(--glass);
-            border-radius: 50px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 25px;
             padding: 0.75rem 1.25rem;
             color: var(--light);
             outline: none;
         }
 
         #chatInput:focus {
-            border-color: var(--primary);
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        #chatInput::placeholder {
+            color: var(--gold);
         }
 
         #sendMessage {
-            background: var(--primary);
-            border: none;
-            color: white;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -500,22 +558,114 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         #sendMessage:hover {
-            background: var(--primary-dark);
+            background: var(--gold);
+            color: var(--black);
             transform: translateY(-2px);
+        }
+
+        /* Profile Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border: 2px solid var(--gold);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .modal-title {
+            color: var(--gold);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--light);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .save-profile {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        .save-profile:hover {
+            background: var(--gold);
+            color: var(--black);
         }
 
         /* Footer */
         footer {
-            background: var(--glass);
+            background: var(--glass-dark);
             backdrop-filter: var(--blur);
             padding: 1.5rem;
             text-align: center;
-            color: var(--gray);
+            color: var(--gold);
             font-size: 0.875rem;
+            border-top: 1px solid var(--gold);
         }
 
         /* Mobile Responsive */
@@ -568,46 +718,23 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .panel {
-                padding: 1rem;
-            }
-            
-            .upload-area {
-                padding: 1.5rem;
-            }
-            
-            .movie-item {
-                padding: 0.75rem;
-            }
-            
-            .movie-thumbnail {
-                width: 50px;
-                height: 35px;
-            }
-            
-            .movie-info h3 {
-                max-width: 150px;
-            }
-        }
-
         /* Scrollbar Styling */
         ::-webkit-scrollbar {
             width: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--glass);
+            background: var(--gray);
             border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--primary);
+            background: var(--gold);
             border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
+            background: var(--gold-light);
         }
     </style>
 </head>
@@ -616,12 +743,17 @@
         <header>
             <div class="header-content">
                 <div class="logo">
-                    <i class="fas fa-film logo-icon"></i>
-                    <div class="logo-text">Cine Familiar</div>
+                    <i class="fas fa-crown logo-icon"></i>
+                    <div class="logo-text">Luxus Corporation</div>
                 </div>
-                <div id="connectionStatus" class="connection-status status-online">
-                    <i class="fas fa-wifi"></i>
-                    <span>Conectado</span>
+                <div class="user-profile">
+                    <button class="profile-btn" id="profileBtn">
+                        <i class="fas fa-user"></i> Perfil
+                    </button>
+                    <div id="connectionStatus" class="connection-status status-online">
+                        <i class="fas fa-wifi"></i>
+                        <span>Conectado</span>
+                    </div>
                 </div>
             </div>
         </header>
@@ -657,11 +789,11 @@
                 <div class="panel">
                     <div class="panel-header">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <h2 class="panel-title">Subir Película</h2>
+                        <h2 class="panel-title">Subir Contenido Premium</h2>
                     </div>
                     <div class="upload-area" id="uploadArea">
                         <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                        <p class="upload-text">Arrastra un video aquí o haz clic para seleccionar</p>
+                        <p class="upload-text">Arrastra tu contenido exclusivo aquí</p>
                         <button class="upload-btn">Seleccionar Archivo</button>
                         <input type="file" id="fileInput" accept="video/*">
                     </div>
@@ -678,22 +810,28 @@
                 <div class="panel">
                     <div class="panel-header">
                         <i class="fas fa-film"></i>
-                        <h2 class="panel-title">Biblioteca</h2>
+                        <h2 class="panel-title">Biblioteca Premium</h2>
                     </div>
                     <div class="movie-list" id="movieList">
-                        <!-- Las películas se cargarán aquí dinámicamente -->
+                        <div class="movie-item" onclick="loadSampleMovie()">
+                            <div class="movie-thumbnail"></div>
+                            <div class="movie-info">
+                                <h3>Contenido de Ejemplo Luxus</h3>
+                                <p>2:30 • Premium</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="panel">
                     <div class="panel-header">
                         <i class="fas fa-users"></i>
-                        <h2 class="panel-title">Usuarios Conectados</h2>
+                        <h2 class="panel-title">Miembros Conectados</h2>
                     </div>
                     <div class="users-grid" id="connectedUsers">
                         <div class="user-card">
-                            <div class="user-avatar">Tú</div>
-                            <div class="user-name">Tú</div>
+                            <div class="user-avatar" id="userAvatar">Tú</div>
+                            <div class="user-name" id="userNameDisplay">Tú</div>
                         </div>
                     </div>
                 </div>
@@ -701,17 +839,17 @@
                 <div class="panel">
                     <div class="panel-header">
                         <i class="fas fa-comments"></i>
-                        <h2 class="panel-title">Chat en Vivo</h2>
+                        <h2 class="panel-title">Chat Exclusivo</h2>
                     </div>
                     <div class="chat-container">
                         <div class="chat-messages" id="chatMessages">
                             <div class="message other">
-                                <div class="message-sender">Sistema</div>
-                                <div class="message-text">¡Bienvenido al chat! Comparte tus comentarios sobre la película.</div>
+                                <div class="message-sender">Sistema Luxus</div>
+                                <div class="message-text">Bienvenido a la experiencia premium de Luxus Corporation</div>
                             </div>
                         </div>
                         <div class="chat-input">
-                            <input type="text" id="chatInput" placeholder="Escribe un mensaje...">
+                            <input type="text" id="chatInput" placeholder="Escribe tu mensaje...">
                             <button id="sendMessage">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
@@ -721,8 +859,27 @@
             </div>
         </div>
 
+        <!-- Profile Modal -->
+        <div class="modal" id="profileModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Perfil Luxus</h2>
+                    <button class="close-modal" id="closeModal">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="userName">Nombre de Usuario</label>
+                    <input type="text" id="userName" placeholder="Ingresa tu nombre">
+                </div>
+                <div class="form-group">
+                    <label for="userAvatarText">Avatar (Texto)</label>
+                    <input type="text" id="userAvatarText" placeholder="Ej: LD" maxlength="2">
+                </div>
+                <button class="save-profile" id="saveProfile">Guardar Perfil</button>
+            </div>
+        </div>
+
         <footer>
-            <p>Cine Familiar &copy; 2024 - Comparte momentos especiales con tus seres queridos</p>
+            <p>Luxus Corporation &copy; 2024 - Experiencia Cinematográfica Premium</p>
         </footer>
     </div>
 
@@ -754,6 +911,7 @@
         try {
             firebase.initializeApp(firebaseConfig);
             database = firebase.database();
+            console.log('Firebase inicializado correctamente');
         } catch (error) {
             console.error('Error inicializando Firebase:', error);
             updateConnectionStatus(false);
@@ -779,11 +937,20 @@
         const chatInput = document.getElementById('chatInput');
         const sendMessage = document.getElementById('sendMessage');
         const connectionStatus = document.getElementById('connectionStatus');
+        const profileBtn = document.getElementById('profileBtn');
+        const profileModal = document.getElementById('profileModal');
+        const closeModal = document.getElementById('closeModal');
+        const saveProfile = document.getElementById('saveProfile');
+        const userNameInput = document.getElementById('userName');
+        const userAvatarText = document.getElementById('userAvatarText');
+        const userAvatar = document.getElementById('userAvatar');
+        const userNameDisplay = document.getElementById('userNameDisplay');
 
         // Variables de estado
         let isSeeking = false;
         let userId = generateUserId();
-        let userName = `Usuario${Math.floor(Math.random() * 1000)}`;
+        let userName = `Invitado${Math.floor(Math.random() * 1000)}`;
+        let userAvatarChar = 'Tú';
         let lastUpdateTime = 0;
         let isOnline = false;
 
@@ -804,9 +971,484 @@
             }
         }
 
-        // Resto del código JavaScript (funciones de video, chat, etc.)
-        // ... (el código JavaScript completo que proporcioné anteriormente)
+        // Formatear tiempo en minutos:segundos
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Actualizar barra de progreso y tiempo
+        function updateProgress() {
+            if (!isSeeking && video.duration && !isNaN(video.duration)) {
+                const progressPercent = (video.currentTime / video.duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                currentTimeElement.textContent = formatTime(video.currentTime);
+            }
+        }
+
+        // Establecer progreso al hacer clic en la barra
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = video.duration;
+            
+            if (duration && !isNaN(duration)) {
+                const newTime = (clickX / width) * duration;
+                video.currentTime = newTime;
+                
+                if (database && isOnline) {
+                    database.ref('videoState').update({
+                        currentTime: newTime,
+                        lastUpdated: Date.now(),
+                        lastUpdatedBy: userId
+                    }).catch(error => {
+                        console.error('Error actualizando tiempo:', error);
+                    });
+                }
+            }
+        }
+
+        // Manejar cambios en la reproducción
+        function togglePlayPause() {
+            if (video.paused) {
+                video.play().catch(error => {
+                    console.error('Error reproduciendo video:', error);
+                });
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                playbackStatus.textContent = 'Reproduciendo';
+            } else {
+                video.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playbackStatus.textContent = 'Pausado';
+            }
+            
+            if (database && isOnline) {
+                database.ref('videoState').update({
+                    isPlaying: !video.paused,
+                    currentTime: video.currentTime,
+                    lastUpdated: Date.now(),
+                    lastUpdatedBy: userId
+                }).catch(error => {
+                    console.error('Error actualizando estado:', error);
+                });
+            }
+        }
+
+        // Pantalla completa
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                video.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Subir video a Cloudinary
+        async function uploadToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', cloudinaryConfig.uploadPreset);
+            formData.append('tags', 'luxus_corporation');
+            formData.append('api_key', cloudinaryConfig.apiKey);
+            
+            try {
+                uploadProgress.style.display = 'block';
+                progressFill.style.width = '30%';
+                progressText.textContent = '30% - Preparando subida...';
+                
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/video/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                progressFill.style.width = '70%';
+                progressText.textContent = '70% - Procesando video...';
+                
+                const data = await response.json();
+                
+                progressFill.style.width = '100%';
+                progressText.textContent = '100% - ¡Completado!';
+                
+                if (data.secure_url) {
+                    const movieData = {
+                        id: data.public_id,
+                        name: file.name.replace(/\.[^/.]+$/, ""),
+                        url: data.secure_url,
+                        duration: data.duration || 0,
+                        size: data.bytes,
+                        format: data.format,
+                        createdAt: Date.now(),
+                        uploadedBy: userId
+                    };
+                    
+                    if (database && isOnline) {
+                        await database.ref('movies/' + data.public_id).set(movieData);
+                    }
+                    
+                    addMovieToLibrary(movieData);
+                    
+                    setTimeout(() => {
+                        uploadProgress.style.display = 'none';
+                        alert('¡Contenido subido exitosamente a la biblioteca premium!');
+                    }, 1000);
+                    
+                } else {
+                    throw new Error('No se pudo obtener la URL del video');
+                }
+                
+            } catch (error) {
+                console.error('Error subiendo a Cloudinary:', error);
+                uploadProgress.style.display = 'none';
+                alert('Error al subir el contenido: ' + error.message);
+            }
+        }
+
+        // Agregar película a la biblioteca
+        function addMovieToLibrary(movie) {
+            const movieItem = document.createElement('div');
+            movieItem.className = 'movie-item';
+            movieItem.onclick = () => loadMovie(movie.id, movie.name, movie.url);
+            
+            const thumbnailUrl = `https://res.cloudinary.com/${cloudinaryConfig.cloudName}/video/upload/w_100,h_60,c_fill/${movie.id}.jpg`;
+            
+            movieItem.innerHTML = `
+                <img src="${thumbnailUrl}" alt="${movie.name}" class="movie-thumbnail" onerror="this.style.display='none'">
+                <div class="movie-info">
+                    <h3>${movie.name}</h3>
+                    <p>${formatTime(movie.duration)} • ${(movie.size / (1024 * 1024)).toFixed(1)}MB</p>
+                </div>
+            `;
+            
+            movieList.appendChild(movieItem);
+        }
+
+        // Cargar película de ejemplo
+        function loadSampleMovie() {
+            const sampleUrl = 'https://res.cloudinary.com/demo/video/upload/sample.mp4';
+            loadMovie('sample', 'Contenido de Ejemplo Luxus', sampleUrl);
+        }
+
+        // Cargar película
+        function loadMovie(movieId, movieName, movieUrl) {
+            video.src = movieUrl;
+            
+            if (database && isOnline) {
+                database.ref('videoState').update({
+                    videoSrc: movieUrl,
+                    videoName: movieName,
+                    currentTime: 0,
+                    isPlaying: false,
+                    lastUpdated: Date.now(),
+                    lastUpdatedBy: userId
+                }).catch(error => {
+                    console.error('Error cargando película:', error);
+                });
+            }
+            
+            video.play().then(() => {
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch(error => {
+                console.error('Error reproduciendo:', error);
+            });
+        }
+
+        // Enviar mensaje de chat
+        function sendChatMessage() {
+            const messageText = chatInput.value.trim();
+            if (messageText && database && isOnline) {
+                const messageData = {
+                    text: messageText,
+                    sender: userName,
+                    senderId: userId,
+                    timestamp: Date.now()
+                };
+                
+                database.ref('chatMessages').push(messageData)
+                    .then(() => {
+                        chatInput.value = '';
+                    })
+                    .catch(error => {
+                        console.error('Error enviando mensaje:', error);
+                        alert('Error al enviar el mensaje');
+                    });
+            }
+        }
+
+        // Actualizar perfil de usuario
+        function updateUserProfile() {
+            const newName = userNameInput.value.trim() || userName;
+            const newAvatar = userAvatarText.value.trim() || userAvatarChar;
+            
+            userName = newName;
+            userAvatarChar = newAvatar;
+            
+            userAvatar.textContent = newAvatar;
+            userNameDisplay.textContent = newName;
+            
+            profileModal.style.display = 'none';
+            
+            if (database && isOnline) {
+                database.ref('users/' + userId).update({
+                    name: userName,
+                    avatar: userAvatarChar,
+                    connected: true,
+                    lastSeen: Date.now()
+                }).catch(error => {
+                    console.error('Error actualizando perfil:', error);
+                });
+            }
+            
+            // Agregar mensaje de sistema
+            addChatMessage('Sistema Luxus', `${userName} ha actualizado su perfil`, true);
+        }
+
+        // Agregar mensaje al chat
+        function addChatMessage(sender, text, isSystem = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isSystem ? 'message other' : 
+                (sender === userName ? 'message own' : 'message other');
+            
+            if (!isSystem) {
+                messageDiv.innerHTML = `
+                    <div class="message-sender">${sender}</div>
+                    <div class="message-text">${text}</div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-sender">${sender}</div>
+                    <div class="message-text">${text}</div>
+                `;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Configurar Firebase si está inicializado
+        if (database) {
+            // Monitorear conexión
+            database.ref('.info/connected').on('value', (snapshot) => {
+                const connected = snapshot.val() === true;
+                updateConnectionStatus(connected);
+                
+                if (connected) {
+                    // Registrar usuario
+                    database.ref('users/' + userId).set({
+                        name: userName,
+                        avatar: userAvatarChar,
+                        connected: true,
+                        lastSeen: Date.now()
+                    });
+                    
+                    database.ref('users/' + userId).onDisconnect().update({
+                        connected: false,
+                        lastSeen: Date.now()
+                    });
+                    
+                }
+            });
+
+            // Escuchar cambios en videoState
+            database.ref('videoState').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.lastUpdatedBy !== userId) {
+                    lastUpdateTime = data.lastUpdated;
+                    
+                    // Sincronizar reproducción
+                    if (data.isPlaying !== undefined && !video.paused !== data.isPlaying) {
+                        if (data.isPlaying && video.paused) {
+                            video.play().catch(console.error);
+                            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        } else if (!data.isPlaying && !video.paused) {
+                            video.pause();
+                            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        }
+                    }
+                    
+                    // Sincronizar tiempo (solo si la diferencia es significativa)
+                    if (data.currentTime !== undefined && 
+                        Math.abs(video.currentTime - data.currentTime) > 2) {
+                        video.currentTime = data.currentTime;
+                        updateProgress();
+                    }
+                    
+                    // Cambiar video si es necesario
+                    if (data.videoSrc && video.src !== data.videoSrc) {
+                        video.src = data.videoSrc;
+                    }
+                }
+            });
+
+            // Cargar biblioteca de películas
+            database.ref('movies').on('value', (snapshot) => {
+                const movies = snapshot.val();
+                movieList.innerHTML = '';
+                
+                // Agregar película de ejemplo
+                const sampleItem = document.createElement('div');
+                sampleItem.className = 'movie-item';
+                sampleItem.onclick = loadSampleMovie;
+                sampleItem.innerHTML = `
+                    <div class="movie-thumbnail"></div>
+                    <div class="movie-info">
+                        <h3>Contenido de Ejemplo Luxus</h3>
+                        <p>2:30 • Premium</p>
+                    </div>
+                `;
+                movieList.appendChild(sampleItem);
+                
+                if (movies) {
+                    Object.values(movies).forEach(movie => {
+                        addMovieToLibrary(movie);
+                    });
+                }
+            });
+
+            // Escuchar usuarios conectados
+            database.ref('users').on('value', (snapshot) => {
+                const users = snapshot.val();
+                connectedUsers.innerHTML = '';
+                
+                if (users) {
+                    Object.values(users).forEach(user => {
+                        if (user.connected) {
+                            const userCard = document.createElement('div');
+                            userCard.className = 'user-card';
+                            userCard.innerHTML = `
+                                <div class="user-avatar">${user.avatar || user.name.charAt(0)}</div>
+                                <div class="user-name">${user.name}</div>
+                            `;
+                            connectedUsers.appendChild(userCard);
+                        }
+                    });
+                }
+            });
+
+            // Escuchar mensajes de chat
+            database.ref('chatMessages').on('child_added', (snapshot) => {
+                const message = snapshot.val();
+                if (message.senderId !== userId) {
+                    addChatMessage(message.sender, message.text);
+                }
+            });
+
+            // Inicializar con un estado por defecto en Firebase si no existe
+            database.ref('videoState').once('value').then((snapshot) => {
+                if (!snapshot.exists()) {
+                    database.ref('videoState').set({
+                        isPlaying: false,
+                        currentTime: 0,
+                        videoSrc: '',
+                        videoName: 'Selecciona contenido de la biblioteca',
+                        lastUpdated: Date.now(),
+                        lastUpdatedBy: userId
+                    });
+                }
+            });
+        }
+
+        // Event Listeners
+        video.addEventListener('timeupdate', updateProgress);
+        video.addEventListener('loadedmetadata', () => {
+            if (video.duration && !isNaN(video.duration)) {
+                durationElement.textContent = formatTime(video.duration);
+            }
+        });
+        video.addEventListener('seeking', () => {
+            isSeeking = true;
+        });
+        video.addEventListener('seeked', () => {
+            isSeeking = false;
+            if (database && Date.now() - lastUpdateTime > 500) {
+                database.ref('videoState').update({
+                    currentTime: video.currentTime,
+                    lastUpdated: Date.now(),
+                    lastUpdatedBy: userId
+                }).catch(console.error);
+            }
+        });
         
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        overlayPlay.addEventListener('click', togglePlayPause);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        progressContainer.addEventListener('click', setProgress);
+
+        // Upload functionality
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(255, 215, 0, 0.2)';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.background = 'rgba(255, 215, 0, 0.05)';
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(255, 215, 0, 0.05)';
+            if (e.dataTransfer.files.length > 0) {
+                handleFileSelect(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                handleFileSelect(this.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            if (!file.type.includes('video/')) {
+                alert('Por favor, selecciona un archivo de video válido.');
+                return;
+            }
+            
+            // QUITÉ la validación de 100MB para que puedas subir archivos grandes
+            uploadToCloudinary(file);
+        }
+
+        // Chat functionality
+        sendMessage.addEventListener('click', sendChatMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+
+        // Profile functionality
+        profileBtn.addEventListener('click', () => {
+            userNameInput.value = userName;
+            userAvatarText.value = userAvatarChar;
+            profileModal.style.display = 'block';
+        });
+
+        closeModal.addEventListener('click', () => {
+            profileModal.style.display = 'none';
+        });
+
+        saveProfile.addEventListener('click', updateUserProfile);
+
+        // Cerrar modal al hacer clic fuera
+        window.addEventListener('click', (e) => {
+            if (e.target === profileModal) {
+                profileModal.style.display = 'none';
+            }
+        });
+
+        // Manejar errores de video
+        video.addEventListener('error', function(e) {
+            console.error('Error de video:', e);
+        });
+
+        // Inicializar
+        updateConnectionStatus(false);
     </script>
 </body>
 </html>
